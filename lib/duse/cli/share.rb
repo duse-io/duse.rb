@@ -1,6 +1,6 @@
 module Duse
   module CLI
-    class Share < Command
+    class Share < ApiCommand
       
     end
   end

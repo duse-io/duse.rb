@@ -4,6 +4,7 @@ module Duse
   module CLI
     autoload :Command, 'duse/cli/command'
     autoload :Share,   'duse/cli/share'
+    autoload :Config,  'duse/cli/config'
 
     extend self
 

@@ -1,4 +1,5 @@
 require 'highline'
+require 'duse/cli_config'
 
 module Duse
   module CLI
@@ -33,6 +34,10 @@ module Duse
 
       def terminal
         @terminal ||= HighLine.new(input, output)
+      end
+
+      def requires_authentication?
+        false
       end
 
       # ignore Command since its not supposed to be executed
