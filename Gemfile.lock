@@ -1,0 +1,16 @@
+PATH
+  remote: .
+  specs:
+    duse (0.0.1)
+      highline
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    highline (1.6.21)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  duse!

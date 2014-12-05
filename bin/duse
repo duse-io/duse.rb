@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+Encoding.default_external = Encoding::UTF_8 if defined? Encoding
+
+require 'bundler/setup'
+require 'duse/cli'
+
+Duse::CLI.run(ARGV)
