@@ -1,8 +1,19 @@
 require 'duse/cli/config'
+require 'fakefs/safe'
 
 describe Duse::CLI::Config do
-  it 'should set the uri in the config correctly' do
-    allow(Duse::CLIConfig).to receive(:uri=)
-    Duse::CLI::Config.execute(['https://duse.io/'])
+  it 'should handle a false uri correctly' do
+    expect(run_cli('config') { |i| i.puts('test') }.err).to eq(
+      "Not an uri\n"
+    )
+  end
+
+  it 'should handle a false uri correctly' do
+    FakeFS do
+      FileUtils.mkdir_p(File.dirname(Duse::CLIConfig.config_file))
+      run = run_cli('config') { |i| i.puts('https://duse.io/') }
+      expect(run.err).to eq('')
+      expect(run.success?).to be true
+    end
   end
 end

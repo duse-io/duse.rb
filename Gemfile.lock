@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    duse (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -21,6 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  duse!
   fakefs
   highline
   rspec
