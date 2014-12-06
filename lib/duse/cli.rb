@@ -42,37 +42,37 @@ module Duse
 
     private
 
-      def try_const_get(name)
-        CLI.const_get(name)
-      rescue Exception
-      end
+    def try_const_get(name)
+      CLI.const_get(name)
+    rescue Exception
+    end
 
-      def dummy_io
-        return StringIO.new unless defined? IO::NULL and IO::NULL
-        File.open(IO::NULL, 'w')
-      end
+    def dummy_io
+      return StringIO.new unless defined? IO::NULL and IO::NULL
+      File.open(IO::NULL, 'w')
+    end
 
-      def command?(constant)
-        constant.is_a? Class and constant < Command and not constant.abstract?
-      end
+    def command?(constant)
+      constant.is_a? Class and constant < Command and not constant.abstract?
+    end
 
-      def command_name(name)
-        case name
-        when nil, '-h', '-?' then 'Help'
-        when '-v'            then 'Version'
-        when /^--/           then command_name(name[2..-1])
-        else name.split('-').map(&:capitalize).join
-        end
+    def command_name(name)
+      case name
+      when nil, '-h', '-?' then 'Help'
+      when '-v'            then 'Version'
+      when /^--/           then command_name(name[2..-1])
+      else name.split('-').map(&:capitalize).join
       end
+    end
 
-      # can't use flatten as it will flatten hashes
-      def preparse(unparsed, args = [], opts = {})
-        case unparsed
-        when Hash  then opts.merge! unparsed
-        when Array then unparsed.each { |e| preparse(e, args, opts) }
-        else args << unparsed.to_s
-        end
-        [args, opts]
+    # can't use flatten as it will flatten hashes
+    def preparse(unparsed, args = [], opts = {})
+      case unparsed
+      when Hash  then opts.merge! unparsed
+      when Array then unparsed.each { |e| preparse(e, args, opts) }
+      else args << unparsed.to_s
       end
+      [args, opts]
+    end
   end
 end

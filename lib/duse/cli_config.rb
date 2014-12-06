@@ -6,39 +6,50 @@ module Duse
 
     def uri=(uri)
       fail ArgumentError, 'Not an uri' unless uri =~ URI.regexp
-      config['uri'] = uri
-      save
+      set('uri', uri)
     end
 
     def uri
-      config['uri']
+      config_get 'uri'
+    end
+
+    def set(key, value)
+      config = load
+      config[key] = value
+      save(config)
+    end
+
+    def get(key)
+      load[key]
     end
 
     def config
-      @config ||= load
+      load
+    end
+
+    def config_file
+      File.join(Dir.home, '.duse.yml')
     end
     
     private
 
     def load
-      YAML.load load_config_file
+      config = YAML.load load_config_file
+      return {} unless config.is_a? Hash
+      config
     end
 
-    def save
+    def save(config)
       File.open(config_file, 'w') do |file|
-        file.write(config.to_yaml)
-        file.chmod(0600)
+        file.write config.to_yaml
+        file.chmod 0600
       end
     end
 
     def load_config_file
       # pretend like it's an empty file if config does not exists
-      return '{}' unless File.exists? config_file
-      File.read config_file 
-    end
-
-    def config_file
-      File.join(Dir.home, '.duse.yml')
+      return "--- {}\n" unless File.exist? config_file
+      File.read config_file
     end
   end
 end
