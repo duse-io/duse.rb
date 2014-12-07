@@ -1,10 +1,14 @@
 require 'stringio'
+require 'faraday'
+require 'faraday_middleware'
 
 module Duse
   module CLI
-    autoload :Command, 'duse/cli/command'
-    autoload :Share,   'duse/cli/share'
-    autoload :Config,  'duse/cli/config'
+    autoload :Command,    'duse/cli/command'
+    autoload :ApiCommand, 'duse/cli/api_command'
+    autoload :Config,     'duse/cli/config'
+    autoload :Login,      'duse/cli/login'
+    autoload :Share,      'duse/cli/share'
 
     extend self
 

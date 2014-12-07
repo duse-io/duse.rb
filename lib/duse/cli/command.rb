@@ -28,7 +28,7 @@ module Duse
       end
 
       def execute
-        puts "executing #{self.class}"
+        run *arguments
       end
 
       def output=(io)
@@ -45,10 +45,6 @@ module Duse
         @terminal ||= HighLine.new(input, output)
       end
 
-      def requires_authentication?
-        false
-      end
-
       # ignore Command since its not supposed to be executed
       @@abstract ||= [Command]
       def self.abstract?
@@ -57,6 +53,14 @@ module Duse
 
       def self.abstract
         @@abstract << self
+      end
+
+      def self.skip(*names)
+        names.each { |n| define_method(n) {} }
+      end
+
+      def config
+        Duse::CLIConfig
       end
 
       def warn(message)
@@ -69,6 +73,10 @@ module Duse
       def error(message, &block)
         warn(message, &block)
         exit 1
+      end
+
+      def success(line)
+        say color(line, :success) if interactive?
       end
 
       def write_to(io)

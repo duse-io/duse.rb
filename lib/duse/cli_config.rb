@@ -6,11 +6,21 @@ module Duse
 
     def uri=(uri)
       fail ArgumentError, 'Not an uri' unless uri =~ URI.regexp
-      set('uri', uri)
+      set 'uri', uri
     end
 
     def uri
-      config_get 'uri'
+      get 'uri'
+    end
+
+    def token=(token)
+      fail ArgumentError, 'Token must be a string'  unless token.is_a? String
+      fail ArgumentError, 'Token must not be empty' if token.empty?
+      set 'token', token
+    end
+
+    def token
+      get 'token'
     end
 
     def set(key, value)
