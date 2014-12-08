@@ -1,6 +1,8 @@
 require 'secret_sharing'
 require 'duse/cli'
 require 'json'
+require 'openssl'
+require 'duse/encryption'
 
 module Duse
   module CLI
@@ -8,15 +10,53 @@ module Duse
       def run
         title  = terminal.ask 'What do you want to call this secret? '
         secret = terminal.ask 'Secret to save: '
-        users  = who_to_share_with.unshift 'server'
+        users  = who_to_share_with
+        response = client.get do |request|
+          request.url '/v1/users/me'
+          request.headers['Authorization'] = CLIConfig.token
+        end
+        current_user = response.body
+        current_user["private_key"] = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
+        current_user["public_key"] = OpenSSL::PKey::RSA.new current_user['public_key']
+        response = client.get do |request|
+          request.url '/v1/users/server'
+          request.headers['Authorization'] = CLIConfig.token
+        end
+        server_user = response.body
+        server_user["public_key"] = OpenSSL::PKey::RSA.new server_user['public_key']
+        parts = secret.chars.each_slice(50).map(&:join).map do |secret_part|
+          # the selected users + current user + server
+          threshold = users.length+2
+          shares = SecretSharing.split_secret(secret_part, 2, threshold)
+          server_share, server_sign = Duse::Encryption.encrypt(current_user['private_key'], server_user['public_key'], shares[0])
+          user_share, user_sign = Duse::Encryption.encrypt(current_user['private_key'], server_user['public_key'], shares[1])
+          part = {
+            "server" => {"share" => server_share, "signature" => server_sign},
+            "me"     => {"share" => user_share,   "signature" => user_sign},
+          }
+          shares[2..shares.length].each_with_index do |share, index|
+            part["#{users[index]}"] = shares[index+2]
+          end
+          part
+        end
 
-        parts  = SecretSharing.split_secret(secret, 2, users.length)
-        secret_json = {
+        secret = {
           title: title,
           required: 2,
           parts: parts
         }.to_json
-        puts secret_json
+        puts secret
+
+        response = client.post do |request|
+          request.url '/v1/secrets'
+          request.headers['Authorization'] = CLIConfig.token
+          request.body = secret
+        end
+        if response.status == 201
+          success 'Secret successfully created!'
+        else
+          error "Something went wrong. (#{response.status}, #{response.body})"
+        end
       end
 
       private
