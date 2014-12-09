@@ -18,14 +18,6 @@ module Duse
       def authenticate
         error 'not logged in, please run "duse login"' if config.token.nil?
       end
-
-      def client
-        Faraday.new url: Duse::CLIConfig.uri do |faraday|
-          faraday.request  :json
-          faraday.response :json, content_type: /\bjson$/
-          faraday.adapter  Faraday.default_adapter
-        end
-      end
     end
   end
 end

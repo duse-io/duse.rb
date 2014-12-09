@@ -11,18 +11,11 @@ module Duse
         title  = terminal.ask 'What do you want to call this secret? '
         secret = terminal.ask 'Secret to save: '
         users  = who_to_share_with
-        response = client.get do |request|
-          request.url '/v1/users/me'
-          request.headers['Authorization'] = CLIConfig.token
-        end
-        current_user = response.body
+        client = Duse::Client::Session.new(CLIConfig.uri, CLIConfig.token)
+        current_user = client.find_one(Duse::Client::User, 'me').body
         current_user["private_key"] = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
         current_user["public_key"] = OpenSSL::PKey::RSA.new current_user['public_key']
-        response = client.get do |request|
-          request.url '/v1/users/server'
-          request.headers['Authorization'] = CLIConfig.token
-        end
-        server_user = response.body
+        server_user = client.find_one(Duse::Client::User, 'me').body
         server_user["public_key"] = OpenSSL::PKey::RSA.new server_user['public_key']
         parts = secret.chars.each_slice(50).map(&:join).map do |secret_part|
           # the selected users + current user + server
@@ -44,14 +37,9 @@ module Duse
           title: title,
           required: 2,
           parts: parts
-        }.to_json
-        puts secret
+        }
 
-        response = client.post do |request|
-          request.url '/v1/secrets'
-          request.headers['Authorization'] = CLIConfig.token
-          request.body = secret
-        end
+        response = client.create(Duse::Client::Secret, secret)
         if response.status == 201
           success 'Secret successfully created!'
         else

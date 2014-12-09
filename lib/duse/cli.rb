@@ -1,6 +1,6 @@
 require 'stringio'
-require 'faraday'
-require 'faraday_middleware'
+require 'duse/client/entity'
+require 'duse/client/session'
 
 module Duse
   module CLI
