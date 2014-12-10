@@ -1,12 +1,20 @@
 module Duse
   module Client
     class Entity
-      attr_reader :session
+      attr_reader :session, :attributes
 
       MAP = {}
 
+      def initialize
+        @attributes = {}
+      end
+
       def self.base_path
         many
+      end
+
+      def self.subclasses
+        MAP.values.uniq
       end
 
       def self.one(key = nil)
@@ -33,6 +41,24 @@ module Duse
         end
 
         @attributes
+      end
+
+      def set_attribute(name, value)
+        attributes[name.to_s] = value
+      end
+
+      def load_attribute(name)
+        session.reload(self) if missing? name
+        attributes[name.to_s]
+      end
+
+      def missing?(key)
+        return false unless include? key
+        !attributes.include?(key.to_s)
+      end
+
+      def include?(key)
+        attributes.include? key or attribute_names.include? key.to_s
       end
     end
 

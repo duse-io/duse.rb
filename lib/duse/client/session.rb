@@ -16,18 +16,22 @@ module Duse
       end
 
       def find_one(entity, id)
-        connection.get do |request|
+        response = connection.get do |request|
           request.url "/v1/#{entity.base_path}/#{id}"
           request.headers['Authorization'] = token
         end
+        fail Exception, "#{response.status}: #{response.body}" unless response.status == 200
+        instance_from(entity, response.body)
       end
 
       def create(entity, hash)
-        connection.post do |request|
+        response = connection.post do |request|
           request.url "/v1/#{entity.base_path}"
           request.headers['Authorization'] = token
           request.body = hash.to_json
         end
+        fail Exception, "#{response.status}: #{response.body}" unless response.status == 201
+        instance_from(entity, response.hash)
       end
 
       def connection
@@ -36,6 +40,16 @@ module Duse
           faraday.response :json, content_type: /\bjson$/
           faraday.adapter  Faraday.default_adapter
         end
+      end
+
+      private
+
+      def instance_from(entity, hash)
+        instance = entity.new
+        entity.attributes.each do |attribute|
+          instance.public_send("#{attribute}=", hash[attribute])
+        end
+        instance
       end
     end
   end
