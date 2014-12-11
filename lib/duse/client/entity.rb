@@ -67,8 +67,47 @@ module Duse
       end
     end
 
+    class SecretMarshaller
+      def initialize(secret, private_key, users, current_user, server_user)
+        @secret       = secret
+        @private_key  = private_key
+        @users        = users
+        @current_user = current_user
+        @server_user  = server_user
+      end
+
+      def to_h
+        secret_hash = @secret.attributes
+        secret_hash['parts'] = parts_from_secret
+        secret_hash
+      end
+
+      def parts_from_secret
+        secret_text_in_slices_of(50).map do |secret_part|
+          # the selected users + current user + server
+          threshold = @users.length+2
+          shares = SecretSharing.split_secret(secret_part, 2, threshold)
+          server_share, server_sign = Duse::Encryption.encrypt(@private_key, @server_user.public_key,  shares[0])
+          user_share,   user_sign   = Duse::Encryption.encrypt(@private_key, @current_user.public_key, shares[1])
+          part = {
+            "server" => {"share" => server_share, "signature" => server_sign},
+            "me"     => {"share" => user_share,   "signature" => user_sign},
+          }
+          shares[2..shares.length].each_with_index do |share, index|
+            part["#{users[index]}"] = shares[index+2]
+          end
+          part
+        end
+      end
+
+      def secret_text_in_slices_of(piece_size)
+        @secret.secret_text.chars.each_slice(piece_size).map(&:join)
+      end
+    end
+
     class Secret < Entity
       attributes :title, :required
+      attr_accessor :secret_text
 
       one  :secret
       many :secrets
