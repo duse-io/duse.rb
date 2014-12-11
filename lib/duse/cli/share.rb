@@ -16,14 +16,12 @@ module Duse
         current_user = client.find_one(Duse::Client::User, 'me')
         server_user  = client.find_one(Duse::Client::User, 'server')
         user_private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
-        user_public_key   = OpenSSL::PKey::RSA.new current_user.public_key
-        server_public_key = OpenSSL::PKey::RSA.new server_user.public_key
         parts = secret.chars.each_slice(50).map(&:join).map do |secret_part|
           # the selected users + current user + server
           threshold = users.length+2
           shares = SecretSharing.split_secret(secret_part, 2, threshold)
-          server_share, server_sign = Duse::Encryption.encrypt(user_private_key, server_public_key, shares[0])
-          user_share, user_sign     = Duse::Encryption.encrypt(user_private_key, user_public_key,   shares[1])
+          server_share, server_sign = Duse::Encryption.encrypt(user_private_key, server_user.public_key, shares[0])
+          user_share, user_sign     = Duse::Encryption.encrypt(user_private_key, current_user.public_key,   shares[1])
           part = {
             "server" => {"share" => server_share, "signature" => server_sign},
             "me"     => {"share" => user_share,   "signature" => user_sign},
