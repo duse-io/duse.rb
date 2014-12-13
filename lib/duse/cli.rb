@@ -1,6 +1,5 @@
 require 'stringio'
-require 'duse/client/entity'
-require 'duse/client/session'
+require 'duse'
 
 module Duse
   module CLI
@@ -8,6 +7,7 @@ module Duse
     autoload :ApiCommand, 'duse/cli/api_command'
     autoload :Config,     'duse/cli/config'
     autoload :Login,      'duse/cli/login'
+    autoload :Register,   'duse/cli/register'
     autoload :Share,      'duse/cli/share'
 
     extend self

@@ -8,11 +8,8 @@ module Duse
       def run
         username = terminal.ask('Username: ')
         password = terminal.ask('Password: ') { |q| q.echo = 'x' }
-        client = Duse::Client::Session.new uri: CLIConfig.uri
-        response = client.connection.post do |request|
-          request.url '/v1/users/token'
-          request.body = { username: username, password: password }.to_json
-        end
+        session = Duse::Client::Session.new uri: CLIConfig.uri
+        response = session.raw_post('/v1/users/token', { username: username, password: password })
         
         if response.status == 200
           Duse::CLIConfig.token = response.body['api_token']

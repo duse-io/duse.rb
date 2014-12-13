@@ -90,8 +90,8 @@ module Duse
           server_share, server_sign = Duse::Encryption.encrypt(@private_key, @server_user.public_key,  shares[0])
           user_share,   user_sign   = Duse::Encryption.encrypt(@private_key, @current_user.public_key, shares[1])
           part = [
-            {"user_id" => "server", "share" => server_share, "signature" => server_sign},
-            {"user_id" => "me"    , "share" => user_share,   "signature" => user_sign},
+            {"user_id" => "server", "content" => server_share, "signature" => server_sign},
+            {"user_id" => "me"    , "content" => user_share,   "signature" => user_sign},
           ]
           #shares[2..shares.length].each_with_index do |share, index|
           #  part["#{users[index]}"] = shares[index+2]
