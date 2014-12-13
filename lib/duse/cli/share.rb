@@ -12,7 +12,7 @@ module Duse
         secret_text = terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
-        client = Duse::Client::Session.new(CLIConfig.uri, CLIConfig.token)
+        client = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
         current_user = client.find_one(Duse::Client::User, 'me')
         server_user  = client.find_one(Duse::Client::User, 'server')
         private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
@@ -20,11 +20,7 @@ module Duse
         secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
 
         response = client.create(Duse::Client::Secret, secret_hash)
-        if response.status == 201
-          success 'Secret successfully created!'
-        else
-          error "Something went wrong. (#{response.status}, #{response.body})"
-        end
+        success 'Secret successfully created!'
       end
 
       private

@@ -10,9 +10,10 @@ module Duse
     class Session
       attr_reader :token, :uri
 
-      def initialize(uri, token)
-        @uri   = uri
-        @token = token
+      def initialize(options = {})
+        fail ArgumentError, 'Uri must be set' unless options[:uri]
+        @uri   = options[:uri]
+        @token = options[:token]
       end
 
       def find_one(entity, id)
@@ -31,7 +32,7 @@ module Duse
           request.body = hash.to_json
         end
         fail Exception, "#{response.status}: #{response.body}" unless response.status == 201
-        instance_from(entity, response.hash)
+        instance_from(entity, response.body)
       end
 
       def connection
