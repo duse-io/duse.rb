@@ -56,7 +56,15 @@ module Duse
       def instance_from(entity, hash)
         instance = entity.new
         entity.attributes.each do |attribute|
-          instance.public_send("#{attribute}=", hash[attribute])
+          if hash.has_key? attribute
+            value = hash[attribute]
+            if Entity::MAP.has_key? attribute
+              puts "nested #{attribute} objects!"
+              nested_entity = Entity::MAP[attribute]
+              value = hash[attribute].map { |e| instance_from(nested_entity, e) }
+            end
+            instance.public_send("#{attribute}=", value)
+          end
         end
         instance
       end

@@ -47,6 +47,7 @@ module Duse
 
         @attributes
       end
+      self.singleton_class.send :alias_method, :has, :attributes
 
       def set_attribute(name, value)
         attributes[name.to_s] = value
@@ -107,6 +108,8 @@ module Duse
 
     class Secret < Entity
       attributes :title, :required
+      has :users
+
       attr_accessor :secret_text
 
       one  :secret
