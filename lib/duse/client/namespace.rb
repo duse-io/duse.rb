@@ -20,7 +20,7 @@ module Duse
           session.create(type, params)
         end
 
-        def find_many(params)
+        def find_many(params = {})
           session.find_many(type, params)
         end
         alias_method :find_all, :find_many

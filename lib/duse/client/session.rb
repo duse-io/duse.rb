@@ -22,6 +22,12 @@ module Duse
         instance_from(entity, response.body)
       end
 
+      def find_many(entity, params = {})
+        response = raw_get("/v1/#{entity.base_path}")
+        fail Exception, "#{response.status}: #{response.body}" unless response.status == 200
+        instances_from(entity, response.body)
+      end
+
       def create(entity, hash)
         response = raw_post("/v1/#{entity.base_path}", hash)
         fail Exception, "#{response.status}: #{response.body}" unless response.status == 201
@@ -52,6 +58,10 @@ module Duse
       end
 
       private
+
+      def instances_from(entity, array)
+        array.map { |e| instance_from(entity, e) }
+      end
 
       def instance_from(entity, hash)
         instance = entity.new

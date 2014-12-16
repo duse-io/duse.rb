@@ -8,6 +8,7 @@ module Duse
     autoload :Config,     'duse/cli/config'
     autoload :Login,      'duse/cli/login'
     autoload :Register,   'duse/cli/register'
+    autoload :List,       'duse/cli/list'
     autoload :Share,      'duse/cli/share'
 
     extend self
