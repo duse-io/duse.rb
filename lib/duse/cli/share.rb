@@ -3,11 +3,14 @@ require 'duse/cli'
 require 'json'
 require 'openssl'
 require 'duse/encryption'
+require 'duse/cli/get_secret'
 
 module Duse
   module CLI
     class Share < ApiCommand
-      def run
+      subcommand :get, GetSecret
+
+      def run(arguments)
         title       = terminal.ask 'What do you want to call this secret? '
         secret_text = terminal.ask 'Secret to save: '
         users       = who_to_share_with
