@@ -7,6 +7,7 @@ gem 'faraday'
 gem 'faraday_middleware'
 
 group :test do
+  gem 'rake'
   gem 'rspec'
   gem 'fakefs', require: 'fakefs/safe'
 end
