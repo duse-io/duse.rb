@@ -69,7 +69,6 @@ module Duse
           if hash.has_key? attribute
             value = hash[attribute]
             if Entity::MAP.has_key? attribute
-              puts "nested #{attribute} objects!"
               nested_entity = Entity::MAP[attribute]
               value = hash[attribute].map { |e| instance_from(nested_entity, e) }
             end

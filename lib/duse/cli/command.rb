@@ -1,11 +1,14 @@
 require 'highline'
 require 'duse/cli_config'
+require 'duse/cli/parser'
 
 module Duse
   module CLI
     class Command
       attr_reader :output, :input
       attr_accessor :arguments, :force_interactive
+
+      extend Parser
 
       HighLine.color_scheme = HighLine::ColorScheme.new do |cs|
         cs[:command]   = [ :bold             ]
@@ -16,15 +19,20 @@ module Duse
         cs[:debug]     = [ :magenta          ]
       end
 
-      def initialize
+      def initialize(options)
         self.output      = $stdout
         self.input       = $stdin
         self.arguments ||= []
+        options.each do |key, value|
+          public_send("#{key}=", value) if respond_to? "#{key}="
+        end
+        @arguments ||= []
       end
 
       def parse(args)
-        parser = OptionParser.new
         arguments.concat(parser.parse(args))
+      rescue OptionParser::ParseError => e
+        error e.message
       end
 
       def execute
@@ -57,6 +65,14 @@ module Duse
 
       def self.skip(*names)
         names.each { |n| define_method(n) {} }
+      end
+
+      def self.subcommand(command, clazz)
+        subcommands[command.to_s] = clazz
+      end
+
+      def self.subcommands
+        @subcommands ||= {}
       end
 
       def config

@@ -14,9 +14,17 @@ module Duse
     extend self
 
     def run(*args)
-      args, opts = preparse(args)
-      name       = args.shift unless args.empty?
-      command    = command(name).new
+      args, opts    = preparse(args)
+      name          = args.shift unless args.empty?
+      command_class = command(name)
+      loop do
+        subcommand_name = args.shift
+        unless command_class.subcommands.key? subcommand_name
+          break
+        end
+        command_class = command_class.subcommands[subcommand_name]
+      end
+      command       = command_class.new(opts)
       command.parse(args)
       command.execute
     end
