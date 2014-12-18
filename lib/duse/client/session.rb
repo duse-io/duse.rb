@@ -7,6 +7,13 @@ require 'faraday_middleware'
 
 module Duse
   module Client
+    class Error < StandardError; end
+    class SSLError < Error; end
+    class NotLoggedIn < Error; end
+    class NotAuthorized < Error; end
+    class NotFound < Error; end
+    class ValidationFailed < Error; end
+
     class Session
       attr_reader :token, :uri
 
@@ -17,35 +24,49 @@ module Duse
       end
 
       def find_one(entity, id)
-        response = raw_get("/v1/#{entity.base_path}/#{id}")
-        fail Exception, "#{response.status}: #{response.body}" unless response.status == 200
-        instance_from(entity, response.body)
+        response_body = get("/v1/#{entity.base_path}/#{id}")
+        instance_from(entity, response_body)
       end
 
       def find_many(entity, params = {})
-        response = raw_get("/v1/#{entity.base_path}")
-        fail Exception, "#{response.status}: #{response.body}" unless response.status == 200
-        instances_from(entity, response.body)
+        response_body = get("/v1/#{entity.base_path}")
+        instances_from(entity, response_body)
       end
 
       def create(entity, hash)
-        response = raw_post("/v1/#{entity.base_path}", hash)
-        fail Exception, "#{response.status}: #{response.body}" unless response.status == 201
-        instance_from(entity, response.body)
+        response_body = post("/v1/#{entity.base_path}", hash)
+        instance_from(entity, response_body)
       end
 
-      def raw_get(url)
-        connection.get do |request|
-          request.url url
+      def get(*args)
+        raw(:get, *args)
+      end
+
+      def post(*args)
+        raw(:post, *args)
+      end
+
+      def delete(*args)
+        raw(:delete, *args)
+      end
+
+      def raw(verb, url, *args)
+        result = connection.public_send(verb, url, *args) do |request|
           request.headers['Authorization'] = token unless token.nil?
         end
-      end
 
-      def raw_post(url, hash)
-        connection.post do |request|
-          request.url url
-          request.headers['Authorization'] = token unless token.nil?
-          request.body = hash.to_json
+        case result.status
+        when 0             then raise SSLError, 'SSL error: could not verify peer'
+        when 200..299      then JSON.parse(result.body) rescue result.body
+        when 301, 303      then raw(:get, result.headers['Location'])
+        when 302, 307, 308 then raw(verb, result.headers['Location'])
+        when 401           then raise NotAuthorized,    'not authorized to access this resource'
+        when 403           then raise NotLoggedIn,      'not logged in'
+        when 404           then raise NotFound,         result.body
+        when 422           then raise ValidationFailed, result.body
+        when 400..499      then raise Error,            "%s: %p" % [result.status, result.body]
+        when 500..599      then raise Error,            "server error (%s: %p)" % [result.status, result.body]
+        else raise Error, "unhandled status code #{result.status}"
         end
       end
 

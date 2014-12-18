@@ -7,6 +7,8 @@ module Duse
         ensure_uri_is_set
         authenticate
         run *arguments
+      rescue Duse::Client::NotFound
+        error 'Could not be found'
       end
 
       private
