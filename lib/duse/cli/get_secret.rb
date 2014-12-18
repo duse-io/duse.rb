@@ -7,8 +7,9 @@ require 'duse/encryption'
 module Duse
   module CLI
     class GetSecret < ApiCommand
-      def run
-        secret_id = terminal.ask('Secret to retrieve: ').to_i
+      def run(*arguments)
+        secret_id = arguments.shift unless arguments.empty?
+        secret_id ||= terminal.ask('Secret to retrieve: ').to_i
 
         client      = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
         secret      = client.find_one(Duse::Client::Secret, secret_id)
