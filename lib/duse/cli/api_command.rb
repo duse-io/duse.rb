@@ -17,6 +17,10 @@ module Duse
 
       def authenticate
         error 'not logged in, please run "duse login"' if config.token.nil?
+        Duse.session = Duse::Client::Session.new(
+          uri:   CLIConfig.uri,
+          token: CLIConfig.token
+        )
       end
     end
   end

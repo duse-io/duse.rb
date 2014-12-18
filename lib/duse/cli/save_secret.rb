@@ -7,19 +7,18 @@ require 'duse/encryption'
 module Duse
   module CLI
     class SaveSecret < ApiCommand
-      def run(arguments)
+      def run(*arguments)
         title       = terminal.ask 'What do you want to call this secret? '
         secret_text = terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
-        client = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
-        current_user = client.find_one(Duse::Client::User, 'me')
-        server_user  = client.find_one(Duse::Client::User, 'server')
+        current_user = Duse::User.find('me')
+        server_user  = Duse::User.find('server')
         private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
         secret       = Duse::Client::Secret.new title: title, required: 2, secret_text: secret_text
         secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
 
-        response = client.create(Duse::Client::Secret, secret_hash)
+        response = Duse::Secret.create secret_hash
         success 'Secret successfully created!'
       end
 

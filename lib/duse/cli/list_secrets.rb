@@ -4,7 +4,6 @@ module Duse
   module CLI
     class ListSecrets < ApiCommand
       def run
-        Duse.session = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
         secrets = Duse::Secret.all
         number  = secrets.length + 1
         secrets.each_with_index do |s, i|
