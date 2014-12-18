@@ -3,27 +3,19 @@ require 'duse/cli'
 require 'json'
 require 'openssl'
 require 'duse/encryption'
+require 'duse/cli/save_secret'
 require 'duse/cli/get_secret'
+require 'duse/cli/list_secrets'
 
 module Duse
   module CLI
-    class Share < ApiCommand
-      subcommand :get, GetSecret
+    class Secret < ApiCommand
+      subcommand :save, SaveSecret
+      subcommand :get,  GetSecret
+      subcommand :list, ListSecrets
 
-      def run(arguments)
-        title       = terminal.ask 'What do you want to call this secret? '
-        secret_text = terminal.ask 'Secret to save: '
-        users       = who_to_share_with
-
-        client = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
-        current_user = client.find_one(Duse::Client::User, 'me')
-        server_user  = client.find_one(Duse::Client::User, 'server')
-        private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
-        secret       = Duse::Client::Secret.new title: title, required: 2, secret_text: secret_text
-        secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
-
-        response = client.create(Duse::Client::Secret, secret_hash)
-        success 'Secret successfully created!'
+      def run(*arguments)
+        say "Display help text for subcommands. TBD."
       end
 
       private

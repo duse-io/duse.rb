@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class List < ApiCommand
+    class ListSecrets < ApiCommand
       def run
         Duse.session = Duse::Client::Session.new(uri: CLIConfig.uri, token: CLIConfig.token)
         secrets = Duse::Secret.all

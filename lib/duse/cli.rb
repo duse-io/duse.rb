@@ -8,8 +8,7 @@ module Duse
     autoload :Config,     'duse/cli/config'
     autoload :Login,      'duse/cli/login'
     autoload :Register,   'duse/cli/register'
-    autoload :List,       'duse/cli/list'
-    autoload :Share,      'duse/cli/share'
+    autoload :Secret,     'duse/cli/secret'
 
     extend self
 
@@ -18,13 +17,12 @@ module Duse
       name          = args.shift unless args.empty?
       command_class = command(name)
       loop do
-        subcommand_name = args.shift
-        unless command_class.subcommands.key? subcommand_name
+        unless command_class.subcommands.key? args[0]
           break
         end
-        command_class = command_class.subcommands[subcommand_name]
+        command_class = command_class.subcommands[args.shift]
       end
-      command       = command_class.new(opts)
+      command = command_class.new(opts)
       command.parse(args)
       command.execute
     end
