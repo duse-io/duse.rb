@@ -74,8 +74,12 @@ module Duse
         @connection ||= Faraday.new url: uri do |faraday|
           faraday.request  :json
           faraday.response :json, content_type: /\bjson$/
-          faraday.adapter  Faraday.default_adapter
+          faraday.adapter  *faraday_adapter
         end
+      end
+
+      def faraday_adapter
+        Faraday.default_adapter
       end
 
       private
