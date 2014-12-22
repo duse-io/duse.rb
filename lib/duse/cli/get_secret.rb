@@ -14,7 +14,8 @@ module Duse
         secret      = Duse::Secret.find secret_id
         private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
 
-        puts "Name: #{secret.title}"
+        puts "Name:   #{secret.title}"
+        puts "Secret: #{secret.secret_text}"
       end
     end
   end

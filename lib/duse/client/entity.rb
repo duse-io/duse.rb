@@ -107,13 +107,28 @@ module Duse
     end
 
     class Secret < Entity
-      attributes :title, :required
+      attributes :title, :required, :shares
       has :users
 
-      attr_accessor :secret_text
+      attr_writer :secret_text
 
       one  :secret
       many :secrets
+
+      def secret_text
+        @secret_text ||= shares.inject('') do |result, shares|
+          result << SecretSharing.recover_secret(shares)
+        end
+      end
+
+      def shares
+        private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
+        load_attribute('shares').map do |part|
+          part.map do |share|
+            Duse::Encryption.decrypt private_key, share
+          end
+        end
+      end
     end
 
     class User < Entity
