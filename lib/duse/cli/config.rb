@@ -5,7 +5,7 @@ module Duse
     class Config < Command
       def run
         uri = terminal.ask('Uri to your duse instance: ').to_s
-        CLIConfig.uri = uri
+        config.uri = uri
       rescue ArgumentError
         error 'Not an uri'
       end

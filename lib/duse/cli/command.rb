@@ -1,5 +1,5 @@
 require 'highline'
-require 'duse/cli_config'
+require 'duse/cli/cli_config'
 require 'duse/cli/parser'
 
 module Duse
@@ -76,7 +76,7 @@ module Duse
       end
 
       def config
-        Duse::CLIConfig
+        CLI.config
       end
 
       def warn(message)

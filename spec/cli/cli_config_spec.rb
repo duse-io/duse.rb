@@ -1,4 +1,4 @@
-require 'duse/cli_config'
+require 'duse/cli/cli_config'
 require 'fileutils'
 require 'fakefs/spec_helpers'
 

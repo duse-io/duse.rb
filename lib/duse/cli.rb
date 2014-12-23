@@ -1,5 +1,6 @@
 require 'stringio'
 require 'duse'
+require 'duse/cli/cli_config'
 
 module Duse
   module CLI
@@ -49,6 +50,10 @@ module Duse
     ensure
       $stderr = stderr if stderr
       $stdout = stdout if stdout
+    end
+
+    def config
+      CLIConfig
     end
 
     private

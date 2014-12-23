@@ -8,7 +8,7 @@ describe Duse::CLI::Config do
     )
   end
 
-  it 'should handle a false uri correctly' do
+  it 'should process a correct uri' do
     FakeFS do
       FileUtils.mkdir_p(File.dirname(Duse::CLIConfig.config_file))
       run = run_cli('config') { |i| i.puts('https://duse.io/') }

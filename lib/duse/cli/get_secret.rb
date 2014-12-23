@@ -15,7 +15,7 @@ module Duse
         private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
 
         puts "Name:   #{secret.title}"
-        puts "Secret: #{secret.secret_text(private_key)}"
+        puts "Secret: #{secret.decrypt(private_key)}"
       end
     end
   end
