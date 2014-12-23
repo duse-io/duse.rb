@@ -54,17 +54,8 @@ module Duse
       end
 
       def load_attribute(name)
-        session.reload(self) if missing? name
+        #session.reload(self) if missing? name
         attributes[name.to_s]
-      end
-
-      def missing?(key)
-        return false unless include? key
-        !attributes.include?(key.to_s)
-      end
-
-      def include?(key)
-        attributes.include? key or attribute_names.include? key.to_s
       end
     end
 
@@ -84,7 +75,9 @@ module Duse
       end
 
       def parts_from_secret
-        secret_text_in_slices_of(50).map do |secret_part|
+        # sliced of 18 is a result of trial & error, if it's too large then
+        # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
+        secret_text_in_slices_of(18).map do |secret_part|
           # the selected users + current user + server
           threshold = @users.length+2
           shares = SecretSharing.split_secret(secret_part, 2, threshold)
@@ -110,19 +103,19 @@ module Duse
       attributes :title, :required, :shares
       has :users
 
-      attr_writer :secret_text
+      attr_accessor :secret_text
 
       one  :secret
       many :secrets
 
-      def secret_text
-        @secret_text ||= shares.inject('') do |result, shares|
+      def decrypt(private_key)
+        @secret_text ||= shares(private_key).inject('') do |result, shares|
           result << SecretSharing.recover_secret(shares)
         end
       end
 
-      def shares
-        private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
+      def shares(private_key)
+        return nil if load_attribute('shares').nil?
         load_attribute('shares').map do |part|
           part.map do |share|
             Duse::Encryption.decrypt private_key, share
