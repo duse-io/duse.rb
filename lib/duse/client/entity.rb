@@ -1,17 +1,7 @@
 module Duse
   module Client
     class Entity
-      attr_reader :session, :attributes
-      alias_method :to_h, :attributes
-
       MAP = {}
-
-      def initialize(options = {})
-        @attributes = {}
-        options.each do |key, value|
-          self.send "#{key.to_s}=", value
-        end
-      end
 
       def self.base_path
         many
@@ -37,7 +27,6 @@ module Duse
         dummy = self.new
         list.each do |name|
           name = name.to_s
-          fail "can't call an attribute id" if name == "id"
 
           @attributes << name
           define_method(name) { load_attribute(name) } unless dummy.respond_to? name
@@ -49,13 +38,46 @@ module Duse
       end
       self.singleton_class.send :alias_method, :has, :attributes
 
+      def self.cast_id(id)
+        Integer(id)
+      end
+
+      def self.id?(object)
+        object.is_a? Integer
+      end
+
+      def self.id_field(key = nil)
+        @id_field = key.to_s if key
+        @id_field
+      end
+
+      attr_accessor :session
+      attr_reader :attributes
+      alias_method :to_h, :attributes
+
+      def initialize(options = {})
+        @attributes = {}
+        options.each do |key, value|
+          self.send("#{key.to_s}=", value) if respond_to? "#{key.to_s}="
+        end
+      end
+
       def set_attribute(name, value)
         attributes[name.to_s] = value
       end
 
       def load_attribute(name)
-        #session.reload(self) if missing? name
+        session.reload(self) if missing? name
         attributes[name.to_s]
+      end
+
+      def missing?(name)
+        return false unless self.class.attributes.include? name
+        !attributes.key?(name)
+      end
+
+      def session
+        Duse.session
       end
     end
 
@@ -87,9 +109,11 @@ module Duse
             {"user_id" => "server", "content" => server_share, "signature" => server_sign},
             {"user_id" => "me"    , "content" => user_share,   "signature" => user_sign},
           ]
-          #shares[2..shares.length].each_with_index do |share, index|
-          #  part["#{users[index]}"] = shares[index+2]
-          #end
+          shares[2..shares.length].each_with_index do |share, index|
+            user = @users[index]
+            content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, shares[index+2])
+            part << {"user_id" => user.id, "content" => content, "signature" => signature}
+          end
           part
         end
       end
@@ -100,11 +124,12 @@ module Duse
     end
 
     class Secret < Entity
-      attributes :title, :required, :shares
+      attributes :id, :title, :required, :shares
       has :users
 
       attr_accessor :secret_text
 
+      id_field :id
       one  :secret
       many :secrets
 
@@ -125,8 +150,9 @@ module Duse
     end
 
     class User < Entity
-      attributes :username, :public_key
+      attributes :id, :username, :public_key
 
+      id_field :id
       one  :user
       many :users
 

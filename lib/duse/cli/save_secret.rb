@@ -25,20 +25,21 @@ module Duse
       private
 
       def who_to_share_with
-        user_ids = []
+        selected_users = []
         wants_to_share = terminal.agree 'Do you want to share this secret?[Y/n] '
         if(wants_to_share)
           terminal.say 'Who do you want to share this secret with?'
-          users = [{id: 1, username: 'adracus'}, {id: 2, username: 'flower-pot'}]
+          users = Duse::User.all
           users.each_with_index do |user, index|
-            terminal.say "#{index+1}: #{user[:username]}"
+            terminal.say "#{index+1}: #{user.username}"
           end
           user_selection = terminal.ask 'Separate with commas, to select multiple'
-          comma_separated_int_list(user_selection).each do |index|
-            user_ids << users[index-1][:id] if users[index-1]
+          user_selection = comma_separated_int_list(user_selection)
+          user_selection.each do |index|
+            selected_users << users[index-1] if users[index-1]
           end
         end
-        user_ids
+        selected_users
       end
 
       def comma_separated_int_list(string)

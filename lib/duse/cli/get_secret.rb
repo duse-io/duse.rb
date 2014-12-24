@@ -16,6 +16,8 @@ module Duse
 
         puts "Name:   #{secret.title}"
         puts "Secret: #{secret.decrypt(private_key)}"
+      rescue Duse::Client::Error => e
+        error e.message
       end
     end
   end
