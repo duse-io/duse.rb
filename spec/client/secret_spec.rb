@@ -12,7 +12,7 @@ describe Duse::Client::Secret do
     secret = secrets.first
     expect(secret.title).to eq 'test'
     expect(secret.required).to eq 2
-    expect(secret.load_attribute('shares')).to eq nil
+    expect(secret.attributes['shares']).to eq nil
   end
 
   it 'should load a single secret with shares' do
