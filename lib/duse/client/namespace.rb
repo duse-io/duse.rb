@@ -11,13 +11,17 @@ module Duse
           @namespace, @type = namespace, type
         end
 
-        def find_one(id = nil)
+        def find_one(id)
           session.find_one(type, id)
         end
         alias_method :find, :find_one
 
         def create(params)
           session.create(type, params)
+        end
+
+        def delete(id)
+          session.delete_one(type, id)
         end
 
         def find_many(params = {})

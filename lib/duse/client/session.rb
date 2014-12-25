@@ -38,6 +38,10 @@ module Duse
         instance_from(entity, response_body)
       end
 
+      def delete_one(entity, id)
+        delete("/v1/#{entity.base_path}/#{id}")
+      end
+
       def reload(instance)
         instance.attributes.merge! find_one(instance.class, instance.id).attributes
       end
