@@ -101,7 +101,7 @@ module Duse
         # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
         secret_text_in_slices_of(18).map do |secret_part|
           # the selected users + current user + server
-          threshold = @users.length+2
+          threshold = 2
           shares = SecretSharing.split_secret(secret_part, 2, threshold)
           server_share, server_sign = Duse::Encryption.encrypt(@private_key, @server_user.public_key,  shares[0])
           user_share,   user_sign   = Duse::Encryption.encrypt(@private_key, @current_user.public_key, shares[1])
