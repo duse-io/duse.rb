@@ -17,6 +17,16 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+unless ENV['CI']
+  require 'simplecov'
+  SimpleCov.start
+end
+
+if ENV['CI']
+  require 'coveralls'
+  Coveralls.wear!
+end
+
 require 'support/helpers'
 require 'support/fake_api'
 
