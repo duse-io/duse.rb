@@ -95,6 +95,10 @@ module Duse
           }.to_json
         end
 
+        delete '/v1/secrets/1' do
+          status 204
+        end
+
         post '/v1/secrets' do
           {
             'id' => 1,
