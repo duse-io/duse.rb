@@ -65,4 +65,16 @@ describe Duse::Client::User do
     expect(user.username).to eq 'adracus'
     expect(user.public_key.to_s).to eq public_key
   end
+
+  it 'should reload the entity when necessary' do
+    Duse.session = Duse::Client::Session.new uri: 'https://example.com/'
+
+    users = Duse::User.all
+    user  = users.last
+
+    expect(users.length).to eq 3
+    expect(user.attributes['public_key']).to be nil
+    expect(user.username).to eq 'adracus'
+    expect(user.public_key.to_s).to eq "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTF2gEqXRy2hJ6+xjj6IbzAgHG\nHvnLNnZlwkYm0ZV89uiPxL9mKYNiW4KA1azZlvJZviTF4218WAwO1IGIH+PppdXF\nIK8vmB6IIaQcO4UTjSA6ZTn8Uwf1fwS4EAuL3Zr3IVdjVYQ4+/ZNtmSyVMmo+7zP\nyOa31hUhDNYrJO1iEQIDAQAB\n-----END PUBLIC KEY-----\n"
+  end
 end

@@ -29,7 +29,7 @@ describe Duse::Client::Secret do
   it 'should be able to delete an existing secret' do
     Duse.session = Duse::Client::Session.new uri: 'https://example.com/'
 
-    secret = Duse::Secret.delete 1
+    Duse::Secret.delete 1
   end
 
   it 'correctly build a secret after creating it' do
