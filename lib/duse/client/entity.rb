@@ -76,6 +76,10 @@ module Duse
         !attributes.key?(name)
       end
 
+      def new?
+        attributes[self.class.id_field].nil?
+      end
+
       def session
         Duse.session
       end
@@ -101,8 +105,8 @@ module Duse
         # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
         secret_text_in_slices_of(18).map do |secret_part|
           # the selected users + current user + server
-          threshold = 2
-          shares = SecretSharing.split_secret(secret_part, 2, threshold)
+          number_of_shares = 2 + @users.length
+          shares = SecretSharing.split_secret(secret_part, 2, number_of_shares)
           server_share, server_sign = Duse::Encryption.encrypt(@private_key, @server_user.public_key,  shares[0])
           user_share,   user_sign   = Duse::Encryption.encrypt(@private_key, @current_user.public_key, shares[1])
           part = [
