@@ -6,3 +6,5 @@ Duse Client
 ===========
 
 A duse command line client written in ruby.
+
+This implementation was heavily inspired by [travis-ci/travis.rb](https://github.com/travis-ci/travis.rb)
