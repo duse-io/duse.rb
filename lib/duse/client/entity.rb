@@ -67,6 +67,14 @@ module Duse
         attributes.merge! curry.find_one(id).attributes
       end
 
+      def save
+        fail NotImplementedError, 'Save will be the "update" action, once the api supports it'
+      end
+
+      def delete
+        curry.delete id
+      end
+
       def missing?(name)
         return false unless self.class.attributes.include? name
         !attributes.key?(name)
