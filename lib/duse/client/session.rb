@@ -42,10 +42,6 @@ module Duse
         delete("/v1/#{entity.base_path}/#{id}")
       end
 
-      def reload(instance)
-        instance.attributes.merge! find_one(instance.class, instance.id).attributes
-      end
-
       def get(*args)
         raw(:get, *args)
       end

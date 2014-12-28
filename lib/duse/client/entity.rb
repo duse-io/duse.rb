@@ -43,7 +43,7 @@ module Duse
         @id_field
       end
 
-      attr_accessor :session
+      attr_accessor :curry
       attr_reader :attributes
       alias_method :to_h, :attributes
 
@@ -59,21 +59,17 @@ module Duse
       end
 
       def load_attribute(name)
-        session.reload(self) if missing? name
+        reload if missing? name
         attributes[name.to_s]
+      end
+
+      def reload
+        attributes.merge! curry.find_one(id).attributes
       end
 
       def missing?(name)
         return false unless self.class.attributes.include? name
         !attributes.key?(name)
-      end
-
-      def new?
-        attributes[self.class.id_field].nil?
-      end
-
-      def session
-        Duse.session
       end
     end
 
