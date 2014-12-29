@@ -92,6 +92,10 @@ module Duse
           }.to_json
         end
 
+        get '/v1/secrets/:id' do
+          status 404
+        end
+
         delete '/v1/secrets/1' do
           status 204
         end

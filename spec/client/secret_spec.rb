@@ -26,6 +26,10 @@ describe Duse::Client::Secret do
     expect(secret.decrypt(private_key)).to eq 'test'
   end
 
+  it 'should raise an exception when trying to get a non existant secret' do
+    expect { Duse::Secret.find 2 }.to raise_error Duse::Client::NotFound
+  end
+
   it 'should be able to delete an existing secret' do
     Duse.session = Duse::Client::Session.new uri: 'https://example.com/'
 

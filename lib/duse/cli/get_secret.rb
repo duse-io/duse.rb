@@ -14,6 +14,7 @@ module Duse
         secret      = Duse::Secret.find secret_id
         private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
 
+        puts ""
         puts "Name:   #{secret.title}"
         puts "Secret: #{secret.decrypt(private_key)}"
       rescue Duse::Client::Error => e
