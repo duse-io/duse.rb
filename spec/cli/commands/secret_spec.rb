@@ -48,4 +48,29 @@ describe Duse::CLI::Secret do
       "not found\n"
     )
   end
+
+  it 'should list successfully' do
+    expect(run_cli('secret', 'list').success?).to be true
+  end
+
+  it 'should delete successfully' do
+    expect(run_cli('secret', 'delete', '1').success?).to be true
+  end
+
+  it 'should save successfully' do
+    expect(run_cli('secret', 'save') do |i|
+      i.puts 'test'
+      i.puts 'test'
+      i.puts 'n'
+    end.success?).to be true
+  end
+
+  it 'should save successfully with multiple users' do
+    expect(run_cli('secret', 'save') do |i|
+      i.puts 'test'
+      i.puts 'test'
+      i.puts 'Y'
+      i.puts '3'
+    end.success?).to be true
+  end
 end
