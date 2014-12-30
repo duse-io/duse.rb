@@ -18,6 +18,15 @@ module Duse
           env['HTTP_AUTHORIZATION'] == 'token'
         end
 
+        post '/v1/users/token' do
+          payload = JSON.parse request.body.read
+          status 401
+          if payload['username'] == 'flower-pot' && payload['password'] == 'Passw0rd!'
+            status 200
+            {api_token: 'token'}.to_json
+          end
+        end
+
         get '/v1/users' do
           [{
             'id' => 1,
