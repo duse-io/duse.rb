@@ -7,8 +7,16 @@ module Duse
         ensure_uri_is_set
         authenticate
         run *arguments
-      rescue Duse::Client::NotFound
-        error 'Could not be found'
+      rescue Duse::Client::NotFound => e
+        error e.message
+      rescue Duse::Client::ValidationFailed => e
+        begin
+          message = JSON.parse e.message
+          message = message['message'].join("\n") if message.is_a? Hash
+          error message
+        rescue JSON::ParserError => e
+          error 'Parsing error'
+        end
       end
 
       private

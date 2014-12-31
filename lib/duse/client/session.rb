@@ -67,7 +67,7 @@ module Duse
         when 401           then raise NotLoggedIn,      'not logged in'
         when 403           then raise NotAuthorized,    'not authorized to access this resource'
         when 404           then raise NotFound,         'not found'
-        when 422           then raise ValidationFailed, result.body
+        when 422           then raise ValidationFailed, result.body.to_json
         when 400..499      then raise Error,            "%s: %p" % [result.status, result.body]
         when 500..599      then raise Error,            "server error (%s: %p)" % [result.status, result.body]
         else raise Error, "unhandled status code #{result.status}"
