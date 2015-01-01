@@ -115,6 +115,44 @@ module Duse
       def say(data, format = nil, style = nil)
         terminal.say format(data, format, style)
       end
+
+      def self.command_name
+        name[/[^:]*$/].split(/(?=[A-Z])/).map(&:downcase).join('-')
+      end
+
+      def command_name
+        self.class.command_name
+      end
+
+      def self.description(description = nil)
+        @description = description if description
+        @description ||= ""
+      end
+
+      def help(info = "")
+        parser.banner = usage
+        self.class.description.sub(/./) { |c| c.upcase } + ".\n" + info + parser.to_s
+      end
+
+      def usage
+        "Usage: " << color(usage_for(command_name, :run), :command)
+      end
+
+      def usage_for(prefix, method)
+        usage = "travis #{prefix}"
+        method = method(method)
+        if method.respond_to? :parameters
+          method.parameters.each do |type, name|
+            name = name.upcase
+            name = "[#{name}]"   if type == :opt
+            name = "[#{name}..]" if type == :rest
+            usage << " #{name}"
+          end
+        elsif method.arity != 0
+          usage << " ..."
+        end
+        usage << " [OPTIONS]"
+      end
     end
   end
 end

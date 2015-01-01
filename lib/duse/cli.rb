@@ -6,6 +6,7 @@ module Duse
   module CLI
     autoload :Command,    'duse/cli/command'
     autoload :ApiCommand, 'duse/cli/api_command'
+    autoload :Help,       'duse/cli/help'
     autoload :Config,     'duse/cli/config'
     autoload :Login,      'duse/cli/login'
     autoload :Register,   'duse/cli/register'
