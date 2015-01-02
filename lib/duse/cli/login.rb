@@ -3,6 +3,8 @@ require 'duse/cli'
 module Duse
   module CLI
     class Login < ApiCommand
+      description 'login to access and save secrets'
+
       skip :authenticate
 
       def run

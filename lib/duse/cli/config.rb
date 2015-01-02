@@ -3,6 +3,8 @@ require 'duse/cli'
 module Duse
   module CLI
     class Config < Command
+      description 'configure the client'
+
       def run
         uri = terminal.ask('Uri to your duse instance: ').to_s
         config.uri = uri

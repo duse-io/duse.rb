@@ -11,8 +11,10 @@ module Duse
       subcommand :list, ListSecrets
       subcommand :delete, DeleteSecret
 
+      description 'save, retrieve and delete secrets'
+
       def run(*arguments)
-        say "Display help text for subcommands. TBD."
+        say help
       end
     end
   end

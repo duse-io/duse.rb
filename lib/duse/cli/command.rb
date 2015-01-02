@@ -19,7 +19,7 @@ module Duse
         cs[:debug]     = [ :magenta          ]
       end
 
-      def initialize(options)
+      def initialize(options = {})
         self.output      = $stdout
         self.input       = $stdin
         self.arguments ||= []

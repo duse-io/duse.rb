@@ -3,6 +3,8 @@ require 'duse/cli'
 module Duse
   module CLI
     class Register < ApiCommand
+      description 'register a new account'
+
       skip :authenticate
 
       def run
