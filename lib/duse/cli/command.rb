@@ -75,6 +75,10 @@ module Duse
         @subcommands ||= {}
       end
 
+      def self.has_subcommands?
+        !@subcommands.empty?
+      end
+
       def config
         CLI.config
       end
@@ -130,8 +134,16 @@ module Duse
       end
 
       def help(info = "")
+        return help_subcommands unless self.class.subcommands.empty?
         parser.banner = usage
         self.class.description.sub(/./) { |c| c.upcase } + ".\n" + info + parser.to_s
+      end
+
+      def help_subcommands
+        result = "Usage: travis #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
+        self.class.subcommands.each { |command_name, command_class| result << "\t#{color(command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
+        result << "\nrun `#$0 help #{command_name} COMMAND` for more infos"
+        result
       end
 
       def usage

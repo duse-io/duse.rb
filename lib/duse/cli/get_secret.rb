@@ -7,6 +7,8 @@ require 'duse/encryption'
 module Duse
   module CLI
     class GetSecret < ApiCommand
+      description 'Retrieve a secret'
+
       def run(*arguments)
         secret_id = arguments.shift unless arguments.empty?
         secret_id ||= terminal.ask('Secret to retrieve: ').to_i
@@ -19,6 +21,10 @@ module Duse
         puts "Secret: #{secret.decrypt(private_key)}"
       rescue Duse::Client::Error => e
         error e.message
+      end
+
+      def command_name
+        'secret get'
       end
     end
   end

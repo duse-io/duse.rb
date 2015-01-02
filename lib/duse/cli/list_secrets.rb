@@ -3,6 +3,8 @@ require 'duse/cli'
 module Duse
   module CLI
     class ListSecrets < ApiCommand
+      description 'List all secrets you have access to'
+
       def run
         secrets = Duse::Secret.all
         number  = secrets.length + 1
@@ -13,6 +15,10 @@ module Duse
           say 'You have not yet saved any secrets, ' \
             'you can do so with "duse secret save".'
         end
+      end
+
+      def command_name
+        'secret list'
       end
     end
   end

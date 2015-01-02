@@ -5,9 +5,16 @@ module Duse
     class Help < Command
       description "helps you out when in dire need of information"
 
-      def run(command = nil)
-        if command
-          say CLI.command(command).new.help
+      def run(*args)
+        unless args.empty?
+          command_class = CLI.command(args.shift)
+          loop do
+            unless command_class.subcommands.key? args.first
+              break
+            end
+            command_class = command_class.subcommands[args.shift]
+          end
+          say command_class.new.help
         else
           say "Usage: travis COMMAND ...\n\nAvailable commands:\n\n"
           commands.each { |c| say "\t#{color(c.command_name, :command).ljust(22)} #{color(c.description, :info)}" }

@@ -7,6 +7,8 @@ require 'duse/encryption'
 module Duse
   module CLI
     class SaveSecret < ApiCommand
+      description 'Save a new secret'
+
       def run(*arguments)
         title       = terminal.ask 'What do you want to call this secret? '
         secret_text = terminal.ask 'Secret to save: '
@@ -44,6 +46,10 @@ module Duse
 
       def comma_separated_int_list(string)
         string.split(',').map(&:strip).delete_if(&:empty?).map(&:to_i)
+      end
+
+      def command_name
+        'secret save'
       end
     end
   end
