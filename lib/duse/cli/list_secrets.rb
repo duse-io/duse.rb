@@ -17,8 +17,8 @@ module Duse
         end
       end
 
-      def command_name
-        'secret list'
+      def self.command_name
+        'list'
       end
     end
   end

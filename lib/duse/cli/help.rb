@@ -3,7 +3,7 @@ require 'duse/cli'
 module Duse
   module CLI
     class Help < Command
-      description "helps you out when in dire need of information"
+      description "Displays help messages, such as this one"
 
       def run(*args)
         unless args.empty?

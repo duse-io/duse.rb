@@ -31,6 +31,10 @@ describe Duse::CLI::Secret do
     end
   end
 
+  it 'should build the full command correctly' do
+    expect(Duse::CLI::GetSecret.full_command).to eq 'secret get'
+  end
+
   it 'should take the secret from the cli call' do
     expect(run_cli('secret', 'get', '1').out).to eq(
       "\nName:   test\nSecret: test\n"

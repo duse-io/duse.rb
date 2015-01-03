@@ -14,8 +14,8 @@ module Duse
         error e.message
       end
 
-      def command_name
-        'secret delete'
+      def self.command_name
+        'delete'
       end
     end
   end

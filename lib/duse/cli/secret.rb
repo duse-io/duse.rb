@@ -11,7 +11,7 @@ module Duse
       subcommand :list, ListSecrets
       subcommand :delete, DeleteSecret
 
-      description 'save, retrieve and delete secrets'
+      description 'Save, retrieve and delete secrets'
 
       def run(*arguments)
         say help

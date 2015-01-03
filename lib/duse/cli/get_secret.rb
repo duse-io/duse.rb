@@ -23,8 +23,8 @@ module Duse
         error e.message
       end
 
-      def command_name
-        'secret get'
+      def self.command_name
+        'get'
       end
     end
   end

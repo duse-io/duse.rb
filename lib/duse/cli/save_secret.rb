@@ -48,8 +48,8 @@ module Duse
         string.split(',').map(&:strip).delete_if(&:empty?).map(&:to_i)
       end
 
-      def command_name
-        'secret save'
+      def self.command_name
+        'save'
       end
     end
   end

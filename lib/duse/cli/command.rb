@@ -67,8 +67,21 @@ module Duse
         names.each { |n| define_method(n) {} }
       end
 
-      def self.subcommand(command, clazz)
-        subcommands[command.to_s] = clazz
+      def self.super_command=(command_class)
+        @super_command = command_class
+      end
+
+      def self.has_super_command?
+        !@super_command.nil?
+      end
+
+      def self.super_command
+        @super_command
+      end
+
+      def self.subcommand(command, command_class)
+        command_class.super_command = self
+        subcommands[command.to_s] = command_class
       end
 
       def self.subcommands
@@ -120,6 +133,15 @@ module Duse
         terminal.say format(data, format, style)
       end
 
+      def self.full_command
+        return "#{super_command.full_command} #{command_name}" if has_super_command?
+        command_name
+      end
+
+      def full_command
+        self.class.full_command
+      end
+
       def self.command_name
         name[/[^:]*$/].split(/(?=[A-Z])/).map(&:downcase).join('-')
       end
@@ -140,14 +162,15 @@ module Duse
       end
 
       def help_subcommands
-        result = "Usage: travis #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
+        result = "#{self.class.description}\n\n"
+        result << "Usage: travis #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
         self.class.subcommands.each { |command_name, command_class| result << "\t#{color(command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
         result << "\nrun `#$0 help #{command_name} COMMAND` for more infos"
         result
       end
 
       def usage
-        "Usage: " << color(usage_for(command_name, :run), :command)
+        "Usage: " << color(usage_for(full_command, :run), :command)
       end
 
       def usage_for(prefix, method)
