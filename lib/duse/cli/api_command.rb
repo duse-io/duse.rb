@@ -7,8 +7,6 @@ module Duse
         ensure_uri_is_set
         authenticate
         run *arguments
-      rescue Duse::Client::NotFound => e
-        error e.message
       rescue Duse::Client::ValidationFailed => e
         begin
           message = JSON.parse e.message
@@ -17,6 +15,10 @@ module Duse
         rescue JSON::ParserError => e
           error 'Parsing error'
         end
+      rescue Duse::Client::Error => e
+        error e.message
+      rescue Interrupt
+        say "\naborted!"
       end
 
       private
