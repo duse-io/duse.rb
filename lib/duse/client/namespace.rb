@@ -17,6 +17,7 @@ module Duse
           entity
         end
         alias_method :find, :find_one
+        alias_method :get, :find_one
 
         def create(params)
           entity = session.create(type, params)
