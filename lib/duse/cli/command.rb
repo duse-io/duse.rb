@@ -163,7 +163,7 @@ module Duse
 
       def help_subcommands
         result = "#{self.class.description}\n\n"
-        result << "Usage: travis #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
+        result << "Usage: duse #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
         self.class.subcommands.each { |command_name, command_class| result << "\t#{color(command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
         result << "\nrun `#$0 help #{command_name} COMMAND` for more infos"
         result
@@ -174,7 +174,7 @@ module Duse
       end
 
       def usage_for(prefix, method)
-        usage = "travis #{prefix}"
+        usage = "duse #{prefix}"
         method = method(method)
         if method.respond_to? :parameters
           method.parameters.each do |type, name|

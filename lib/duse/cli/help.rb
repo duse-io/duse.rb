@@ -16,7 +16,7 @@ module Duse
           end
           say command_class.new.help
         else
-          say "Usage: travis COMMAND ...\n\nAvailable commands:\n\n"
+          say "Usage: duse COMMAND ...\n\nAvailable commands:\n\n"
           commands.each { |c| say "\t#{color(c.command_name, :command).ljust(22)} #{color(c.description, :info)}" }
           say "\nrun `#$0 help COMMAND` for more infos"
         end
