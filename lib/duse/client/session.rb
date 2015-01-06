@@ -15,10 +15,9 @@ module Duse
     class ValidationFailed < Error; end
 
     class Session
-      attr_reader :token, :uri
+      attr_accessor :token, :uri
 
       def initialize(options = {})
-        fail ArgumentError, 'Uri must be set' unless options[:uri]
         @uri   = options[:uri]
         @token = options[:token]
       end
@@ -55,6 +54,8 @@ module Duse
       end
 
       def raw(verb, url, *args)
+        fail ArgumentError, 'Uri must be set' if uri.nil?
+
         result = connection.public_send(verb, url, *args) do |request|
           request.headers['Authorization'] = token unless token.nil?
         end
