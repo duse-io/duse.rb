@@ -54,7 +54,6 @@ module Duse
 
         namespace = self
         define_method(:session) { namespace.session ||= Session.new }
-        define_method(:session=) { |value| namespace.session = value }
       end
     end
   end

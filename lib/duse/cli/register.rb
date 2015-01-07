@@ -12,7 +12,7 @@ module Duse
         password = terminal.ask('Password: ') { |q| q.echo = 'x' }
         password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
 
-        Duse.session = Duse::Client::Session.new uri: config.uri
+        Duse.uri = config.uri
         user = Duse::User.create(
             username: username,
             password: password,

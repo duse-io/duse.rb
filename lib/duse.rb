@@ -8,6 +8,5 @@ module Duse
   include Client::Namespace.new
 
   def_delegators :session, :uri=, :token=
-  module_function :session, :session=
-  public :session, :session=
+  module_function :session
 end

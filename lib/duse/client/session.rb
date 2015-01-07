@@ -17,11 +17,6 @@ module Duse
     class Session
       attr_accessor :token, :uri
 
-      def initialize(options = {})
-        @uri   = options[:uri]
-        @token = options[:token]
-      end
-
       def find_one(entity, id)
         response_body = get("/v1/#{entity.base_path}/#{id}")
         instance_from(entity, response_body)
