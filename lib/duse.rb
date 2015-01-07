@@ -1,18 +1,13 @@
 require 'duse/client/entity'
 require 'duse/client/namespace'
 require 'duse/client/session'
+require 'forwardable'
 
 module Duse
+  extend SingleForwardable
   include Client::Namespace.new
 
-  def uri=(uri)
-    session.uri = uri
-  end
-
-  def token=(token)
-    session.token = token
-  end
-
-  module_function :session, :session=, :uri=, :token=
+  def_delegators :session, :uri=, :token=
+  module_function :session, :session=
   public :session, :session=
 end
