@@ -1,3 +1,5 @@
+require 'duse/cli'
+
 module Duse
   module CLI
     class DeleteSecret < ApiCommand

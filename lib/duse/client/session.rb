@@ -1,7 +1,4 @@
-require 'secret_sharing'
-require 'json'
-require 'openssl'
-require 'duse/encryption'
+require 'duse/client/entity'
 require 'faraday'
 require 'faraday_middleware'
 

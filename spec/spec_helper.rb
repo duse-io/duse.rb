@@ -29,6 +29,8 @@ end
 
 require 'support/helpers'
 require 'support/fake_api'
+require 'duse'
+require 'duse/cli'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

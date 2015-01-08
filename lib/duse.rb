@@ -1,6 +1,8 @@
 require 'duse/client/entity'
-require 'duse/client/namespace'
+require 'duse/client/secret'
+require 'duse/client/user'
 require 'duse/client/session'
+require 'duse/client/namespace'
 require 'forwardable'
 
 module Duse

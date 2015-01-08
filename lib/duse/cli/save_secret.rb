@@ -1,8 +1,5 @@
-require 'secret_sharing'
 require 'duse/cli'
-require 'json'
 require 'openssl'
-require 'duse/encryption'
 
 module Duse
   module CLI

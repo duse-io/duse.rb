@@ -1,3 +1,5 @@
+require 'json'
+
 module Duse
   module CLI
     class ApiCommand < Command
