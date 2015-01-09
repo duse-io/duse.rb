@@ -83,7 +83,6 @@ module Duse
           [{
             'id' => 1,
             'title' => 'test',
-            'required' => 2,
             'url' => 'http://example.com/v1/secrets/1'
           }].to_json
         end
@@ -92,7 +91,6 @@ module Duse
           {
             'id' => 1,
             'title' => 'test',
-            'required' => 2,
             'shares' => [[
               "FlWfp7jBNQj5Ad2Fes36rQA3Xunm/rD7EhMdTxQvwpTdgEw8Co7Dywc6hiA6\nx0B3ICayX4q4r4DSFCsEFlwboTW+fKTHW7n4Jvym2tnc9DsELmcnpCC+tgGb\nbCOLR5XNXncby1gmIXrqoz+VJVkSbuz/8uFubJMEHP+iZx8Efds=\n",
               "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n"
@@ -113,7 +111,6 @@ module Duse
           {
             'id' => 1,
             'title' => 'test',
-            'required' => 2,
             'shares' => [[
               "FlWfp7jBNQj5Ad2Fes36rQA3Xunm/rD7EhMdTxQvwpTdgEw8Co7Dywc6hiA6\nx0B3ICayX4q4r4DSFCsEFlwboTW+fKTHW7n4Jvym2tnc9DsELmcnpCC+tgGb\nbCOLR5XNXncby1gmIXrqoz+VJVkSbuz/8uFubJMEHP+iZx8Efds=\n",
               "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n"

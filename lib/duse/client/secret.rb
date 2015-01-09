@@ -47,7 +47,7 @@ module Duse
     end
 
     class Secret < Entity
-      attributes :id, :title, :required, :shares
+      attributes :id, :title, :shares
       has :users
 
       attr_accessor :secret_text

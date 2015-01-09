@@ -14,7 +14,7 @@ module Duse
         current_user = Duse::User.find('me')
         server_user  = Duse::User.find('server')
         private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
-        secret       = Duse::Client::Secret.new title: title, required: 2, secret_text: secret_text
+        secret       = Duse::Client::Secret.new title: title, secret_text: secret_text
         secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
 
         response = Duse::Secret.create secret_hash
