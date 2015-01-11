@@ -29,6 +29,11 @@ module Duse
         instance_from(entity, response_body)
       end
 
+      def update(entity, id, hash)
+        response_body = patch("/v1/#{entity.base_path}/#{id}", hash)
+        instance_from(entity, response_body)
+      end
+
       def delete_one(entity, id)
         delete("/v1/#{entity.base_path}/#{id}")
       end
@@ -39,6 +44,10 @@ module Duse
 
       def post(*args)
         raw(:post, *args)
+      end
+
+      def patch(*args)
+        raw(:patch, *args)
       end
 
       def delete(*args)

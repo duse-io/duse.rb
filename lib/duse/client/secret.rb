@@ -14,8 +14,9 @@ module Duse
       end
 
       def to_h
-        secret_hash = @secret.attributes
-        secret_hash['parts'] = parts_from_secret
+        secret_hash = {}
+        secret_hash['title'] = @secret.title     if @secret.title
+        secret_hash['parts'] = parts_from_secret if @secret.secret_text
         secret_hash
       end
 

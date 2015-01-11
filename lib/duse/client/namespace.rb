@@ -25,6 +25,12 @@ module Duse
           entity
         end
 
+        def update(id, params)
+          entity = session.update(type, id, params)
+          entity.curry = self
+          entity
+        end
+
         def delete(id)
           session.delete_one(type, id)
         end

@@ -16,6 +16,7 @@ module Duse
         puts ""
         puts "Name:   #{secret.title}"
         puts "Secret: #{secret.decrypt(private_key)}"
+        puts "Access: #{secret.users.map(&:username).join(', ')}"
       end
 
       def self.command_name
