@@ -5,12 +5,9 @@ require 'secret_sharing'
 module Duse
   module Client
     class SecretMarshaller
-      def initialize(secret, private_key, users, current_user, server_user)
+      def initialize(secret, private_key)
         @secret       = secret
         @private_key  = private_key
-        @users        = users
-        @current_user = current_user
-        @server_user  = server_user
       end
 
       def to_h
@@ -24,21 +21,12 @@ module Duse
         # sliced of 18 is a result of trial & error, if it's too large then
         # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
         secret_text_in_slices_of(18).map do |secret_part|
-          # the selected users + current user + server
-          number_of_shares = 2 + @users.length
-          shares = SecretSharing.split_secret(secret_part, 2, number_of_shares)
-          server_share, server_sign = Duse::Encryption.encrypt(@private_key, @server_user.public_key,  shares[0])
-          user_share,   user_sign   = Duse::Encryption.encrypt(@private_key, @current_user.public_key, shares[1])
-          part = [
-            {"user_id" => "server", "content" => server_share, "signature" => server_sign},
-            {"user_id" => "me"    , "content" => user_share,   "signature" => user_sign},
-          ]
-          shares[2..shares.length].each_with_index do |share, index|
-            user = @users[index]
-            content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, shares[index+2])
-            part << {"user_id" => user.id, "content" => content, "signature" => signature}
+          shares = SecretSharing.split_secret(secret_part, 2, @secret.users.length)
+          @secret.users.each_with_index.map do |user, index|
+            share = shares[index]
+            content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, share)
+            {"user_id" => "#{user.id}", "content" => content, "signature" => signature}
           end
-          part
         end
       end
 

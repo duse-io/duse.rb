@@ -37,13 +37,13 @@ describe Duse::CLI::Secret do
 
   it 'should take the secret from the cli call' do
     expect(run_cli('secret', 'get', '1').out).to eq(
-      "\nName:   test\nSecret: test\n"
+      "\nName:   test\nSecret: test\nAccess: server, flower-pot\n"
     )
   end
 
   it 'should take the secret from a user input' do
     expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
-      "Secret to retrieve: \nName:   test\nSecret: test\n"
+      "Secret to retrieve: \nName:   test\nSecret: test\nAccess: server, flower-pot\n"
     )
   end
 

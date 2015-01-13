@@ -11,11 +11,11 @@ module Duse
         secret_text = terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
-        current_user = Duse::User.find('me')
-        server_user  = Duse::User.find('server')
-        private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
-        secret       = Duse::Client::Secret.new title: title, secret_text: secret_text
-        secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
+        users << Duse::User.find('me')
+        users << Duse::User.find('server')
+        private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
+        secret      = Duse::Client::Secret.new title: title, secret_text: secret_text, users: users
+        secret_hash = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
 
         response = Duse::Secret.create secret_hash
         success 'Secret successfully created!'
