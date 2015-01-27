@@ -6,7 +6,7 @@ module Duse
     module_function
 
     def encrypt(private_key, public_key, text)
-      encrypted = public_key.public_encrypt text
+      encrypted = public_key.public_encrypt text.force_encoding('ascii-8bit')
       signature = sign(private_key, encrypted)
       [encode(encrypted), signature]
     end
@@ -16,7 +16,7 @@ module Duse
     end
 
     def decrypt(private_key, text)
-      private_key.private_decrypt decode(text)
+      private_key.private_decrypt(decode(text)).force_encoding('utf-8')
     end
 
     def verify(public_key, signature, encrypted)
@@ -36,3 +36,4 @@ module Duse
     end
   end
 end
+
