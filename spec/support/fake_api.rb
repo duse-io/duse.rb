@@ -91,7 +91,7 @@ module Duse
           {
             'id' => 1,
             'title' => 'test',
-            'shares' => [[
+            'parts' => [[
               "FlWfp7jBNQj5Ad2Fes36rQA3Xunm/rD7EhMdTxQvwpTdgEw8Co7Dywc6hiA6\nx0B3ICayX4q4r4DSFCsEFlwboTW+fKTHW7n4Jvym2tnc9DsELmcnpCC+tgGb\nbCOLR5XNXncby1gmIXrqoz+VJVkSbuz/8uFubJMEHP+iZx8Efds=\n",
               "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n"
             ]],
@@ -122,7 +122,18 @@ module Duse
           {
             'id' => 1,
             'title' => 'test',
-            'shares' => [[
+            'users' => [{
+              'id' => 1,
+              'username' => 'server',
+              'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n",
+              'url' => 'https://example.com/v1/users/1'
+            }, {
+              'id' => 2,
+              'username' => 'flower-pot',
+              'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
+              'url' => 'https://example.com/v1/users/2'
+            }],
+            'parts' => [[
               "FlWfp7jBNQj5Ad2Fes36rQA3Xunm/rD7EhMdTxQvwpTdgEw8Co7Dywc6hiA6\nx0B3ICayX4q4r4DSFCsEFlwboTW+fKTHW7n4Jvym2tnc9DsELmcnpCC+tgGb\nbCOLR5XNXncby1gmIXrqoz+VJVkSbuz/8uFubJMEHP+iZx8Efds=\n",
               "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n"
             ]],

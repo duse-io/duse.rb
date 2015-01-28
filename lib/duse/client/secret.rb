@@ -36,7 +36,7 @@ module Duse
     end
 
     class Secret < Entity
-      attributes :id, :title, :shares
+      attributes :id, :title, :parts
       has :users
 
       attr_accessor :secret_text
@@ -46,14 +46,14 @@ module Duse
       many :secrets
 
       def decrypt(private_key)
-        @secret_text ||= shares(private_key).inject('') do |result, shares|
+        @secret_text ||= parts(private_key).inject('') do |result, shares|
           result << SecretSharing.recover_secret(shares)
         end
       end
 
-      def shares(private_key)
-        return nil if load_attribute('shares').nil?
-        load_attribute('shares').map do |part|
+      def parts(private_key)
+        return nil if load_attribute('parts').nil?
+        load_attribute('parts').map do |part|
           part.map do |share|
             Duse::Encryption.decrypt private_key, share
           end

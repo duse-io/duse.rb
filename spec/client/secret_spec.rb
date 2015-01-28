@@ -43,7 +43,7 @@ describe Duse::Client::Secret do
 
     secret = Duse::Secret.create({
       title: 'test',
-      shares: [[
+      parts: [[
         {user_id: 'server', content: "T6BKRp0U41zRRZ2NSRPwpJW7NjsSZaJ1eSSdtYNjchscXb5UIEqzSr/+B6Zy\nJ8JUA9CPrad+Z6s1CNNPGN6sJKtdAtzk+zJr5vTeg/4Aw42799A8cFPw/fE9\nd5K+IIYjn4Yxtypcv0I2j+dYsgDvN+mhosZ21cdibfX5PyyibuA=\n", signature: "XBMWwpKyO5K+S1dimX/7aZ4oX7dW5SDlf4KaagYUBoVm7ii7jX9jfLKWqrRL\nj2f85JYMSUQ3UoXVWT1LDWXXZIs3KO02xlvA+oflmx5ZSGx57TDvuYpusEBu\n/LNSpNj6ooROXTm+Xq+AvQfmt0bjQZCg/PSOt8Qx11q5JLmhL38=\n"},
         {user_id: 'me', content: "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n", signature: "dAhhcWeebiE5E9jfhexu+/zem1emWG2vBQed06f4CJJ24xrWDwUgX9kggHka\nsOWgu/RnCN/qzIuN8XCPgh2I1zQegd9d5FdAHUqXJRgpT2bvmAYPZ6DM6UYs\nB8OJ7+QgQy9EahTfhfbrSKuqtnX9103ftTZtiGagzFdYi5ylMNM=\n"}
       ]]
