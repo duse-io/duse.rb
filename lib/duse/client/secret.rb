@@ -25,7 +25,7 @@ module Duse
           @secret.users.each_with_index.map do |user, index|
             share = shares[index]
             content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, share)
-            {"user_id" => "#{user.id}", "content" => content, "signature" => signature}
+            {"user_id" => user.id, "content" => content, "signature" => signature}
           end
         end
       end
