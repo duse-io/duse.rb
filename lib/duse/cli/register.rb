@@ -9,15 +9,21 @@ module Duse
 
       def run
         username = terminal.ask('Username: ')
-        password = terminal.ask('Password: ') { |q| q.echo = 'x' }
-        password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
+
+        password = ''
+        password_confirmation = ''
+        loop do
+          password = terminal.ask('Password: ') { |q| q.echo = 'x' }
+          password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
+          break if password == password_confirmation
+          warn 'Password and password confirmation do not match. Try again.'
+        end
 
         Duse.uri = config.uri
         user = Duse::User.create(
-            username: username,
-            password: password,
-            password_confirmation: password_confirmation,
-            public_key: File.read(File.expand_path('~/.ssh/id_rsa.pem'))
+          username: username,
+          password: password,
+          public_key: File.read(File.expand_path('~/.ssh/id_rsa.pem'))
         )
 
         success 'Successfully created your account! You can now login with "duse login"'
