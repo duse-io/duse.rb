@@ -6,15 +6,18 @@ module Duse
     class SaveSecret < ApiCommand
       description 'Save a new secret'
 
+      on('-t', '--title [TITLE]',   'The title for the secret to save')
+      on('-s', '--secret [SECRET]', 'The secret to save')
+
       def run(*arguments)
-        title       = terminal.ask 'What do you want to call this secret? '
-        secret_text = terminal.ask 'Secret to save: '
+        self.title  ||= terminal.ask 'What do you want to call this secret? '
+        self.secret ||= terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
         users << Duse::User.find('me')
         users << Duse::User.find('server')
         private_key = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
-        secret      = Duse::Client::Secret.new title: title, secret_text: secret_text, users: users
+        secret      = Duse::Client::Secret.new title: self.title, secret_text: self.secret, users: users
         secret_hash = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
 
         response = Duse::Secret.create secret_hash
