@@ -15,27 +15,27 @@ module Duse
       attr_accessor :token, :uri
 
       def find_one(entity, id)
-        response_body = get("/v1/#{entity.base_path}/#{id}")
+        response_body = get("/#{entity.base_path}/#{id}")
         instance_from(entity, response_body)
       end
 
       def find_many(entity, params = {})
-        response_body = get("/v1/#{entity.base_path}")
+        response_body = get("/#{entity.base_path}")
         instances_from(entity, response_body)
       end
 
       def create(entity, hash)
-        response_body = post("/v1/#{entity.base_path}", hash)
+        response_body = post("/#{entity.base_path}", hash)
         instance_from(entity, response_body)
       end
 
       def update(entity, id, hash)
-        response_body = patch("/v1/#{entity.base_path}/#{id}", hash)
+        response_body = patch("/#{entity.base_path}/#{id}", hash)
         instance_from(entity, response_body)
       end
 
       def delete_one(entity, id)
-        delete("/v1/#{entity.base_path}/#{id}")
+        delete("/#{entity.base_path}/#{id}")
       end
 
       def get(*args)
@@ -59,6 +59,7 @@ module Duse
 
         result = connection.public_send(verb, url, *args) do |request|
           request.headers['Authorization'] = token unless token.nil?
+          request.headers['Accept'] = 'application/vnd.duse.1+json'
         end
 
         case result.status

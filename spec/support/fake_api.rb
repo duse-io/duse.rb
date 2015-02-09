@@ -18,7 +18,7 @@ module Duse
           env['HTTP_AUTHORIZATION'] == 'token'
         end
 
-        post '/v1/users/token' do
+        post '/users/token' do
           payload = JSON.parse request.body.read
           status 401
           if payload['username'] == 'flower-pot' && payload['password'] == 'Passw0rd!'
@@ -27,67 +27,67 @@ module Duse
           end
         end
 
-        get '/v1/users' do
+        get '/users' do
           [{
             'id' => 1,
             'username' => 'server',
-            'url' => 'https://example.com/v1/users/1'
+            'url' => 'https://example.com/users/1'
           }, {
             'id' => 2,
             'username' => 'flower-pot',
-            'url' => 'https://example.com/v1/users/2'
+            'url' => 'https://example.com/users/2'
           }, {
             'id' => 3,
             'username' => 'adracus',
-            'url' => 'https://example.com/v1/users/3'
+            'url' => 'https://example.com/users/3'
           }].to_json
         end
 
-        post '/v1/users' do
+        post '/users' do
           {
             'id' => 2,
             'username' => 'flower-pot',
             'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
-            'url' => 'https://example.com/v1/users/2'
+            'url' => 'https://example.com/users/2'
           }.to_json
         end
 
-        get '/v1/users/me' do
+        get '/users/me' do
           {
             'id' => 2,
             'username' => 'flower-pot',
             'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
-            'url' => 'https://example.com/v1/users/2'
+            'url' => 'https://example.com/users/2'
           }.to_json
         end
 
-        get '/v1/users/server' do
+        get '/users/server' do
           {
             'id' => 1,
             'username' => 'server',
             'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n",
-            'url' => 'https://example.com/v1/users/1'
+            'url' => 'https://example.com/users/1'
           }.to_json
         end
 
-        get '/v1/users/3' do
+        get '/users/3' do
           {
             'id' => 3,
             'username' => 'adracus',
             'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTF2gEqXRy2hJ6+xjj6IbzAgHG\nHvnLNnZlwkYm0ZV89uiPxL9mKYNiW4KA1azZlvJZviTF4218WAwO1IGIH+PppdXF\nIK8vmB6IIaQcO4UTjSA6ZTn8Uwf1fwS4EAuL3Zr3IVdjVYQ4+/ZNtmSyVMmo+7zP\nyOa31hUhDNYrJO1iEQIDAQAB\n-----END PUBLIC KEY-----\n",
-            'url' => 'https://example.com/v1/users/3'
+            'url' => 'https://example.com/users/3'
           }.to_json
         end
 
-        get '/v1/secrets' do
+        get '/secrets' do
           [{
             'id' => 1,
             'title' => 'test',
-            'url' => 'http://example.com/v1/secrets/1'
+            'url' => 'http://example.com/secrets/1'
           }].to_json
         end
 
-        get '/v1/secrets/1' do
+        get '/secrets/1' do
           {
             'id' => 1,
             'title' => 'test',
@@ -99,26 +99,26 @@ module Duse
               'id' => 1,
               'username' => 'server',
               'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n",
-              'url' => 'https://example.com/v1/users/1'
+              'url' => 'https://example.com/users/1'
             }, {
               'id' => 2,
               'username' => 'flower-pot',
               'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
-              'url' => 'https://example.com/v1/users/2'
+              'url' => 'https://example.com/users/2'
             }],
-            'url' => 'http://example.com/v1/secrets/1'
+            'url' => 'http://example.com/secrets/1'
           }.to_json
         end
 
-        get '/v1/secrets/:id' do
+        get '/secrets/:id' do
           status 404
         end
 
-        delete '/v1/secrets/1' do
+        delete '/secrets/1' do
           status 204
         end
 
-        post '/v1/secrets' do
+        post '/secrets' do
           {
             'id' => 1,
             'title' => 'test',
@@ -126,18 +126,18 @@ module Duse
               'id' => 1,
               'username' => 'server',
               'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n",
-              'url' => 'https://example.com/v1/users/1'
+              'url' => 'https://example.com/users/1'
             }, {
               'id' => 2,
               'username' => 'flower-pot',
               'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
-              'url' => 'https://example.com/v1/users/2'
+              'url' => 'https://example.com/users/2'
             }],
             'parts' => [[
               "FlWfp7jBNQj5Ad2Fes36rQA3Xunm/rD7EhMdTxQvwpTdgEw8Co7Dywc6hiA6\nx0B3ICayX4q4r4DSFCsEFlwboTW+fKTHW7n4Jvym2tnc9DsELmcnpCC+tgGb\nbCOLR5XNXncby1gmIXrqoz+VJVkSbuz/8uFubJMEHP+iZx8Efds=\n",
               "XMcasmkkD0eOB52ilT3sGUOy9ehHpsuIFnbmErKLsTq0PExcvSuGT6RwMKjE\nM3rS7Lu2nHgWm0IPSzi5Vd8ieJTgyayYgT9VCOOnKGqfAMmCpV0WrHpfNwLu\nUgH7VC3Wfk1F+6yzWAFOoYXBDUuIRRau4uswCpedp1pe3csmO+I=\n"
             ]],
-            'url' => 'http://example.com/v1/secrets/1'
+            'url' => 'http://example.com/secrets/1'
           }.to_json
         end
       end

@@ -11,7 +11,7 @@ module Duse
         username = terminal.ask('Username: ')
         password = terminal.ask('Password: ') { |q| q.echo = 'x' }
         Duse.uri = config.uri
-        response = Duse.session.post('/v1/users/token', { username: username, password: password })
+        response = Duse.session.post('/users/token', { username: username, password: password })
         config.token = response['api_token']
         success 'Successfully logged in!'
       rescue Duse::Client::NotLoggedIn
