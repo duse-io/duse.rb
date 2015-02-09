@@ -7,9 +7,8 @@ module Duse
 
       def run
         secrets = Duse::Secret.all
-        number  = secrets.length + 1
-        secrets.each_with_index do |s, i|
-          puts "#{(i+1).to_s.rjust(number.to_s.length)}: #{s.title}"
+        secrets.each do |s|
+          puts "#{s.id}: #{s.title}"
         end
         if secrets.empty?
           say 'You have not yet saved any secrets, ' \
