@@ -9,6 +9,7 @@ module Duse
 
       def run
         username = terminal.ask('Username: ')
+        email = terminal.ask('Email: ')
 
         password = ''
         password_confirmation = ''
@@ -22,6 +23,7 @@ module Duse
         Duse.uri = config.uri
         user = Duse::User.create(
           username: username,
+          email: email,
           password: password,
           public_key: File.read(File.expand_path('~/.ssh/id_rsa.pem'))
         )

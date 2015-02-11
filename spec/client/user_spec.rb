@@ -18,12 +18,14 @@ describe Duse::Client::User do
 
     user = Duse::User.create(
       'username' => 'flower-pot',
+      'email'    => 'flower-pot@example.org',
       'password' => 'Passw0rd!',
       'password_confirmation' => 'Passw0rd!',
       'public_key' => public_key
     )
 
     expect(user.username).to eq 'flower-pot'
+    expect(user.email).to eq 'flower-pot@example.org'
     expect(user.public_key.to_s).to eq public_key
   end
 
@@ -33,6 +35,7 @@ describe Duse::Client::User do
     user = Duse::User.find 'me'
 
     expect(user.username).to eq 'flower-pot'
+    expect(user.email).to eq 'flower-pot@example.org'
     expect(user.public_key.to_s).to eq public_key
   end
 
@@ -42,6 +45,7 @@ describe Duse::Client::User do
     user = Duse::User.find 'server'
 
     expect(user.username).to eq 'server'
+    expect(user.email).to eq 'server@localhost'
     expect(user.public_key.to_s).to eq public_key
   end
 
@@ -51,6 +55,7 @@ describe Duse::Client::User do
     user = Duse::User.find 'server'
 
     expect(user.username).to eq 'server'
+    expect(user.email).to eq 'server@localhost'
     expect(user.public_key.to_s).to eq public_key
   end
 
@@ -60,6 +65,7 @@ describe Duse::Client::User do
     user = Duse::User.find 3
 
     expect(user.username).to eq 'adracus'
+    expect(user.email).to eq 'adracus@example.org'
     expect(user.public_key.to_s).to eq public_key
   end
 
@@ -70,6 +76,7 @@ describe Duse::Client::User do
     expect(users.length).to eq 3
     expect(user.attributes['public_key']).to be nil
     expect(user.username).to eq 'adracus'
+    expect(user.email).to eq 'adracus@example.org'
     expect(user.public_key.to_s).to eq "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTF2gEqXRy2hJ6+xjj6IbzAgHG\nHvnLNnZlwkYm0ZV89uiPxL9mKYNiW4KA1azZlvJZviTF4218WAwO1IGIH+PppdXF\nIK8vmB6IIaQcO4UTjSA6ZTn8Uwf1fwS4EAuL3Zr3IVdjVYQ4+/ZNtmSyVMmo+7zP\nyOa31hUhDNYrJO1iEQIDAQAB\n-----END PUBLIC KEY-----\n"
   end
 end
