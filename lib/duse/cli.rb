@@ -11,6 +11,7 @@ module Duse
     autoload :Login,      'duse/cli/login'
     autoload :Register,   'duse/cli/register'
     autoload :Secret,     'duse/cli/secret'
+    autoload :Account,    'duse/cli/account'
 
     extend self
 
