@@ -6,8 +6,12 @@ describe Duse::CLIConfig do
   include FakeFS::SpecHelpers
 
   before :each do
-    dir = File.dirname(Duse::CLIConfig.config_file)
-    FileUtils.mkdir_p(dir)
+    @dir = File.dirname(Duse::CLIConfig.config_file)
+    FileUtils.mkdir_p @dir
+  end
+
+  after :each do
+    FileUtils.rm_rf @dir
   end
 
   it 'should return an empty hash when no config file exists' do
