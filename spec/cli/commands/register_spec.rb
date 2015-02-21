@@ -7,14 +7,10 @@ describe Duse::CLI::Register do
       f.puts '---'
       f.puts 'uri: https://example.com/'
     end
-    public_key_file = File.expand_path('~/.ssh/id_rsa.pem')
+    public_key_file = File.expand_path('~/.ssh/id_rsa.pub')
     FileUtils.mkdir_p(File.dirname(public_key_file))
     open(public_key_file, 'w') do |f|
-      f.puts "-----BEGIN RSA PUBLIC KEY-----\n"
-      f.puts "MIGJAoGBAK1oA5FmkUnTfsA3UOubzxMtjJnL68vJVmv1co98xQX8oIcSxPWAl9Bg\n"
-      f.puts "VEju3+AeMvdWi4ozXTrvV/+Dyzm3WFYcXpg69oVN3fINcCR/zrHmOs8Gsgfozczl\n"
-      f.puts "Y7DCrBb1pEXbYIXOUGgKhXgZC3gqFHOqsbaRElQuwG5P1OIcIoQ/AgMBAAE=\n"
-      f.puts "-----END RSA PUBLIC KEY-----"
+      f.puts "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCtaAORZpFJ037AN1Drm88TLYyZy+vLyVZr9XKPfMUF/KCHEsT1gJfQYFRI7t/gHjL3VouKM10671f/g8s5t1hWHF6YOvaFTd3yDXAkf86x5jrPBrIH6M3M5WOwwqwW9aRF22CFzlBoCoV4GQt4KhRzqrG2kRJULsBuT9TiHCKEPw== RSA-1024"
     end
   end
 

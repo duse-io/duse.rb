@@ -1,4 +1,5 @@
 require 'duse/cli'
+require 'duse/openssh/pub_key'
 
 module Duse
   module CLI
@@ -20,12 +21,16 @@ module Duse
           warn 'Password and password confirmation do not match. Try again.'
         end
 
+        public_key = File.read(File.expand_path('~/.ssh/id_rsa.pub'))
+        public_key = OpenSSH::PubKey.new(public_key).to_rsa
+        public_key = public_key.to_pem
+
         Duse.uri = config.uri
         user = Duse::User.create(
           username: username,
           email: email,
           password: password,
-          public_key: File.read(File.expand_path('~/.ssh/id_rsa.pem'))
+          public_key: public_key
         )
 
         success 'Successfully created your account! You can now login with "duse login"'
