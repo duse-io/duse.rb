@@ -21,19 +21,66 @@ module Duse
           warn 'Password and password confirmation do not match. Try again.'
         end
 
-        public_key = File.read(File.expand_path('~/.ssh/id_rsa.pub'))
-        public_key = OpenSSH::PubKey.new(public_key).to_rsa
-        public_key = public_key.to_pem
-
         Duse.uri = config.uri
         user = Duse::User.create(
           username: username,
           email: email,
           password: password,
-          public_key: public_key
+          public_key: choose_key
         )
 
         success 'Successfully created your account! You can now login with "duse login"'
+      end
+
+      private
+
+      def choose_key
+        key = nil
+        generate_option = 'Generate a new one'
+        choose_myself_option = 'Let me choose it myself'
+        choices = possible_ssh_keys + [generate_option, choose_myself_option]
+        terminal.choose do |ssh_keys|
+          ssh_keys.prompt = 'Which private ssh-key do you want to use?'
+          ssh_keys.choices *choices do |choice|
+            key = generate_key if choice == generate_option
+            key = choose_private_key_file if choice == choose_myself_option
+            key ||= OpenSSL::PKey::RSA.new File.read choice
+          end
+        end
+        key.public_key.to_pem
+      end
+
+      def possible_ssh_keys
+        ssh_keys = Dir.glob File.join(ssh_dir, '*')
+        ssh_keys.keep_if &method(:valid_ssh_private_key?)
+      end
+
+      def choose_private_key_file
+        private_key_file = nil
+        loop do
+          private_key_file = terminal.ask('Private key file: ') { |q| q.default = File.join ssh_dir, 'id_rsa' }
+          break if valid_ssh_private_key? private_key_file
+        end
+        OpenSSL::PKey::RSA.new File.read private_key_file
+      end
+
+      def valid_ssh_private_key?(private_key_file)
+        rsa_key = OpenSSL::PKey::RSA.new File.read private_key_file
+        rsa_key.private?
+      rescue
+        false
+      end
+
+      def generate_key
+        OpenSSL::PKey::RSA.generate 4096
+      end
+
+      def ssh_dir
+        File.join home_dir, '.ssh'
+      end
+
+      def home_dir
+        File.expand_path '~'
       end
     end
   end

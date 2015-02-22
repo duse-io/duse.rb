@@ -23,8 +23,10 @@ describe Duse::CLI::Register do
   it 'should be able to register successfully' do
     expect(run_cli('register') do |i|
       i.puts 'flower-pot'
+      i.puts 'fbranczyk@gmail.com'
       i.puts 'Passw0rd!'
       i.puts 'Passw0rd!'
+      i.puts '1'
     end.success?).to be true
   end
 end
