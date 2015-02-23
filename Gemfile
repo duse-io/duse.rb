@@ -9,4 +9,5 @@ group :test do
   gem 'fakefs',    require: 'fakefs/safe'
   gem 'simplecov', require: false
   gem 'coveralls', require: false
+  gem 'webmock'
 end

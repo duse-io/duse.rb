@@ -29,6 +29,7 @@ end
 
 require 'support/helpers'
 require 'support/fake_api'
+require 'webmock/rspec'
 require 'duse'
 require 'duse/cli'
 

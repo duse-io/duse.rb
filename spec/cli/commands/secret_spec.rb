@@ -54,9 +54,13 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should show an error message when getting not existant secrets' do
+  xit 'should show an error message when getting not existant secrets' do
+    stub_request(:get, "https://example.com/secrets/2").
+      with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
+      to_return(status: 404, body: { message: 'Not found' }.to_json)
+
     expect(run_cli('secret', 'get', '2').err).to eq(
-      "not found\n"
+      "Not found\n"
     )
   end
 
