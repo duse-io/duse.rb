@@ -38,10 +38,14 @@ module Duse
     end
 
     def config_file
-      File.join(Dir.home, '.duse.yml')
+      File.join config_dir, 'config.yml'
     end
     
     private
+
+    def config_dir
+      File.join Dir.home, '.config', 'duse'
+    end
 
     def load
       config = YAML.load load_config_file
@@ -50,6 +54,7 @@ module Duse
     end
 
     def save(config)
+      FileUtils.mkdir_p config_dir
       File.open(config_file, 'w') do |file|
         file.write config.to_yaml
         file.chmod 0600
