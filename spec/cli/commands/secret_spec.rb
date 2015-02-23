@@ -5,15 +5,13 @@ describe Duse::CLI::Secret do
   include FakeFS::SpecHelpers
 
   before :each do
-    @dir = File.dirname(Duse::CLIConfig.config_file)
-    FileUtils.mkdir_p @dir
+    FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLI.config.config_file, 'w') do |f|
       f.puts '---'
       f.puts 'uri: https://example.com/'
       f.puts 'token: token'
     end
-    FileUtils.mkdir_p(File.expand_path('~/.ssh'))
-    open(File.expand_path('~/.ssh/id_rsa'), 'w') do |f|
+    open(Duse::CLIConfig.private_key_file_for(OpenStruct.new(username: 'flower-pot')), 'w') do |f|
       f.puts "-----BEGIN RSA PRIVATE KEY-----"
       f.puts "MIICWgIBAAKBgQCftZvHkB6uKWVDvrIzmy2p496Hv9PD/hhRk+DSXcE/CPtRmvYZ"
       f.puts "zbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTeNdlaH9cRFV2wc2A/hbg2kaIS"
@@ -33,8 +31,7 @@ describe Duse::CLI::Secret do
   end
 
   after :each do
-    FileUtils.rm_rf @dir
-    FileUtils.rm_rf File.expand_path('~/.ssh')
+    FileUtils.rm_rf Duse::CLIConfig.config_dir
   end
 
   it 'should build the full command correctly' do

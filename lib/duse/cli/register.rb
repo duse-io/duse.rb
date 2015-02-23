@@ -8,50 +8,57 @@ module Duse
       skip :authenticate
 
       def run
-        Duse.uri = config.uri
+        ask_for_user_input
         user = Duse::User.create(
-          username: choose_username,
-          email: choose_email,
-          password: choose_password,
-          public_key: choose_key
+          username: @username,
+          email: @email,
+          password: @password,
+          public_key: @key.public_key.to_pem
         )
-
+        Duse::CLIConfig.save_private_key_for user, @key.to_pem
         success 'Successfully created your account! You can now login with "duse login"'
       end
 
       private
 
+      def ask_for_user_input
+        choose_username
+        choose_email
+        choose_password
+        choose_key
+      end
+
       def choose_username
-        terminal.ask('Username: ')
+        @username = terminal.ask('Username: ')
       end
 
       def choose_email
-        terminal.ask('Email: ')
+        @email = terminal.ask('Email: ')
       end
 
       def choose_password
         loop do
-          password = terminal.ask('Password: ') { |q| q.echo = 'x' }
+          @password = terminal.ask('Password: ') { |q| q.echo = 'x' }
           password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
-          return password if password == password_confirmation
+          break if @password == password_confirmation
           warn 'Password and password confirmation do not match. Try again.'
         end
       end
 
       def choose_key
-        key = nil
+        @key = nil
         generate_option = 'Generate a new one'
         choose_myself_option = 'Let me choose it myself'
         choices = possible_ssh_keys + [generate_option, choose_myself_option]
         terminal.choose do |ssh_keys|
           ssh_keys.prompt = 'Which private ssh-key do you want to use?'
           ssh_keys.choices *choices do |choice|
-            key = generate_key if choice == generate_option
-            key = choose_private_key_file if choice == choose_myself_option
-            key ||= OpenSSL::PKey::RSA.new File.read choice
+            @key = generate_key if choice == generate_option
+            @key = choose_private_key_file if choice == choose_myself_option
+            @key ||= OpenSSL::PKey::RSA.new File.read choice
           end
         end
-        key.public_key.to_pem
+        @key
       end
 
       def possible_ssh_keys

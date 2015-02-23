@@ -4,6 +4,16 @@ module Duse
   module CLIConfig
     extend self
 
+    def private_key_for(user)
+      OpenSSL::PKey::RSA.new File.read private_key_file_for user
+    end
+
+    def save_private_key_for(user, private_key)
+      File.open(private_key_file_for(user), 'w') do |file|
+        file.write private_key
+      end
+    end
+
     def uri=(uri)
       fail ArgumentError, 'Not an uri' unless uri =~ URI.regexp
       set 'uri', uri
@@ -40,12 +50,16 @@ module Duse
     def config_file
       File.join config_dir, 'config.yml'
     end
-    
-    private
 
     def config_dir
       File.join Dir.home, '.config', 'duse'
     end
+
+    def private_key_file_for(user)
+      File.join config_dir, user.username
+    end
+    
+    private
 
     def load
       config = YAML.load load_config_file

@@ -13,7 +13,7 @@ module Duse
         current_user = Duse::User.find('me')
         server_user  = Duse::User.find('server')
         secret       = Duse::Secret.find secret_id
-        private_key  = OpenSSL::PKey::RSA.new File.read File.expand_path '~/.ssh/id_rsa'
+        private_key  = Duse::CLIConfig.private_key_for current_user
 
         puts "\nName:   #{secret.title}"
         puts "Secret: #{secret.decrypt(private_key)}\n"
