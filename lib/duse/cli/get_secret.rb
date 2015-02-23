@@ -13,19 +13,20 @@ module Duse
         secret_id ||= terminal.ask('Secret to retrieve: ').to_i
 
         secret = Duse::Secret.find secret_id
-
-        say render(secret)
+        print_secret(secret)
       end
 
-      def render(secret)
+      def print_secret(secret)
         private_key = config.private_key_for Duse::User.find 'me'
         plain_secret = secret.decrypt(private_key)
 
         if plain?
-          return plain_secret
+          print plain_secret
+          $stdout.flush
+          return
         end
         
-        "
+        say "
           Name:   #{secret.title}
           Secret: #{plain_secret}
           Access: #{secret.users.map(&:username).join(', ')}
