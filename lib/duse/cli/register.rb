@@ -8,23 +8,11 @@ module Duse
       skip :authenticate
 
       def run
-        username = terminal.ask('Username: ')
-        email = terminal.ask('Email: ')
-
-        password = ''
-        password_confirmation = ''
-        loop do
-          password = terminal.ask('Password: ') { |q| q.echo = 'x' }
-          password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
-          break if password == password_confirmation
-          warn 'Password and password confirmation do not match. Try again.'
-        end
-
         Duse.uri = config.uri
         user = Duse::User.create(
-          username: username,
-          email: email,
-          password: password,
+          username: choose_username,
+          email: choose_email,
+          password: choose_password,
           public_key: choose_key
         )
 
@@ -32,6 +20,23 @@ module Duse
       end
 
       private
+
+      def choose_username
+        terminal.ask('Username: ')
+      end
+
+      def choose_email
+        terminal.ask('Email: ')
+      end
+
+      def choose_password
+        loop do
+          password = terminal.ask('Password: ') { |q| q.echo = 'x' }
+          password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
+          return password if password == password_confirmation
+          warn 'Password and password confirmation do not match. Try again.'
+        end
+      end
 
       def choose_key
         key = nil
