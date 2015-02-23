@@ -1,5 +1,4 @@
 require 'duse/cli'
-require 'duse/openssh/pub_key'
 
 module Duse
   module CLI
