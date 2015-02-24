@@ -78,7 +78,11 @@ module Duse
       end
 
       def error_msg(json)
-        JSON.parse(json)['message'] rescue json
+        result = JSON.parse(json)['message']
+        result = result.join '\n' if result.is_a? Array
+        result
+      rescue
+        json
       end
 
       def connection
