@@ -14,8 +14,8 @@ module Duse
         response = Duse.session.post('/users/token', { username: username, password: password })
         config.token = response['api_token']
         success 'Successfully logged in!'
-      rescue Duse::Client::NotLoggedIn
-        error 'Wrong username or password!'
+      rescue Duse::Client::NotLoggedIn => e
+        error e.message.empty? ? 'Wrong username or password!' : e.message
       end
     end
   end
