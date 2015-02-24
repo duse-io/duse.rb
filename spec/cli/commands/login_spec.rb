@@ -28,7 +28,12 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should handle logins correctly' do
+  xit 'should handle logins correctly' do
+    stub_request(:post, "https://example.com/users/token").
+      with(body: {username: "flower-pot", password: "wrong password"}.to_json,
+           headers: {'Accept'=>'application/vnd.duse.1+json', 'Content-Type'=>'application/json'}).
+      to_return(status: 401, body: "", headers: {})
+
     expect(run_cli('login') do |i|
       i.puts 'flower-pot'
       i.puts 'wrong password'
