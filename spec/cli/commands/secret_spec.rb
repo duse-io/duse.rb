@@ -39,22 +39,31 @@ describe Duse::CLI::Secret do
   end
 
   it 'should only output the secret content when using the plain flag' do
+    stub_secret_get
+    stub_user_me_get
+    stub_server_user_get
     expect(run_cli('secret', 'get', '1', '--plain').out).to eq("test")
   end
 
   it 'should take the secret from the cli call' do
+    stub_secret_get
+    stub_user_me_get
+    stub_server_user_get
     expect(run_cli('secret', 'get', '1').out).to eq(
       "\nName:   test\nSecret: test\nAccess: server, flower-pot\n"
     )
   end
 
   it 'should take the secret from a user input' do
+    stub_secret_get
+    stub_user_me_get
+    stub_server_user_get
     expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
       "Secret to retrieve: \nName:   test\nSecret: test\nAccess: server, flower-pot\n"
     )
   end
 
-  xit 'should show an error message when getting not existant secrets' do
+  it 'should show an error message when getting not existant secrets' do
     stub_request(:get, "https://example.com/secrets/2").
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
       to_return(status: 404, body: { message: 'Not found' }.to_json)
@@ -65,14 +74,27 @@ describe Duse::CLI::Secret do
   end
 
   it 'should list successfully' do
-    expect(run_cli('secret', 'list').success?).to be true
+    stub_get_secrets
+
+    expect(run_cli('secret', 'list').out).to eq(
+      "1: test\n"
+    )
   end
 
   it 'should delete successfully' do
+    stub_request(:delete, "https://example.com/secrets/1").
+      with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
+      to_return(status: 204, body: "", headers: {})
+
     expect(run_cli('secret', 'delete', '1').success?).to be true
   end
 
   it 'should save successfully' do
+    stub_get_users
+    stub_user_me_get
+    stub_server_user_get
+    stub_create_secret
+
     expect(run_cli('secret', 'save') do |i|
       i.puts 'test'
       i.puts 'test'
@@ -81,6 +103,12 @@ describe Duse::CLI::Secret do
   end
 
   it 'should save successfully with multiple users' do
+    stub_get_users
+    stub_user_me_get
+    stub_server_user_get
+    stub_get_other_user
+    stub_create_secret
+
     expect(run_cli('secret', 'save') do |i|
       i.puts 'test'
       i.puts 'test'

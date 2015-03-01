@@ -1,3 +1,5 @@
+require 'fakefs/spec_helpers'
+
 describe Duse::CLI::Register do
   include FakeFS::SpecHelpers
 
@@ -21,6 +23,16 @@ describe Duse::CLI::Register do
   end
 
   it 'should be able to register successfully' do
+    stub_request(:post, "https://example.com/users").
+      with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Content-Type'=>'application/json'}).
+      to_return(status: 201, body: {
+        'id' => 2,
+        'username' => 'flower-pot',
+        'email' => 'flower-pot@example.org',
+        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
+        'url' => 'https://example.com/users/2'
+      }.to_json , headers: {})
+
     expect(run_cli('register') do |i|
       i.puts 'flower-pot'
       i.puts 'fbranczyk@gmail.com'
