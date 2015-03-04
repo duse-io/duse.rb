@@ -54,26 +54,30 @@ module Duse
         raw(:delete, *args)
       end
 
-      def raw(verb, url, *args)
-        fail ArgumentError, 'Uri must be set' if uri.nil?
+      def raw(*args)
+        process_raw_http_response raw_http_request(*args)
+      end
 
-        result = connection.public_send(verb, url, *args) do |request|
+      def process_raw_http_response(response)
+        case response.status
+        when 0             then raise SSLError, 'SSL error: could not verify peer'
+        when 200..299      then JSON.parse(response.body) rescue response.body
+        when 301, 303      then raw(:get, response.headers['Location'])
+        when 302, 307, 308 then raw(verb, response.headers['Location'])
+        when 401           then raise NotLoggedIn,      error_msg(response.body)
+        when 403           then raise NotAuthorized,    error_msg(response.body)
+        when 404           then raise NotFound,         error_msg(response.body)
+        when 422           then raise ValidationFailed, error_msg(response.body)
+        when 400..499      then raise Error,            error_msg(response.body)
+        when 500..599      then raise Error,            error_msg(response.body)
+        else raise Error, "unhandled status code #{response.status}"
+        end
+      end
+
+      def raw_http_request(*args)
+        connection.public_send(*args) do |request|
           request.headers['Authorization'] = token unless token.nil?
           request.headers['Accept'] = 'application/vnd.duse.1+json'
-        end
-
-        case result.status
-        when 0             then raise SSLError, 'SSL error: could not verify peer'
-        when 200..299      then JSON.parse(result.body) rescue result.body
-        when 301, 303      then raw(:get, result.headers['Location'])
-        when 302, 307, 308 then raw(verb, result.headers['Location'])
-        when 401           then raise NotLoggedIn,      error_msg(result.body)
-        when 403           then raise NotAuthorized,    error_msg(result.body)
-        when 404           then raise NotFound,         error_msg(result.body)
-        when 422           then raise ValidationFailed, error_msg(result.body)
-        when 400..499      then raise Error,            error_msg(result.body)
-        when 500..599      then raise Error,            error_msg(result.body)
-        else raise Error, "unhandled status code #{result.status}"
         end
       end
 
@@ -86,6 +90,8 @@ module Duse
       end
 
       def connection
+        fail ArgumentError, 'Uri must be set' if uri.nil?
+
         @connection ||= Faraday.new url: uri do |faraday|
           faraday.request  :json
           faraday.response :json, content_type: /\bjson$/
