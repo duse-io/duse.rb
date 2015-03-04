@@ -1,9 +1,11 @@
 require 'duse/cli'
 require 'openssl'
+require 'duse/cli/key_helper'
 
 module Duse
   module CLI
     class GetSecret < ApiCommand
+      include KeyHelper
       description 'Retrieve a secret'
 
       on('-p', '--plain', 'Print the decrypted secret plain, without additional information.')
@@ -17,7 +19,9 @@ module Duse
       end
 
       def print_secret(secret)
-        private_key = config.private_key_for Duse::User.find 'me'
+        user = Duse::User.find 'me'
+        ensure_matching_keys_for user
+        private_key = config.private_key_for user
         plain_secret = secret.decrypt(private_key)
 
         if plain?

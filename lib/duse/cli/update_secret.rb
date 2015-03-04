@@ -1,9 +1,12 @@
 require 'duse/cli'
 require 'openssl'
+require 'duse/cli/key_helper'
 
 module Duse
   module CLI
     class UpdateSecret < ApiCommand
+      include KeyHelper
+
       description 'Save a new secret'
 
       def run(*arguments)
@@ -11,6 +14,7 @@ module Duse
         secret_id ||= terminal.ask('Secret to update: ').to_i
 
         current_user = Duse::User.find('me')
+        ensure_matching_keys_for current_user
         server_user  = Duse::User.find('server')
         secret       = Duse::Secret.find secret_id
         private_key  = Duse::CLIConfig.private_key_for current_user

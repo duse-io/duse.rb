@@ -1,9 +1,12 @@
 require 'duse/cli'
 require 'openssl'
+require 'duse/cli/key_helper'
 
 module Duse
   module CLI
     class SaveSecret < ApiCommand
+      include KeyHelper
+
       description 'Save a new secret'
 
       on('-t', '--title [TITLE]',   'The title for the secret to save')
@@ -15,6 +18,7 @@ module Duse
         users       = who_to_share_with
 
         current_user = Duse::User.find('me')
+        ensure_matching_keys_for current_user
         users << current_user
         users << Duse::User.find('server')
         private_key = Duse::CLIConfig.private_key_for current_user
