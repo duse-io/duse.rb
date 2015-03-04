@@ -1,6 +1,18 @@
+class CommaSeparatedIntegerList
+  def initialize(string)
+    @list = string.split(',').map(&:strip).delete_if(&:empty?).map(&:to_i)
+  end
+
+  def map(&block)
+    @list.map(&block)
+  end
+end
+
 module Duse
   module CLI
     module ShareWithUser
+      class InvalidSelection < StandardError; end
+
       private
 
       def who_to_share_with
@@ -19,22 +31,21 @@ module Duse
       end
 
       def select_from_list(subjects, method = :to_s)
-        subjects.each_with_index do |subject, index|
-          terminal.say "#{index+1}: #{subject.public_send(method)}"
-        end
+        print_list(subjects, method)
         selection = terminal.ask 'Separate with commas, to select multiple'
-        selection_list = comma_separated_int_list(selection)
-        selection_list.map do |i|
+        CommaSeparatedIntegerList.new(selection).map do |i|
           fail InvalidSelection if subjects[i-1].nil?
           subjects[i-1]
         end
-      rescue
+      rescue InvalidSelection
         warn 'One or more of your selections are invalid. Please try again'
         select_from_list(subjects, method)
       end
 
-      def comma_separated_int_list(string)
-        string.split(',').map(&:strip).delete_if(&:empty?).map(&:to_i)
+      def print_list(items, method = :to_s)
+        items.each_with_index do |item, index|
+          terminal.say "#{index+1}: #{item.public_send(method)}"
+        end
       end
     end
   end
