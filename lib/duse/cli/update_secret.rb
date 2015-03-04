@@ -1,11 +1,13 @@
 require 'duse/cli'
 require 'openssl'
 require 'duse/cli/key_helper'
+require 'duse/cli/share_with_user'
 
 module Duse
   module CLI
     class UpdateSecret < ApiCommand
       include KeyHelper
+      include ShareWithUser
 
       description 'Save a new secret'
 
@@ -36,28 +38,6 @@ module Duse
       end
 
       private
-
-      def who_to_share_with
-        selected_users = []
-        wants_to_share = terminal.agree 'Do you want to share this secret?[Y/n] '
-        if(wants_to_share)
-          terminal.say 'Who do you want to share this secret with?'
-          users = Duse::User.all
-          users.each_with_index do |user, index|
-            terminal.say "#{index+1}: #{user.username}"
-          end
-          user_selection = terminal.ask 'Separate with commas, to select multiple'
-          user_selection = comma_separated_int_list(user_selection)
-          user_selection.each do |index|
-            selected_users << users[index-1] if users[index-1]
-          end
-        end
-        selected_users
-      end
-
-      def comma_separated_int_list(string)
-        string.split(',').map(&:strip).delete_if(&:empty?).map(&:to_i)
-      end
 
       def self.command_name
         'save'

@@ -113,7 +113,23 @@ describe Duse::CLI::Secret do
       i.puts 'test'
       i.puts 'test'
       i.puts 'Y'
+      i.puts '1'
+    end.success?).to be true
+  end
+
+  it 'should repeat asking for a users selection if the previous selection was invalid' do
+    stub_get_users
+    stub_user_me_get
+    stub_server_user_get
+    stub_get_other_user
+    stub_create_secret
+
+    expect(run_cli('secret', 'save') do |i|
+      i.puts 'test'
+      i.puts 'test'
+      i.puts 'Y'
       i.puts '3'
+      i.puts '1'
     end.success?).to be true
   end
 end
