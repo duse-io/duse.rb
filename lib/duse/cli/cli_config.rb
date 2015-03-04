@@ -1,11 +1,15 @@
 require 'yaml'
 
 module Duse
+  class PrivateKeyMissing < StandardError; end
+
   module CLIConfig
     extend self
 
     def private_key_for(user)
-      OpenSSL::PKey::RSA.new File.read private_key_file_for user
+      private_key_filename = private_key_file_for user
+      fail PrivateKeyMissing unless File.exists? private_key_filename
+      OpenSSL::PKey::RSA.new File.read private_key_filename
     end
 
     def save_private_key_for(user, private_key)
