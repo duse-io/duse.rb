@@ -24,19 +24,22 @@ module Duse
       def self.attributes(*list)
         @attributes ||= []
 
-        dummy = self.new
         list.each do |name|
-          name = name.to_s
-
-          @attributes << name
-          define_method(name) { load_attribute(name) } unless dummy.respond_to? name
-          define_method("#{name}=") { |value| set_attribute(name, value) } unless dummy.respond_to? "#{name}="
-          define_method("#{name}?") { !!send(name) } unless dummy.respond_to? "#{name}?"
+          add_attribute name.to_s
         end
 
         @attributes
       end
       self.singleton_class.send :alias_method, :has, :attributes
+
+      def self.add_attribute(name)
+        dummy = self.new
+
+        attributes << name
+        define_method(name) { load_attribute(name) } unless dummy.respond_to? name
+        define_method("#{name}=") { |value| set_attribute(name, value) } unless dummy.respond_to? "#{name}="
+        define_method("#{name}?") { !!send(name) } unless dummy.respond_to? "#{name}?"
+      end
 
       def self.id_field(key = nil)
         @id_field = key.to_s if key
