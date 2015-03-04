@@ -17,27 +17,29 @@ module Duse
 
         current_user = Duse::User.find('me')
         ensure_matching_keys_for current_user
-        server_user  = Duse::User.find('server')
-        secret       = Duse::Secret.find secret_id
-        private_key  = Duse::CLIConfig.private_key_for current_user
-
-        puts "\nName:   #{secret.title}"
-        puts "Secret: #{secret.decrypt(private_key)}\n"
-
-        hash                = {}
-        hash[:title]        = terminal.ask 'What do you want to call this secret? ' if terminal.agree 'Change the title? '
-        hash[:secret_text]  = terminal.ask 'Secret to save: ' if terminal.agree 'Change the secret? '
-        users               = secret.users.delete_if { |user| user.id == current_user.id || user.id == server_user.id }
-        users               = who_to_share_with if terminal.agree 'Change accessible users? '
-
-        secret       = Duse::Client::Secret.new hash
-        secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key, users, current_user, server_user).to_h
+        private_key = config.private_key_for current_user
+        secret = Duse::Secret.find secret_id
+        print_secret secret, private_key
+        secret = update_secret(secret)
+        secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
 
         response = Duse::Secret.update secret_id, secret_hash
         success 'Secret successfully updated!'
       end
 
       private
+
+      def print_secret(secret, private_key)
+        puts "\nName:   #{secret.title}"
+        puts "Secret: #{secret.decrypt(private_key)}\n"
+      end
+
+      def update_secret(secret)
+        title       = terminal.ask 'What do you want to call this secret? ' if terminal.agree 'Change the title? '
+        secret_text = terminal.ask 'Secret to save: ' if terminal.agree 'Change the secret? '
+        users       = who_to_share_with if terminal.agree 'Change accessible users? '
+        Duse::Client::Secret.new title: title, secret_text: secret_text, users: users
+      end
 
       def self.command_name
         'save'
