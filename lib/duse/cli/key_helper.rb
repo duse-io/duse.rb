@@ -1,10 +1,12 @@
 module Duse
   module KeyHelper
-    def choose_key
+    def choose_key(options = { allow_generate: true })
       key = nil
       generate_option = 'Generate a new one'
       choose_myself_option = 'Let me choose it myself'
-      choices = possible_ssh_keys + [generate_option, choose_myself_option]
+      choices = possible_ssh_keys
+      choices << generate_option if options[:allow_generate]
+      choices << choose_myself_option
       terminal.choose do |ssh_keys|
         ssh_keys.prompt = 'Which private ssh-key do you want to use?'
         ssh_keys.choices *choices do |choice|
@@ -24,7 +26,7 @@ module Duse
       loop do
         break if matching_keys? key_pair
         warn 'Your private key does not match the public key, please select a new one.'
-        key_pair[:private] = choose_key
+        key_pair[:private] = choose_key(allow_generate: false)
       end
       config.save_private_key_for user, key_pair[:private].to_pem
     end
@@ -33,10 +35,10 @@ module Duse
       config.private_key_for(user)
     rescue PrivateKeyMissing
       warn 'No private key found, please select one.'
-      choose_key
+      choose_key(allow_generate: false)
     rescue OpenSSL::PKey::RSAError
       warn 'The private key file does not contain a valid private key, please select a new one.'
-      choose_key
+      choose_key(allow_generate: false)
     end
 
     def matching_keys?(key_pair)
