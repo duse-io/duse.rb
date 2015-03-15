@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.executables = ['duse']
   s.authors     = 'Frederic Branczyk'
   s.email       = 'fbranczyk@gmail.com'
+  s.files       = `git ls-files -z`.split("\x0")
 
   s.add_runtime_dependency 'highline'
   s.add_runtime_dependency 'secret_sharing'
