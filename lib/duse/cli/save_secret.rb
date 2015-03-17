@@ -2,6 +2,7 @@ require 'duse/cli'
 require 'openssl'
 require 'duse/cli/key_helper'
 require 'duse/cli/share_with_user'
+require 'duse/cli/secret_generator'
 
 module Duse
   module CLI
@@ -13,9 +14,11 @@ module Duse
 
       on('-t', '--title [TITLE]',   'The title for the secret to save')
       on('-s', '--secret [SECRET]', 'The secret to save')
+      on('-g', '--generate-secret', 'Automatically generate the secret')
 
       def run(*arguments)
         self.title  ||= terminal.ask 'What do you want to call this secret? '
+        self.secret = SecretGenerator.new.generated_password if generate_secret?
         self.secret ||= terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
