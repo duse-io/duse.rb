@@ -195,4 +195,5 @@ RSpec.configure do |config|
   end
 
   config.order = :random
+  Kernel.srand config.seed
 end
