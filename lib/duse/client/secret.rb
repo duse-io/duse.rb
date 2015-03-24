@@ -31,7 +31,8 @@ module Duse
       end
 
       def secret_text_in_slices_of(piece_size)
-        @secret.secret_text.chars.each_slice(piece_size).map(&:join)
+        encoded_secret = Encryption.encode(@secret.secret_text)
+        encoded_secret.chars.each_slice(piece_size).map(&:join)
       end
     end
 
@@ -46,9 +47,13 @@ module Duse
       many :secrets
 
       def decrypt(private_key)
-        @secret_text ||= parts(private_key).inject('') do |result, shares|
-          result << SecretSharing.recover_secret(shares)
+        unless self.secret_text
+          secret_text = parts(private_key).inject('') do |result, shares|
+            result << SecretSharing.recover_secret(shares)
+          end
+          self.secret_text = Encryption.decode(secret_text)
         end
+        self.secret_text
       end
 
       def parts(private_key)

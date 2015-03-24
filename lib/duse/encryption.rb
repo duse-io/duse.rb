@@ -32,7 +32,7 @@ module Duse
     end
 
     def decode(encoded_text)
-      Base64.decode64 encoded_text.encode('ascii-8bit')
+      Base64.decode64(encoded_text.encode('ascii-8bit')).force_encoding('utf-8')
     end
   end
 end
