@@ -19,6 +19,11 @@ module Duse
         cs[:debug]     = [ :magenta          ]
       end
 
+      on('-h', '--help', 'Display help') do |c, _|
+        c.say c.help
+        exit
+      end
+
       def initialize(options = {})
         self.output      = $stdout
         self.input       = $stdin
@@ -158,7 +163,7 @@ module Duse
       def help(info = "")
         return help_subcommands unless self.class.subcommands.empty?
         parser.banner = usage
-        self.class.description.sub(/./) { |c| c.upcase } + ".\n" + info + parser.to_s
+        self.class.description.sub(/./) { |c| c.upcase } + ".\n\n" + info + parser.to_s
       end
 
       def help_subcommands

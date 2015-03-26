@@ -16,29 +16,29 @@ module Duse
     extend self
 
     def run(*args)
-      args, opts    = preparse(args)
-      name          = args.shift unless args.empty?
-      command_class = command(name)
-      loop do
-        unless command_class.subcommands.key? args[0]
-          break
-        end
-        command_class = command_class.subcommands[args.shift]
-      end
+      args, opts = preparse(args)
+      command_class = command(args)
       command = command_class.new(opts)
       command.parse(args)
       command.execute
     end
 
-    def command(name)
+    def command(args)
+      name = args.shift unless args.empty?
       const_name = command_name(name)
       constant   = CLI.const_get(const_name) if const_name =~ /^[A-Z][A-Za-z]+$/ and const_defined? const_name
       if command? constant
-        constant
-      else
-        $stderr.puts "unknown command #{name}"
-        exit 1
+        command_class = constant
+        loop do
+          unless command_class.subcommands.key? args[0]
+            break
+          end
+          command_class = command_class.subcommands[args.shift]
+        end
+        return command_class
       end
+      $stderr.puts "unknown command #{name}"
+      exit 1
     end
 
     def commands

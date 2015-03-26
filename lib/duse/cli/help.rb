@@ -7,21 +7,12 @@ module Duse
 
       def run(*args)
         unless args.empty?
-          say command(args).new.help
+          say CLI.command(args).new.help
         else
           say "Usage: duse COMMAND ...\n\nAvailable commands:\n\n"
           commands.each { |c| say "\t#{color(c.command_name, :command).ljust(22)} #{color(c.description, :info)}" }
           say "\nrun `#$0 help COMMAND` for more infos"
         end
-      end
-
-      def command(command_chain)
-        command_class = CLI.command(command_chain.shift)
-        loop do
-          break unless command_class.subcommands.key? command_chain.first
-          command_class = command_class.subcommands[command_chain.shift]
-        end
-        command_class
       end
 
       def commands
