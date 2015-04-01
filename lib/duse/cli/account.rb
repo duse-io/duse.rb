@@ -1,11 +1,13 @@
 require 'duse/cli/confirm_account'
 require 'duse/cli/resend_confirmation'
+require 'duse/cli/info_account'
 
 module Duse
   module CLI
     class Account < ApiCommand
       subcommand :confirm, ConfirmAccount
       subcommand :resend_confirmation, ResendConfirmation
+      subcommand :info, InfoAccount
 
       description 'Manage your account'
 
