@@ -13,6 +13,8 @@ module Duse
         error "not logged in, run `#$0 login`"
       rescue Duse::Client::Error => e
         error e.message
+      rescue Faraday::ConnectionFailed
+        error 'Cannot connect to specified duse instance'
       rescue Interrupt
         say "\naborted!"
       end
