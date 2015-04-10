@@ -1,4 +1,5 @@
 require 'yaml'
+require 'uri'
 
 module Duse
   class PrivateKeyMissing < StandardError; end
