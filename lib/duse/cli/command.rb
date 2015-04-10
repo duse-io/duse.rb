@@ -42,6 +42,8 @@ module Duse
 
       def execute
         run *arguments
+      rescue Interrupt
+        say "\naborted!"
       end
 
       def output=(io)
