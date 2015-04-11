@@ -5,7 +5,13 @@
 Duse Client & Client Library
 ============================
 
-A duse command line client written in ruby.
+Duse is a cryptographic server client application created to securely share
+secrets among signed up users. It is meant to be used for secrets such as
+passwords and ssh-keys, but it can very well be used to encrypt and share
+anything.
+
+This is a CLI for consuming the [duse api](https://github.com/duse-io/api),
+written in ruby.
 
 This implementation was heavily inspired by [travis-ci/travis.rb](https://github.com/travis-ci/travis.rb)
 
