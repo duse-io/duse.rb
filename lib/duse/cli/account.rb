@@ -2,6 +2,7 @@ require 'duse/cli/confirm_account'
 require 'duse/cli/resend_confirmation'
 require 'duse/cli/info_account'
 require 'duse/cli/update_account'
+require 'duse/cli/password'
 
 module Duse
   module CLI
@@ -10,6 +11,7 @@ module Duse
       subcommand :resend_confirmation, ResendConfirmation
       subcommand :info, InfoAccount
       subcommand :update, UpdateAccount
+      subcommand :password, Password
 
       description 'Manage your account'
 

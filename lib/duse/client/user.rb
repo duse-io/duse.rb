@@ -4,7 +4,7 @@ require 'openssl'
 module Duse
   module Client
     class User < Entity
-      attributes :id, :username, :email, :public_key
+      attributes :id, :username, :email, :public_key, :password
 
       id_field :id
       one  :user

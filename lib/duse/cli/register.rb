@@ -1,10 +1,12 @@
 require 'duse/cli'
 require 'duse/cli/key_helper'
+require 'duse/cli/password_helper'
 
 module Duse
   module CLI
     class Register < ApiCommand
       include KeyHelper
+      include PasswordHelper
 
       description 'Register a new account'
 
@@ -27,7 +29,7 @@ module Duse
       def ask_for_user_input
         @username = choose_username
         @email = choose_email
-        @password = choose_password
+        @password = ask_for_password
         @key = choose_key
       end
 
@@ -37,15 +39,6 @@ module Duse
 
       def choose_email
         terminal.ask('Email: ')
-      end
-
-      def choose_password
-        loop do
-          password = terminal.ask('Password: ') { |q| q.echo = 'x' }
-          password_confirmation = terminal.ask('Confirm password: ') { |q| q.echo = 'x' }
-          return password if password == password_confirmation
-          warn 'Password and password confirmation do not match. Try again.'
-        end
       end
     end
   end
