@@ -11,7 +11,6 @@ module Duse
 
       def run
         self.token ||= terminal.ask("A confirmation email has been sent. A confirmation token was mentioned in it, please provide that token below.\n\ntoken: ")
-        Duse.uri = config.uri
         response = Duse.session.patch('/users/confirm', { token: self.token })
         success 'Account successfully confirmed.'
       rescue Duse::Client::NotFound

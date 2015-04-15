@@ -11,7 +11,6 @@ module Duse
 
       def run
         self.email ||= terminal.ask('Your email: ')
-        Duse.uri = config.uri
         response = Duse.session.post('/users/confirm', { email: self.email })
         success 'New confirmation process started.'
       end

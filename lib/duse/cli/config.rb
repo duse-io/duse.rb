@@ -6,8 +6,7 @@ module Duse
       description 'Configure the client'
 
       def run
-        uri = terminal.ask('Uri to your duse instance: ').to_s
-        config.uri = uri
+        config.uri = terminal.ask('Uri to the duse instance you want to use: ')
       rescue ArgumentError
         error 'Not an uri'
       end
