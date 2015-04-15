@@ -9,7 +9,7 @@ module Duse
 
       description 'Manage your password'
 
-      def run(*arguments)
+      def run
         say help
       end
     end

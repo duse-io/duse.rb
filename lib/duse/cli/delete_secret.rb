@@ -5,8 +5,7 @@ module Duse
     class DeleteSecret < ApiCommand
       description 'Delete a secret'
 
-      def run(*arguments)
-        secret_id = arguments.shift unless arguments.empty?
+      def run(secret_id = nil)
         secret_id ||= terminal.ask('Secret to delete: ').to_i
 
         Duse::Secret.delete secret_id

@@ -10,8 +10,7 @@ module Duse
 
       on('-p', '--plain', 'Print the decrypted secret plain, without additional information.')
 
-      def run(*arguments)
-        secret_id = arguments.shift unless arguments.empty?
+      def run(secret_id = nil)
         secret_id ||= terminal.ask('Secret to retrieve: ').to_i
 
         secret = Duse::Secret.find secret_id

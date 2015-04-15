@@ -11,8 +11,7 @@ module Duse
 
       description 'Save a new secret'
 
-      def run(*arguments)
-        secret_id = arguments.shift unless arguments.empty?
+      def run(secret_id = nil)
         secret_id ||= terminal.ask('Secret to update: ').to_i
 
         current_user = Duse::User.find('me')

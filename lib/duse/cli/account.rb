@@ -15,7 +15,7 @@ module Duse
 
       description 'Manage your account'
 
-      def run(*arguments)
+      def run
         say help
       end
     end

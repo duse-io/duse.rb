@@ -15,7 +15,7 @@ module Duse
 
       description 'Save, retrieve and delete secrets'
 
-      def run(*arguments)
+      def run
         say help
       end
     end

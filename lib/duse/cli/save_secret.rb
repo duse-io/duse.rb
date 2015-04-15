@@ -16,7 +16,7 @@ module Duse
       on('-s', '--secret [SECRET]', 'The secret to save')
       on('-g', '--generate-secret', 'Automatically generate the secret')
 
-      def run(*arguments)
+      def run
         self.title  ||= terminal.ask 'What do you want to call this secret? '
         self.secret = SecretGenerator.new.generated_password if generate_secret?
         self.secret ||= terminal.ask 'Secret to save: '
