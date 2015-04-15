@@ -7,7 +7,7 @@ module Duse
 
       skip :authenticate
 
-      on('-e', '--email [EMAIL]', 'The token to use for confirming')
+      on('-e', '--email [EMAIL]', 'Your email')
 
       def run
         self.email ||= terminal.ask('Your email: ')
