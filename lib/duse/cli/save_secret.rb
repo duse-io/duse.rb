@@ -15,9 +15,11 @@ module Duse
       on('-t', '--title [TITLE]',   'The title for the secret to save')
       on('-s', '--secret [SECRET]', 'The secret to save')
       on('-g', '--generate-secret', 'Automatically generate the secret')
+      on('-f', '--file [FILE]',     'Read the secret to save from this file')
 
       def run
         self.title  ||= terminal.ask 'What do you want to call this secret? '
+        self.secret = File.read(self.file) if file?
         self.secret = SecretGenerator.new.generated_password if generate_secret?
         self.secret ||= terminal.ask 'Secret to save: '
         users       = who_to_share_with
