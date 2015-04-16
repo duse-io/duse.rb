@@ -6,7 +6,7 @@ require 'duse/cli/secret_generator'
 
 module Duse
   module CLI
-    class SaveSecret < ApiCommand
+    class AddSecret < ApiCommand
       include KeyHelper
       include ShareWithUser
 

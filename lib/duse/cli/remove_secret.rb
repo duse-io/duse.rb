@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class DeleteSecret < ApiCommand
+    class RemoveSecret < ApiCommand
       description 'Delete a secret'
 
       def run(secret_id = nil)
