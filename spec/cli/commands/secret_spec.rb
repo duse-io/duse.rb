@@ -86,7 +86,7 @@ describe Duse::CLI::Secret do
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
       to_return(status: 204, body: "", headers: {})
 
-    expect(run_cli('secret', 'delete', '1').success?).to be true
+    expect(run_cli('secret', 'rm', '1').success?).to be true
   end
 
   it 'should save successfully' do
@@ -95,7 +95,7 @@ describe Duse::CLI::Secret do
     stub_server_user_get
     stub_create_secret
 
-    expect(run_cli('secret', 'save') do |i|
+    expect(run_cli('secret', 'add') do |i|
       i.puts 'test'
       i.puts 'test'
       i.puts 'n'
@@ -109,7 +109,7 @@ describe Duse::CLI::Secret do
     stub_get_other_user
     stub_create_secret
 
-    expect(run_cli('secret', 'save') do |i|
+    expect(run_cli('secret', 'add') do |i|
       i.puts 'test'
       i.puts 'test'
       i.puts 'Y'
@@ -124,7 +124,7 @@ describe Duse::CLI::Secret do
     stub_get_other_user
     stub_create_secret
 
-    expect(run_cli('secret', 'save') do |i|
+    expect(run_cli('secret', 'add') do |i|
       i.puts 'test'
       i.puts 'test'
       i.puts 'Y'
