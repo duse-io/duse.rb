@@ -4,7 +4,7 @@ require 'duse/cli/password_helper'
 
 module Duse
   module CLI
-    class UpdateAccount < ApiCommand
+    class AccountUpdate < ApiCommand
       include KeyHelper
       include PasswordHelper
 

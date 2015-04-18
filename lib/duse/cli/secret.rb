@@ -1,17 +1,17 @@
-require 'duse/cli/add_secret'
-require 'duse/cli/get_secret'
-require 'duse/cli/list_secrets'
-require 'duse/cli/remove_secret'
-require 'duse/cli/update_secret'
+require 'duse/cli/secret_add'
+require 'duse/cli/secret_get'
+require 'duse/cli/secret_list'
+require 'duse/cli/secret_remove'
+require 'duse/cli/secret_update'
 
 module Duse
   module CLI
     class Secret < ApiCommand
-      subcommand :add, AddSecret
-      subcommand :get, GetSecret
-      subcommand :list, ListSecrets
-      subcommand :rm, RemoveSecret
-      subcommand :update, UpdateSecret
+      subcommand SecretAdd
+      subcommand SecretGet
+      subcommand SecretList
+      subcommand SecretRemove
+      subcommand SecretUpdate
 
       description 'Save, retrieve and delete secrets'
 

@@ -35,7 +35,7 @@ describe Duse::CLI::Secret do
   end
 
   it 'should build the full command correctly' do
-    expect(Duse::CLI::GetSecret.full_command).to eq 'secret get'
+    expect(Duse::CLI::SecretGet.full_command).to eq 'secret get'
   end
 
   it 'should only output the secret content when using the plain flag' do
@@ -86,7 +86,7 @@ describe Duse::CLI::Secret do
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
       to_return(status: 204, body: "", headers: {})
 
-    expect(run_cli('secret', 'rm', '1').success?).to be true
+    expect(run_cli('secret', 'remove', '1').success?).to be true
   end
 
   it 'should save successfully' do

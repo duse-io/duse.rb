@@ -5,7 +5,7 @@ require 'duse/cli/share_with_user'
 
 module Duse
   module CLI
-    class UpdateSecret < ApiCommand
+    class SecretUpdate < ApiCommand
       include KeyHelper
       include ShareWithUser
 
@@ -38,10 +38,6 @@ module Duse
         secret_text = terminal.ask 'Secret to save: ' if terminal.agree 'Change the secret? '
         users       = who_to_share_with if terminal.agree 'Change accessible users? '
         Duse::Client::Secret.new title: title, secret_text: secret_text, users: users
-      end
-
-      def self.command_name
-        'save'
       end
     end
   end

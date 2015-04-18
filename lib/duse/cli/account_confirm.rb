@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class ConfirmAccount < ApiCommand
+    class AccountConfirm < ApiCommand
       description 'confirm your account'
 
       skip :authenticate

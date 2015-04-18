@@ -86,13 +86,13 @@ module Duse
         @super_command
       end
 
-      def self.subcommand(command, command_class)
+      def self.subcommand(command_class)
         command_class.super_command = self
-        subcommands[command.to_s] = command_class
+        subcommands << command_class
       end
 
       def self.subcommands
-        @subcommands ||= {}
+        @subcommands ||= []
       end
 
       def self.has_subcommands?
@@ -141,8 +141,7 @@ module Duse
       end
 
       def self.full_command
-        return "#{super_command.full_command} #{command_name}" if has_super_command?
-        command_name
+        name[/[^:]*$/].split(/(?=[A-Z])/).map(&:downcase).join(' ')
       end
 
       def full_command
@@ -150,7 +149,8 @@ module Duse
       end
 
       def self.command_name
-        name[/[^:]*$/].split(/(?=[A-Z])/).map(&:downcase).join('-')
+        return full_command.sub(super_command.full_command, '').strip.sub(' ', '-') if has_super_command?
+        full_command
       end
 
       def command_name
@@ -171,7 +171,7 @@ module Duse
       def help_subcommands
         result = "#{self.class.description}\n\n"
         result << "Usage: duse #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
-        self.class.subcommands.each { |command_name, command_class| result << "\t#{color(command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
+        self.class.subcommands.each { |command_class| result << "\t#{color(command_class.command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
         result << "\nrun `#$0 help #{command_name} COMMAND` for more infos"
         result
       end

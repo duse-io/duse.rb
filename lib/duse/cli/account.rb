@@ -1,17 +1,17 @@
-require 'duse/cli/confirm_account'
-require 'duse/cli/resend_confirmation'
-require 'duse/cli/info_account'
-require 'duse/cli/update_account'
-require 'duse/cli/password'
+require 'duse/cli/account_confirm'
+require 'duse/cli/account_resend_confirmation'
+require 'duse/cli/account_info'
+require 'duse/cli/account_update'
+require 'duse/cli/account_password'
 
 module Duse
   module CLI
     class Account < ApiCommand
-      subcommand :confirm, ConfirmAccount
-      subcommand :resend_confirmation, ResendConfirmation
-      subcommand :info, InfoAccount
-      subcommand :update, UpdateAccount
-      subcommand :password, Password
+      subcommand AccountConfirm
+      subcommand AccountResendConfirmation
+      subcommand AccountInfo
+      subcommand AccountUpdate
+      subcommand AccountPassword
 
       description 'Manage your account'
 

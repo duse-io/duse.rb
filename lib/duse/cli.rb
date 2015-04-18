@@ -30,10 +30,11 @@ module Duse
       if command? constant
         command_class = constant
         loop do
-          unless command_class.subcommands.key? args[0]
+          if command_class.subcommands.select { |sc| sc.command_name == args[0] }.empty?
             break
           end
-          command_class = command_class.subcommands[args.shift]
+          command_class = command_class.subcommands.select { |sc| sc.command_name == args[0] }.first
+          args.shift
         end
         return command_class
       end
@@ -63,6 +64,7 @@ module Duse
     def try_const_get(name)
       CLI.const_get(name)
     rescue Exception
+      puts name
     end
 
     def dummy_io

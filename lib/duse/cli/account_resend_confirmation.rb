@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class ResendConfirmation < ApiCommand
+    class AccountResendConfirmation < ApiCommand
       description 'resend the confirmation email for your account'
 
       skip :authenticate

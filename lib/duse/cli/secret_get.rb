@@ -4,7 +4,7 @@ require 'duse/cli/key_helper'
 
 module Duse
   module CLI
-    class GetSecret < ApiCommand
+    class SecretGet < ApiCommand
       include KeyHelper
       description 'Retrieve a secret'
 
@@ -34,10 +34,6 @@ module Duse
           Secret: #{plain_secret}
           Access: #{secret.users.map(&:username).join(', ')}
         ".gsub(/^( |\t)+/, "")
-      end
-
-      def self.command_name
-        'get'
       end
     end
   end

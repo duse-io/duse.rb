@@ -6,7 +6,7 @@ require 'duse/cli/secret_generator'
 
 module Duse
   module CLI
-    class AddSecret < ApiCommand
+    class SecretAdd < ApiCommand
       include KeyHelper
       include ShareWithUser
 
@@ -32,12 +32,6 @@ module Duse
 
         response = Duse::Secret.create secret_hash
         success 'Secret successfully created!'
-      end
-
-      private
-
-      def self.command_name
-        'save'
       end
     end
   end

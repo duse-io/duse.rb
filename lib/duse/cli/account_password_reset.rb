@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class ResetPassword < ApiCommand
+    class AccountPasswordReset < ApiCommand
       description 'request a reset of your password'
 
       skip :authenticate

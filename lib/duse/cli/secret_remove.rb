@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class RemoveSecret < ApiCommand
+    class SecretRemove < ApiCommand
       description 'Delete a secret'
 
       def run(secret_id = nil)
@@ -13,10 +13,6 @@ module Duse
         success 'Successfully deleted'
       rescue Duse::Client::Error => e
         error e.message
-      end
-
-      def self.command_name
-        'delete'
       end
     end
   end

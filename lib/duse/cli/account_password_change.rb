@@ -3,7 +3,7 @@ require 'duse/cli/password_helper'
 
 module Duse
   module CLI
-    class ChangePassword < ApiCommand
+    class AccountPasswordChange < ApiCommand
       include PasswordHelper
 
       description 'change your password'

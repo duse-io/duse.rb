@@ -2,7 +2,7 @@ require 'duse/cli'
 
 module Duse
   module CLI
-    class InfoAccount < ApiCommand
+    class AccountInfo < ApiCommand
       description 'view your account information'
 
       def run
