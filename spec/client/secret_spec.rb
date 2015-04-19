@@ -1,6 +1,6 @@
 describe Duse::Client::Secret do
   before :each do
-    Duse.uri = 'https://example.com/'
+    Duse.config = Duse::CLIConfig.new({ 'uri' => 'https://example.com/'})
   end
 
   it 'should load a users secrets without shares' do

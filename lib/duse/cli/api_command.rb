@@ -23,12 +23,10 @@ module Duse
 
       def ensure_uri_is_set
         error "client not configured, run `#$0 config`" if config.uri.nil?
-        Duse.uri = config.uri
       end
 
       def authenticate
         fail Duse::Client::NotLoggedIn if config.token.nil?
-        Duse.token = config.token
       end
     end
   end

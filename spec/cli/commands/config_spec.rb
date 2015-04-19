@@ -1,5 +1,5 @@
 require 'duse/cli/config'
-require 'fakefs/safe'
+require 'fakefs/spec_helpers'
 
 describe Duse::CLI::Config do
   include FakeFS::SpecHelpers
@@ -10,7 +10,8 @@ describe Duse::CLI::Config do
   end
 
   after :each do
-    FileUtils.rm_rf @dir
+    open(Duse::CLIConfig.config_file, 'w') { |f| f.puts ''}
+    Duse.config = nil
   end
 
   it 'should handle a false uri correctly' do

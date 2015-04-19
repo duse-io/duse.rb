@@ -7,7 +7,7 @@ describe Duse::CLI::Secret do
   before :each do
     @dir = File.dirname(Duse::CLIConfig.config_file)
     FileUtils.mkdir_p @dir
-    open(Duse::CLI.config.config_file, 'w') do |f|
+    open(Duse::CLIConfig.config_file, 'w') do |f|
       f.puts '---'
       f.puts 'uri: https://example.com/'
     end
@@ -32,7 +32,7 @@ describe Duse::CLI::Secret do
       i.puts 'Passw0rd!'
     end.success?).to be true
 
-    expect(File.read Duse::CLI.config.config_file).to eq(
+    expect(File.read Duse::CLIConfig.config_file).to eq(
       "---\nuri: https://example.com/\ntoken: token\n"
     )
   end
@@ -50,7 +50,7 @@ describe Duse::CLI::Secret do
       "Wrong username or password!\n"
     )
 
-    expect(File.read Duse::CLI.config.config_file).to eq(
+    expect(File.read Duse::CLIConfig.config_file).to eq(
       "---\nuri: https://example.com/\n"
     )
   end

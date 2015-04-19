@@ -1,6 +1,6 @@
 describe Duse::Client::SecretMarshaller do
   before :each do
-    Duse.uri = 'https://example.com/'
+    Duse.config = Duse::CLIConfig.new({ 'uri' => 'https://example.com/' })
   end
 
   it 'should be able to marshall a secret correctly' do

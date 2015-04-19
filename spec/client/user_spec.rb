@@ -1,6 +1,6 @@
 describe Duse::Client::User do
   before :each do
-    Duse.uri = 'https://example.com/'
+    Duse.config = Duse::CLIConfig.new({ 'uri' => 'https://example.com/' })
   end
 
   def stub_create_user

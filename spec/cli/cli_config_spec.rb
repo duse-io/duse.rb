@@ -15,12 +15,14 @@ describe Duse::CLIConfig do
   end
 
   it 'should return an empty hash when no config file exists' do
-    config = Duse::CLIConfig.config
+    config = Duse::CLIConfig.load
     expect(config).to eq Hash.new
   end
 
   it 'should build the config file correctly when setting the uri' do
-    Duse::CLIConfig.uri = 'https://duse.io/'
+    config = Duse::CLIConfig.new
+    config.uri = 'https://duse.io/'
+    Duse::CLIConfig.save(config)
 
     expect(File.exist? Duse::CLIConfig.config_file).to be true
     expected_file_content = "---\nuri: https://duse.io/\n"
@@ -34,7 +36,7 @@ describe Duse::CLIConfig do
       f.chmod 0600
     end
 
-    expect(Duse::CLIConfig.config).to eq config
+    expect(Duse::CLIConfig.load).to eq config
   end
 
   it 'should use an empty config when config is malformatted' do
@@ -43,6 +45,6 @@ describe Duse::CLIConfig do
       f.chmod 0600
     end
 
-    expect(Duse::CLIConfig.config).to eq Hash.new
+    expect(Duse::CLIConfig.load).to eq Hash.new
   end
 end

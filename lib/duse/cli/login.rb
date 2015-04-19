@@ -15,7 +15,7 @@ module Duse
         password = terminal.ask('Password: ') { |q| q.echo = 'x' }
         response = Duse.session.post('/users/token', { username: username, password: password })
         config.token = response['api_token']
-        Duse.token = response['api_token']
+        CLIConfig.save(config)
         user = Duse::User.find 'me'
         ensure_matching_keys_for user
         success 'Successfully logged in!'

@@ -28,11 +28,11 @@ module Duse
         warn 'Your private key does not match the public key, please select a new one.'
         key_pair[:private] = choose_key(allow_generate: false)
       end
-      config.save_private_key_for user, key_pair[:private].to_pem
+      Duse::CLIConfig.new.save_private_key_for user, key_pair[:private].to_pem
     end
 
     def private_key_for(user)
-      config.private_key_for(user)
+      Duse::CLIConfig.new.private_key_for(user)
     rescue PrivateKeyMissing
       warn 'No private key found, please select one.'
       choose_key(allow_generate: false)

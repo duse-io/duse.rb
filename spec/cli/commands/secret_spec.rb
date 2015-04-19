@@ -6,12 +6,13 @@ describe Duse::CLI::Secret do
 
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
-    open(Duse::CLI.config.config_file, 'w') do |f|
+    open(Duse::CLIConfig.config_file, 'w') do |f|
       f.puts '---'
       f.puts 'uri: https://example.com/'
       f.puts 'token: token'
     end
-    open(Duse::CLIConfig.private_key_file_for(OpenStruct.new(username: 'flower-pot')), 'w') do |f|
+    Duse.config = nil
+    open(Duse::CLIConfig.new.private_key_file_for(OpenStruct.new(username: 'flower-pot')), 'w') do |f|
       f.puts "-----BEGIN RSA PRIVATE KEY-----"
       f.puts "MIICWgIBAAKBgQCftZvHkB6uKWVDvrIzmy2p496Hv9PD/hhRk+DSXcE/CPtRmvYZ"
       f.puts "zbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTeNdlaH9cRFV2wc2A/hbg2kaIS"

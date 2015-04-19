@@ -12,7 +12,7 @@ module Duse
     class ValidationFailed < Error; end
 
     class Session
-      attr_accessor :token, :uri
+      attr_accessor :config
 
       def find_one(entity, id)
         response_body = get("/#{entity.base_path}/#{id}")
@@ -76,7 +76,7 @@ module Duse
 
       def raw_http_request(*args)
         connection.public_send(*args) do |request|
-          request.headers['Authorization'] = token unless token.nil?
+          request.headers['Authorization'] = config.token unless config.token.nil?
           request.headers['Accept'] = 'application/vnd.duse.1+json'
         end
       end
@@ -90,9 +90,9 @@ module Duse
       end
 
       def connection
-        fail ArgumentError, 'Uri must be set' if uri.nil?
+        fail ArgumentError, 'Uri must be set' if config.uri.nil?
 
-        @connection ||= Faraday.new url: uri do |faraday|
+        @connection ||= Faraday.new url: config.uri do |faraday|
           faraday.request  :json
           faraday.response :json, content_type: /\bjson$/
           faraday.adapter  *faraday_adapter

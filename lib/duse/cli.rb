@@ -55,7 +55,11 @@ module Duse
     end
 
     def config
-      CLIConfig
+      Duse.config ||= CLIConfig.new(CLIConfig.load)
+    end
+
+    def config=(config)
+      Duse.config = config
     end
 
     private

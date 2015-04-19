@@ -6,7 +6,7 @@ describe Duse::CLI::Register do
   before :each do
     @dir = File.dirname(Duse::CLIConfig.config_file)
     FileUtils.mkdir_p @dir
-    open(Duse::CLI.config.config_file, 'w') do |f|
+    open(Duse::CLIConfig.config_file, 'w') do |f|
       f.puts '---'
       f.puts 'uri: https://example.com/'
     end

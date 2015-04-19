@@ -6,7 +6,8 @@ module Duse
       description 'Configure the client'
 
       def run
-        config.uri = terminal.ask('Uri to the duse instance you want to use: ')
+        config.uri = terminal.ask('Uri to the duse instance you want to use: ') { |q| q.default = config.uri }
+        CLIConfig.save(config)
       rescue ArgumentError
         error 'Not an uri'
       end

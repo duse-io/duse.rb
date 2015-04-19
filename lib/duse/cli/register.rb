@@ -20,7 +20,7 @@ module Duse
           password: @password,
           public_key: @key.public_key.to_pem
         )
-        Duse::CLIConfig.save_private_key_for user, @key.to_pem
+        Duse::CLIConfig.new.save_private_key_for user, @key.to_pem
         success 'Successfully created your account! You can now login with "duse login"'
       end
 

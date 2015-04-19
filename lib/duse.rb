@@ -9,6 +9,6 @@ module Duse
   extend SingleForwardable
   include Client::Namespace.new
 
-  def_delegators :session, :uri=, :token=
+  def_delegators :session, :config, :config=
   module_function :session
 end
