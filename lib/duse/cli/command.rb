@@ -87,7 +87,8 @@ module Duse
       end
 
       def self.subcommand(command)
-        return subcommands.select { |sc| sc.command_name == command }.first if command.nil? or not command < Command
+        return nil if command.nil?
+        return subcommands.select { |sc| sc.command_name == command }.first if command.is_a? String
         command.super_command = self
         subcommands << command
       end
