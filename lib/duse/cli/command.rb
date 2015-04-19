@@ -86,9 +86,10 @@ module Duse
         @super_command
       end
 
-      def self.subcommand(command_class)
-        command_class.super_command = self
-        subcommands << command_class
+      def self.subcommand(command)
+        return subcommands.select { |sc| sc.command_name == command }.first if command.nil? or not command < Command
+        command.super_command = self
+        subcommands << command
       end
 
       def self.subcommands

@@ -30,11 +30,10 @@ module Duse
       if command? constant
         command_class = constant
         loop do
-          if command_class.subcommands.select { |sc| sc.command_name == args[0] }.empty?
+          unless command_class.subcommand args.first
             break
           end
-          command_class = command_class.subcommands.select { |sc| sc.command_name == args[0] }.first
-          args.shift
+          command_class = command_class.subcommand args.shift
         end
         return command_class
       end
