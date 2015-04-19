@@ -26,32 +26,32 @@ Then you can explore the client with its help texts
 
 	$ duse help
 	Usage: duse COMMAND ...
-	
+
 	Available commands:
-	
+
 	  config         Configure the client
 	  help           Displays help messages, such as this one
 	  login          login to access and save secrets
 	  register       Register a new account
 	  secret         Save, retrieve and delete secrets
-	
+
 	run `duse help COMMAND` for more infos
 
 When you want to see the help texts for subcommands of e.g. secrets
 
 	$ duse help secret
-	
+
 	Save, retrieve and delete secrets
-	
+
 	Usage: duse secret COMMAND ...
-	
+
 	Available commands:
-	
+
 	  save           Save a new secret
 	  get            Retrieve a secret
 	  list           List all secrets you have access to
 	  delete         Delete a secret
-	
+
 	run `duse help secret COMMAND` for more infos
 
 Generally the cli will tell you if an action on your side is required. For

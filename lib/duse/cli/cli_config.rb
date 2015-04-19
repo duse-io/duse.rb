@@ -63,7 +63,7 @@ module Duse
     def private_key_file_for(user)
       File.join config_dir, user.username
     end
-    
+
     private
 
     def load

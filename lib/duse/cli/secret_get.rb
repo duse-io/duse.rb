@@ -28,7 +28,7 @@ module Duse
           $stdout.flush
           return
         end
-        
+
         say "
           Name:   #{secret.title}
           Secret: #{plain_secret}
