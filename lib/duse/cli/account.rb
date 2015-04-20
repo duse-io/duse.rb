@@ -6,7 +6,7 @@ require 'duse/cli/account_password'
 
 module Duse
   module CLI
-    class Account < ApiCommand
+    class Account < MetaCommand
       subcommand AccountConfirm
       subcommand AccountResendConfirmation
       subcommand AccountInfo
@@ -14,10 +14,6 @@ module Duse
       subcommand AccountPassword
 
       description 'Manage your account'
-
-      def run
-        say help
-      end
     end
   end
 end

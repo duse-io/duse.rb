@@ -6,7 +6,7 @@ require 'duse/cli/secret_update'
 
 module Duse
   module CLI
-    class Secret < ApiCommand
+    class Secret < MetaCommand
       subcommand SecretAdd
       subcommand SecretGet
       subcommand SecretList
@@ -14,10 +14,6 @@ module Duse
       subcommand SecretUpdate
 
       description 'Save, retrieve and delete secrets'
-
-      def run
-        say help
-      end
     end
   end
 end

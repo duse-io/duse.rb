@@ -9,6 +9,7 @@ module Duse
     autoload :Help,       'duse/cli/help'
     autoload :Config,     'duse/cli/config'
     autoload :Login,      'duse/cli/login'
+    autoload :MetaCommand,'duse/cli/meta_command'
     autoload :Register,   'duse/cli/register'
     autoload :Secret,     'duse/cli/secret'
     autoload :Account,    'duse/cli/account'

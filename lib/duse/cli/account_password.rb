@@ -3,15 +3,11 @@ require 'duse/cli/account_password_reset.rb'
 
 module Duse
   module CLI
-    class AccountPassword < ApiCommand
+    class AccountPassword < MetaCommand
       subcommand AccountPasswordChange
       subcommand AccountPasswordReset
 
       description 'Manage your password'
-
-      def run
-        say help
-      end
     end
   end
 end
