@@ -16,7 +16,7 @@ describe Duse::CLI::Register do
     end
   end
 
-  it 'should be able to register successfully' do
+  it 'registers successfully' do
     stub_request(:post, "https://example.com/users").
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Content-Type'=>'application/json'}).
       to_return(status: 201, body: {

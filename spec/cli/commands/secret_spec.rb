@@ -27,18 +27,18 @@ describe Duse::CLI::Secret do
     end
   end
 
-  it 'should build the full command correctly' do
+  it 'builds the full command correctly' do
     expect(Duse::CLI::SecretGet.full_command).to eq 'secret get'
   end
 
-  it 'should only output the secret content when using the plain flag' do
+  it 'output the secret content plaintext when using the plain flag' do
     stub_secret_get
     stub_user_me_get
     stub_server_user_get
     expect(run_cli('secret', 'get', '1', '--plain').out).to eq("test")
   end
 
-  it 'should take the secret from the cli call' do
+  it 'takes the secrets id from the cli call' do
     stub_secret_get
     stub_user_me_get
     stub_server_user_get
@@ -47,7 +47,7 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should take the secret from a user input' do
+  it 'asks for the secret id' do
     stub_secret_get
     stub_user_me_get
     stub_server_user_get
@@ -56,7 +56,7 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should show an error message when getting not existant secrets' do
+  it 'shows an error message when getting not existant secrets' do
     stub_request(:get, "https://example.com/secrets/2").
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
       to_return(status: 404, body: { message: 'Not found' }.to_json)
@@ -66,7 +66,7 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should list successfully' do
+  it 'lists secrets' do
     stub_get_secrets
 
     expect(run_cli('secret', 'list').out).to eq(
@@ -74,7 +74,7 @@ describe Duse::CLI::Secret do
     )
   end
 
-  it 'should delete successfully' do
+  it 'can deletes' do
     stub_request(:delete, "https://example.com/secrets/1").
       with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
       to_return(status: 204, body: "", headers: {})
@@ -82,7 +82,7 @@ describe Duse::CLI::Secret do
     expect(run_cli('secret', 'remove', '1').success?).to be true
   end
 
-  it 'should save successfully' do
+  it 'can create a secret' do
     stub_get_users
     stub_user_me_get
     stub_server_user_get
@@ -95,7 +95,7 @@ describe Duse::CLI::Secret do
     end.success?).to be true
   end
 
-  it 'should save successfully with multiple users' do
+  it 'can create a secret with multiple users' do
     stub_get_users
     stub_user_me_get
     stub_server_user_get
@@ -110,7 +110,7 @@ describe Duse::CLI::Secret do
     end.success?).to be true
   end
 
-  it 'should repeat asking for a users selection if the previous selection was invalid' do
+  it 'repeat asking for a users selection if the previous selection was invalid' do
     stub_get_users
     stub_user_me_get
     stub_server_user_get
