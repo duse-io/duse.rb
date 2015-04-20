@@ -28,17 +28,18 @@ module Duse
       const_name = command_name(name)
       constant   = CLI.const_get(const_name) if const_name =~ /^[A-Z][A-Za-z]+$/ and const_defined? const_name
       if command? constant
-        command_class = constant
-        loop do
-          unless command_class.subcommand args.first
-            break
-          end
-          command_class = command_class.subcommand args.shift
-        end
-        return command_class
+        command = constant
+        return deep_subcommand(command, args)
       end
       $stderr.puts "unknown command #{name}"
       exit 1
+    end
+
+    def deep_subcommand(command, args)
+      loop do
+        return command unless command.subcommand args.first
+        command = command.subcommand args.shift
+      end
     end
 
     def commands
