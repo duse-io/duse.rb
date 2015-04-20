@@ -1,19 +1,6 @@
 require 'duse/cli/config'
-require 'fakefs/spec_helpers'
 
 describe Duse::CLI::Config do
-  include FakeFS::SpecHelpers
-
-  before :each do
-    @dir = File.dirname(Duse::CLIConfig.config_file)
-    FileUtils.mkdir_p @dir
-  end
-
-  after :each do
-    open(Duse::CLIConfig.config_file, 'w') { |f| f.puts ''}
-    Duse.config = nil
-  end
-
   it 'should handle a false uri correctly' do
     expect(run_cli('config') { |i| i.puts('test') }.err).to eq(
       "Not an uri\n"

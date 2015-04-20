@@ -1,9 +1,6 @@
 require 'duse/cli/secret'
-require 'fakefs/spec_helpers'
 
 describe Duse::CLI::Secret do
-  include FakeFS::SpecHelpers
-
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLIConfig.config_file, 'w') do |f|
@@ -11,7 +8,6 @@ describe Duse::CLI::Secret do
       f.puts 'uri: https://example.com/'
       f.puts 'token: token'
     end
-    Duse.config = nil
     open(Duse::CLIConfig.new.private_key_file_for(OpenStruct.new(username: 'flower-pot')), 'w') do |f|
       f.puts "-----BEGIN RSA PRIVATE KEY-----"
       f.puts "MIICWgIBAAKBgQCftZvHkB6uKWVDvrIzmy2p496Hv9PD/hhRk+DSXcE/CPtRmvYZ"
@@ -29,10 +25,6 @@ describe Duse::CLI::Secret do
       f.puts "LZRZUZLlAdJORX177Ief6MWqgXldlcP1N7mzWskE"
       f.puts "-----END RSA PRIVATE KEY-----"
     end
-  end
-
-  after :each do
-    FileUtils.rm_rf Duse::CLIConfig.config_dir
   end
 
   it 'should build the full command correctly' do
