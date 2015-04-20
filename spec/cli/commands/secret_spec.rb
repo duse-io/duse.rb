@@ -1,6 +1,4 @@
-require 'duse/cli/secret'
-
-describe Duse::CLI::Secret do
+RSpec.describe 'duse secret' do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLIConfig.config_file, 'w') do |f|
@@ -27,102 +25,118 @@ describe Duse::CLI::Secret do
     end
   end
 
-  it 'builds the full command correctly' do
-    expect(Duse::CLI::SecretGet.full_command).to eq 'secret get'
+  describe 'get' do
+    context 'provide secret id from the call' do
+      it 'takes the secrets id from the cli call and does not ask for it' do
+        stub_secret_get
+        stub_user_me_get
+        stub_server_user_get
+        expect(run_cli('secret', 'get', '1').out).to eq(
+          "\nName:   test\nSecret: test\nAccess: server, flower-pot\n"
+        )
+      end
+
+      it 'outputs the secret content plaintext when using the plain flag' do
+        stub_secret_get
+        stub_user_me_get
+        stub_server_user_get
+        expect(run_cli('secret', 'get', '1', '--plain').out).to eq("test")
+      end
+    end
+
+    context 'secret does not exist' do
+      it 'shows an error message when getting not existant secrets' do
+        stub_request(:get, "https://example.com/secrets/2").
+          with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
+          to_return(status: 404, body: { message: 'Not found' }.to_json)
+
+        expect(run_cli('secret', 'get', '2').err).to eq(
+          "Not found\n"
+        )
+      end
+    end
+
+    context 'secret exists' do
+      it 'asks for the secret id' do
+        stub_secret_get
+        stub_user_me_get
+        stub_server_user_get
+        expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
+          "Secret to retrieve: \nName:   test\nSecret: test\nAccess: server, flower-pot\n"
+        )
+      end
+    end
   end
 
-  it 'output the secret content plaintext when using the plain flag' do
-    stub_secret_get
-    stub_user_me_get
-    stub_server_user_get
-    expect(run_cli('secret', 'get', '1', '--plain').out).to eq("test")
+  describe 'secret list' do
+    it 'lists secrets' do
+      stub_get_secrets
+
+      expect(run_cli('secret', 'list').out).to eq(
+        "1: test\n"
+      )
+    end
   end
 
-  it 'takes the secrets id from the cli call' do
-    stub_secret_get
-    stub_user_me_get
-    stub_server_user_get
-    expect(run_cli('secret', 'get', '1').out).to eq(
-      "\nName:   test\nSecret: test\nAccess: server, flower-pot\n"
-    )
+  describe 'secret delete' do
+    it 'deletes the provided secret id' do
+      stub_request(:delete, "https://example.com/secrets/1").
+        with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
+        to_return(status: 204, body: "", headers: {})
+
+      expect(run_cli('secret', 'remove', '1').success?).to be true
+    end
   end
 
-  it 'asks for the secret id' do
-    stub_secret_get
-    stub_user_me_get
-    stub_server_user_get
-    expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
-      "Secret to retrieve: \nName:   test\nSecret: test\nAccess: server, flower-pot\n"
-    )
-  end
+  describe 'secret add' do
+    context 'minimal users' do
+      it 'can create a secret' do
+        stub_get_users
+        stub_user_me_get
+        stub_server_user_get
+        stub_create_secret
 
-  it 'shows an error message when getting not existant secrets' do
-    stub_request(:get, "https://example.com/secrets/2").
-      with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
-      to_return(status: 404, body: { message: 'Not found' }.to_json)
+        expect(run_cli('secret', 'add') do |i|
+          i.puts 'test'
+          i.puts 'test'
+          i.puts 'n'
+        end.success?).to be true
+      end
+    end
 
-    expect(run_cli('secret', 'get', '2').err).to eq(
-      "Not found\n"
-    )
-  end
+    context 'multiple users' do
+      it 'can create a secret with multiple users' do
+        stub_get_users
+        stub_user_me_get
+        stub_server_user_get
+        stub_get_other_user
+        stub_create_secret
 
-  it 'lists secrets' do
-    stub_get_secrets
+        expect(run_cli('secret', 'add') do |i|
+          i.puts 'test'
+          i.puts 'test'
+          i.puts 'Y'
+          i.puts '1'
+        end.success?).to be true
+      end
+    end
 
-    expect(run_cli('secret', 'list').out).to eq(
-      "1: test\n"
-    )
-  end
+    context 'invalid user input' do
+      it 'repeats asking for a users selection if the previous selection was invalid' do
+        stub_get_users
+        stub_user_me_get
+        stub_server_user_get
+        stub_get_other_user
+        stub_create_secret
 
-  it 'can deletes' do
-    stub_request(:delete, "https://example.com/secrets/1").
-      with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
-      to_return(status: 204, body: "", headers: {})
-
-    expect(run_cli('secret', 'remove', '1').success?).to be true
-  end
-
-  it 'can create a secret' do
-    stub_get_users
-    stub_user_me_get
-    stub_server_user_get
-    stub_create_secret
-
-    expect(run_cli('secret', 'add') do |i|
-      i.puts 'test'
-      i.puts 'test'
-      i.puts 'n'
-    end.success?).to be true
-  end
-
-  it 'can create a secret with multiple users' do
-    stub_get_users
-    stub_user_me_get
-    stub_server_user_get
-    stub_get_other_user
-    stub_create_secret
-
-    expect(run_cli('secret', 'add') do |i|
-      i.puts 'test'
-      i.puts 'test'
-      i.puts 'Y'
-      i.puts '1'
-    end.success?).to be true
-  end
-
-  it 'repeat asking for a users selection if the previous selection was invalid' do
-    stub_get_users
-    stub_user_me_get
-    stub_server_user_get
-    stub_get_other_user
-    stub_create_secret
-
-    expect(run_cli('secret', 'add') do |i|
-      i.puts 'test'
-      i.puts 'test'
-      i.puts 'Y'
-      i.puts '3'
-      i.puts '1'
-    end.success?).to be true
+        expect(run_cli('secret', 'add') do |i|
+          i.puts 'test'
+          i.puts 'test'
+          i.puts 'Y'
+          i.puts '3'
+          i.puts '1'
+        end.success?).to be true
+      end
+    end
   end
 end

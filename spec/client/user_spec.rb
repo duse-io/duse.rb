@@ -1,4 +1,4 @@
-describe Duse::Client::User do
+RSpec.describe Duse::Client::User do
   before :each do
     Duse.config = Duse::CLIConfig.new({ 'uri' => 'https://example.com/' })
   end
@@ -17,68 +17,80 @@ describe Duse::Client::User do
       to_return(status: 201, body: payload, headers: {})
   end
 
-  it 'creates user instances' do
-    stub_get_users
-    users = Duse::User.all
+  describe '.all' do
+    it 'returns an array of users' do
+      stub_get_users
+      users = Duse::User.all
 
-    expect(users.length).to eq 3
-    expect(users.class).to be Array
-    users.each do |user|
-      expect(user.class).to be Duse::Client::User
+      expect(users.length).to eq 3
+      expect(users.class).to be Array
+      users.each do |user|
+        expect(user.class).to be Duse::Client::User
+      end
     end
   end
 
-  it 'creates correct user entity from json create response' do
-    stub_create_user
-    public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n"
+  describe '.create' do
+    it 'creates correct user entity from json create response' do
+      stub_create_user
+      public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n"
 
-    user = Duse::User.create(
-      username: 'flower-pot',
-      email:    'flower-pot@example.org',
-      password: 'Passw0rd!',
-      password_confirmation: 'Passw0rd!',
-      public_key: public_key
-    )
+      user = Duse::User.create(
+        username: 'flower-pot',
+        email:    'flower-pot@example.org',
+        password: 'Passw0rd!',
+        password_confirmation: 'Passw0rd!',
+        public_key: public_key
+      )
 
-    expect(user.username).to eq 'flower-pot'
-    expect(user.email).to eq 'flower-pot@example.org'
-    expect(user.public_key.to_s).to eq public_key
+      expect(user.username).to eq 'flower-pot'
+      expect(user.email).to eq 'flower-pot@example.org'
+      expect(user.public_key.to_s).to eq public_key
+    end
   end
 
-  it 'creates the correct entity when requesting own user' do
-    stub_user_me_get
-    public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n"
+  describe '.find' do
+    context 'own user' do
+      it 'creates the correct entity when requesting own user' do
+        stub_user_me_get
+        public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n"
 
-    user = Duse::User.find 'me'
+        user = Duse::User.find 'me'
 
-    expect(user.username).to eq 'flower-pot'
-    expect(user.email).to eq 'flower-pot@example.org'
-    expect(user.public_key.to_s).to eq public_key
+        expect(user.username).to eq 'flower-pot'
+        expect(user.email).to eq 'flower-pot@example.org'
+        expect(user.public_key.to_s).to eq public_key
+      end
+    end
+
+    context 'server user' do
+      it 'creates the correct entity when requesting the server user' do
+        stub_server_user_get
+        public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n"
+
+        user = Duse::User.find 'server'
+
+        expect(user.username).to eq 'server'
+        expect(user.email).to eq 'server@localhost'
+        expect(user.public_key.to_s).to eq public_key
+      end
+    end
+
+    context 'any user' do
+      it 'creates the correct entity when requesting a specific user' do
+        stub_get_other_user
+        public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTF2gEqXRy2hJ6+xjj6IbzAgHG\nHvnLNnZlwkYm0ZV89uiPxL9mKYNiW4KA1azZlvJZviTF4218WAwO1IGIH+PppdXF\nIK8vmB6IIaQcO4UTjSA6ZTn8Uwf1fwS4EAuL3Zr3IVdjVYQ4+/ZNtmSyVMmo+7zP\nyOa31hUhDNYrJO1iEQIDAQAB\n-----END PUBLIC KEY-----\n"
+
+        user = Duse::User.find 3
+
+        expect(user.username).to eq 'adracus'
+        expect(user.email).to eq 'adracus@example.org'
+        expect(user.public_key.to_s).to eq public_key
+      end
+    end
   end
 
-  it 'creates the correct entity when requesting the server user' do
-    stub_server_user_get
-    public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC8Z1K4aCksOb6rsbKNcF4fNcN\n1Tbyv+ids751YvmfU2WHDXB3wIVoN1YRdb8Dk8608YlGAAqVaGVwfgYdyLMppIGs\nglZIMjwZFM2F84T4swKOEJJx6o3ZCRnP9ZQcceqzcIuTjiIqC7xu+QOvtADAMW68\nzZIpFOHjjiuxkA7PQQIDAQAB\n-----END PUBLIC KEY-----\n"
-
-    user = Duse::User.find 'server'
-
-    expect(user.username).to eq 'server'
-    expect(user.email).to eq 'server@localhost'
-    expect(user.public_key.to_s).to eq public_key
-  end
-
-  it 'creates the correct entity when requesting a specific user' do
-    stub_get_other_user
-    public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTF2gEqXRy2hJ6+xjj6IbzAgHG\nHvnLNnZlwkYm0ZV89uiPxL9mKYNiW4KA1azZlvJZviTF4218WAwO1IGIH+PppdXF\nIK8vmB6IIaQcO4UTjSA6ZTn8Uwf1fwS4EAuL3Zr3IVdjVYQ4+/ZNtmSyVMmo+7zP\nyOa31hUhDNYrJO1iEQIDAQAB\n-----END PUBLIC KEY-----\n"
-
-    user = Duse::User.find 3
-
-    expect(user.username).to eq 'adracus'
-    expect(user.email).to eq 'adracus@example.org'
-    expect(user.public_key.to_s).to eq public_key
-  end
-
-  it 'reloads the entity when necessary' do
+  it 'reloads an entity when necessary' do
     stub_get_users
     stub_get_other_user
     users = Duse::User.all
