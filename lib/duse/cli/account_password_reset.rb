@@ -11,7 +11,7 @@ module Duse
 
       def run
         self.email ||= terminal.ask('Your email: ')
-        response = Duse.session.post('/users/forgot_password', { email: self.email })
+        Duse::User.forgot_password(self.email)
         success 'An email with instructions on how to reset your password has been sent.'
       end
     end

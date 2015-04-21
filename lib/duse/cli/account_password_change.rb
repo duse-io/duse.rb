@@ -17,7 +17,7 @@ module Duse
             password: ask_for_password
           })
         else
-          user = Duse::User.find('me')
+          user = Duse::User.current
           Duse::User.update(user.id, {
             password: ask_for_password,
             current_password: ask_for_current_password

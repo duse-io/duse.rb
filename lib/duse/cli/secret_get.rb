@@ -18,7 +18,7 @@ module Duse
       end
 
       def print_secret(secret)
-        user = Duse::User.find 'me'
+        user = Duse::User.current
         ensure_matching_keys_for user
         private_key = config.private_key_for user
         plain_secret = secret.decrypt(private_key)

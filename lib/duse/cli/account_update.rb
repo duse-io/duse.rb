@@ -11,7 +11,7 @@ module Duse
       description 'update account'
 
       def run
-        user = Duse::User.find('me')
+        user = Duse::User.current
         terminal.say 'Leave blank if you do not wish to change'
         Duse::User.update(user.id, {
           username: terminal.ask('Username: ') { |q| q.default = user.username },

@@ -6,7 +6,7 @@ module Duse
       description 'view your account information'
 
       def run
-        user = Duse::User.find('me')
+        user = Duse::User.current
         say "
           Username: #{user.username}
           Email:    #{user.email}

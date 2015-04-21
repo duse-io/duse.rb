@@ -24,9 +24,9 @@ module Duse
         self.secret ||= terminal.ask 'Secret to save: '
         users       = who_to_share_with
 
-        current_user = Duse::User.find('me')
-        ensure_matching_keys_for current_user
-        private_key = config.private_key_for current_user
+        user = Duse::User.current
+        ensure_matching_keys_for user
+        private_key = config.private_key_for user
         secret      = Duse::Client::Secret.new title: self.title, secret_text: self.secret, users: users
         secret_hash = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
 

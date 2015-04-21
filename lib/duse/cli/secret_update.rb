@@ -14,9 +14,9 @@ module Duse
       def run(secret_id = nil)
         secret_id ||= terminal.ask('Secret to update: ').to_i
 
-        current_user = Duse::User.find('me')
-        ensure_matching_keys_for current_user
-        private_key = config.private_key_for current_user
+        user = Duse::User.current
+        ensure_matching_keys_for user
+        private_key = config.private_key_for user
         secret = Duse::Secret.find secret_id
         print_secret secret, private_key
         secret = update_secret(secret)
