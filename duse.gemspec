@@ -1,6 +1,11 @@
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'duse/version'
+
 Gem::Specification.new do |s|
   s.name        = 'duse'
-  s.version     = '0.0.1'
+  s.version     = Duse::VERSION
   s.description = 'CLI and Ruby client library for duse'
   s.homepage    = 'https://github.com/duse-io/duse.rb'
   s.summary     = 'Duse client'

@@ -13,6 +13,7 @@ module Duse
     autoload :Register,   'duse/cli/register'
     autoload :Secret,     'duse/cli/secret'
     autoload :Account,    'duse/cli/account'
+    autoload :Version,    'duse/cli/version'
 
     extend self
 
