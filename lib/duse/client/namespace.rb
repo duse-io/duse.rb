@@ -82,6 +82,8 @@ module Duse
       attr_accessor :session
 
       def initialize
+        @session = Session.new
+
         Entity.subclasses.each do |subclass|
           name = subclass.name[/[^:]+$/]
           curry = Curry.new(self, subclass)
@@ -89,15 +91,21 @@ module Duse
           curry.extend curry_extension if curry_extension
           const_set(name, curry)
         end
-
-        namespace = self
-        define_method(:session) { namespace.session ||= Session.new }
       end
 
       def get_curry_extension(name)
         Curry.const_get(name)
       rescue NameError
         nil
+      end
+
+      def included(klass)
+        return if klass == Object or klass == Kernel
+        namespace = self
+        klass.define_singleton_method(:session)  { namespace.session }
+        klass.define_singleton_method(:session=) { |value| namespace.session = value }
+        klass.define_singleton_method(:config)  { session.config }
+        klass.define_singleton_method(:config=) { |value| session.config = value }
       end
     end
   end
