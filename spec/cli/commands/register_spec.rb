@@ -14,7 +14,7 @@ describe 'duse register' do
     end
   end
 
-  context 'all user inputs are valid' do
+  context 'if all user inputs are valid' do
     it 'registers successfully' do
       stub_request(:post, "https://example.com/users").
         with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Content-Type'=>'application/json'}).

@@ -172,9 +172,9 @@ module Duse
 
       def help_subcommands
         result = "#{self.class.description}\n\n"
-        result << "Usage: duse #{command_name} COMMAND ...\n\nAvailable commands:\n\n"
+        result << "Usage: duse #{full_command} COMMAND ...\n\nAvailable commands:\n\n"
         self.class.subcommands.each { |command_class| result << "\t#{color(command_class.command_name, :command).ljust(22)} #{color(command_class.description, :info)}\n" }
-        result << "\nrun `#$0 help #{command_name} COMMAND` for more infos"
+        result << "\nrun `#$0 help #{full_command} COMMAND` for more infos"
         result
       end
 

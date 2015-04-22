@@ -68,7 +68,7 @@ RSpec.describe 'duse secret' do
     end
   end
 
-  describe 'secret list' do
+  describe 'list' do
     it 'lists secrets' do
       stub_get_secrets
 
@@ -78,7 +78,7 @@ RSpec.describe 'duse secret' do
     end
   end
 
-  describe 'secret delete' do
+  describe 'delete' do
     it 'deletes the provided secret id' do
       stub_request(:delete, "https://example.com/secrets/1").
         with(headers: {'Accept'=>'application/vnd.duse.1+json', 'Authorization'=>'token'}).
@@ -88,7 +88,7 @@ RSpec.describe 'duse secret' do
     end
   end
 
-  describe 'secret add' do
+  describe 'add' do
     context 'minimal users' do
       it 'can create a secret' do
         stub_get_users
