@@ -1,5 +1,13 @@
 language: ruby
 rvm:
-  - 2.2.2
+- 2.2.2
 sudo: false
 cache: bundler
+deploy:
+  provider: rubygems
+  api_key:
+    secure: bdKrctjfSWJ5bhPOVL2Amr2/hbCa6J0QGhIsl7ZbWSitSP17sW8wN8E2TSECGHAouymzZ9SmFKCJpTrjpdd6lA3ATHoMcRl2c5qHVcL0IyZ1Q89sVxnhCt/nXzoCOG1FzLyyHfiGq4/RbB3e04xG2ZWPkuLZMGJnFqChNciNPB0=
+  gem: duse
+  on:
+    tags: true
+    repo: duse-io/duse.rb
