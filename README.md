@@ -24,34 +24,38 @@ To install the client simply install its ruby gem.
 
 Then you can explore the client with its help texts
 
-	$ duse help
+	$ duse
+	
 	Usage: duse COMMAND ...
-
+	
 	Available commands:
-
+	
+	  account        Manage your account
 	  config         Configure the client
 	  help           Displays help messages, such as this one
 	  login          login to access and save secrets
 	  register       Register a new account
 	  secret         Save, retrieve and delete secrets
-
+	  version        print the client version
+	
 	run `duse help COMMAND` for more infos
 
 When you want to see the help texts for subcommands of e.g. secrets
 
-	$ duse help secret
-
+	$ duse secret
+	
 	Save, retrieve and delete secrets
-
+	
 	Usage: duse secret COMMAND ...
-
+	
 	Available commands:
-
-	  save           Save a new secret
+	
+	  add            Save a new secret
 	  get            Retrieve a secret
 	  list           List all secrets you have access to
-	  delete         Delete a secret
-
+	  remove         Delete a secret
+	  update         Save a new secret
+	
 	run `duse help secret COMMAND` for more infos
 
 Generally the cli will tell you if an action on your side is required. For
@@ -59,6 +63,60 @@ example when it needs to be configured and you are trying to login.
 
 	$ duse login
 	client not configured, run `duse config`
+
+So configure it
+
+	$ duse config
+	Uri to the duse instance you want to use: https://myserver.io/
+
+Let's register
+
+	$ duse register
+	Username: flower-pot
+	Email: fbranczyk@gmail.com
+	Password: xxxxxxxx
+	Confirm password: xxxxxxxx
+	1. /Users/fredericbranczyk/.ssh/id_boot2docker
+	2. /Users/fredericbranczyk/.ssh/id_rsa
+	3. Generate a new one
+	4. Let me choose it myself
+	Which private ssh-key do you want to use?
+	3
+	Successfully created your account! An email to confirm it has been sent. Once confirmed you can login with "duse login"
+
+Confirm the account according to the instructions in the email. Then login
+
+	$ duse login
+	Username: flower-pot
+	Password: xxxxxxxx
+	Successfully logged in!
+
+Now that the client is configured and you're logged in the first secret can be
+created
+
+	$ duse secret save
+	What do you want to call this secret? First Secret
+	Secret to save: test-secret
+	Do you want to share this secret?[Y/n] n
+	Secret successfully created!
+
+Then list your secrets
+
+	$ duse secret list
+	1: First Secret
+
+Retrieve a secret
+
+	$ duse secret get 1
+	
+	Name:   First Secret
+	Secret: test-secret
+	Access: flower-pot, server
+
+Or plain
+
+	$ duse secret get 1
+	test-secret
 
 The Library
 ===========

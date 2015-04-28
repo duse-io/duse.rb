@@ -21,7 +21,7 @@ module Duse
           public_key: @key.public_key.to_pem
         )
         Duse::CLIConfig.new.save_private_key_for user, @key.to_pem
-        success 'Successfully created your account! You can now login with "duse login"'
+        success 'Successfully created your account! An email to confirm it has been sent. Once confirmed you can login with "duse login"'
       end
 
       private
