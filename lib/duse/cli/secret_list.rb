@@ -1,4 +1,5 @@
 require 'duse/cli'
+require 'duse/cli/secret_add'
 
 module Duse
   module CLI
@@ -12,7 +13,7 @@ module Duse
         end
         if secrets.empty?
           say 'You have not yet saved any secrets, ' \
-            'you can do so with "duse secret save".'
+            "you can do so with \"duse #{SecretAdd.full_command}\"."
         end
       end
     end
