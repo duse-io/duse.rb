@@ -4,40 +4,8 @@ require 'secret_sharing'
 
 module Duse
   module Client
-    class SecretMarshaller
-      def initialize(secret, private_key)
-        @secret       = secret
-        @private_key  = private_key
-      end
-
-      def to_h
-        secret_hash = {}
-        secret_hash['title'] = @secret.title     if @secret.title
-        secret_hash['parts'] = parts_from_secret if @secret.secret_text
-        secret_hash
-      end
-
-      def parts_from_secret
-        # sliced of 18 is a result of trial & error, if it's too large then
-        # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
-        secret_text_in_slices_of(18).map do |secret_part|
-          shares = SecretSharing.split_secret(secret_part, 2, @secret.users.length)
-          @secret.users.each_with_index.map do |user, index|
-            share = shares[index]
-            content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, share)
-            {"user_id" => user.id, "content" => content, "signature" => signature}
-          end
-        end
-      end
-
-      def secret_text_in_slices_of(piece_size)
-        encoded_secret = Encryption.encode(@secret.secret_text)
-        encoded_secret.chars.each_slice(piece_size).map(&:join)
-      end
-    end
-
     class Secret < Entity
-      attributes :id, :title, :parts
+      attributes :id, :title, :shares, :cipher_text
       has :users
 
       attr_accessor :secret_text
@@ -47,21 +15,28 @@ module Duse
       many :secrets
 
       def decrypt(private_key)
-        unless self.secret_text
-          secret_text = parts(private_key).inject('') do |result, shares|
-            result << SecretSharing.recover_secret(shares)
-          end
-          self.secret_text = Encryption.decode(secret_text)
+        # require private_key to be private rsa key
+        # require shares to be set (real shares object in the future)
+        # require cipher_text to be set
+
+        raw_shares = self.shares.map do |share|
+          Encryption::Asymmetric.decrypt private_key, share
         end
-        self.secret_text
+        key, iv = SecretSharing.recover_secret(raw_shares).split ' '
+        self.secret_text = Encryption::Symmetric.decrypt key, iv, cipher_text
       end
 
-      def parts(private_key)
-        return nil if load_attribute('parts').nil?
-        load_attribute('parts').map do |part|
-          part.map do |share|
-            Duse::Encryption.decrypt private_key, share
-          end
+      def encrypt(private_key)
+        # require private_key to be private rsa key
+        # require users to be set and user objects
+        # require secret_text to be set and string
+
+        key, iv, self.cipher_text = Encryption::Symmetric.encrypt secret_text
+        raw_shares = SecretSharing.split_secret "#{key} #{iv}", 2, self.users.length
+        self.shares = users.map.with_index do |user, index|
+          share = raw_shares[index]
+          content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
+          {"user_id" => user.id, "content" => content, "signature" => signature}
         end
       end
     end
