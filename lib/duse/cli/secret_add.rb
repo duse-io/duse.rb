@@ -27,8 +27,11 @@ module Duse
         user = Duse::User.current
         ensure_matching_keys_for user
         private_key = config.private_key_for user
-        secret      = Duse::Client::Secret.new title: self.title, secret_text: self.secret, users: users
-        secret_hash = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
+        secret_hash = Duse::Client::CreateSecret.with(
+          title: self.title,
+          secret_text: self.secret,
+          users: users
+        ).sign_with(private_key).build
 
         response = Duse::Secret.create secret_hash
         success 'Secret successfully created!'

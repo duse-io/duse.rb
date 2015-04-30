@@ -4,11 +4,56 @@ require 'secret_sharing'
 
 module Duse
   module Client
+    class CreateSecret
+      class CreatableSecret
+        def initialize(options)
+          @options = options
+        end
+
+        def build
+          cipher_text, shares = encrypt(@options[:secret_text], @options[:users], @options[:private_key])
+          {
+            title: @options[:title],
+            cipher_text: cipher_text,
+            shares: shares
+          }
+        end
+
+        def encrypt(secret_text, users, private_key)
+          key, iv, cipher_text = Encryption::Symmetric.encrypt Encryption::Symmetric.encode(secret_text)
+          raw_shares = SecretSharing.split_secret "#{key} #{iv}", 2, users.length
+          shares = users.map.with_index do |user, index|
+            share = raw_shares[index]
+            content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
+            {"user_id" => user.id, "content" => content, "signature" => signature}
+          end
+          [cipher_text, shares]
+        end
+      end
+
+      def self.with(options)
+        new(options)
+      end
+
+      def initialize(options)
+        @title = options.fetch(:title)
+        @secret_text = options.fetch(:secret_text)
+        @users = options.fetch(:users)
+      end
+
+      def sign_with(private_key)
+        CreatableSecret.new(
+          title: @title,
+          secret_text: @secret_text,
+          users: @users,
+          private_key: private_key
+        )
+      end
+    end
+
     class Secret < Entity
       attributes :id, :title, :shares, :cipher_text
       has :users
-
-      attr_accessor :secret_text
 
       id_field :id
       one  :secret
@@ -23,21 +68,7 @@ module Duse
           Encryption::Asymmetric.decrypt private_key, share
         end
         key, iv = SecretSharing.recover_secret(raw_shares).split ' '
-        self.secret_text = Encryption::Symmetric.decode(Encryption::Symmetric.decrypt(key, iv, self.cipher_text))
-      end
-
-      def encrypt(private_key)
-        # require private_key to be private rsa key
-        # require users to be set and user objects
-        # require secret_text to be set and string
-
-        key, iv, self.cipher_text = Encryption::Symmetric.encrypt Encryption::Symmetric.encode(secret_text)
-        raw_shares = SecretSharing.split_secret "#{key} #{iv}", 2, self.users.length
-        self.shares = users.map.with_index do |user, index|
-          share = raw_shares[index]
-          content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
-          {"user_id" => user.id, "content" => content, "signature" => signature}
-        end
+        Encryption::Symmetric.decode(Encryption::Symmetric.decrypt(key, iv, self.cipher_text))
       end
     end
   end

@@ -41,6 +41,14 @@ module Duse
         define_method("#{name}?") { !!send(name) } unless dummy.respond_to? "#{name}?"
       end
 
+      def self.ignore_in_json(*attributes)
+        @ignored_attributes ||= []
+        attributes.each do |attribute|
+          @ignored_attributes << attribute
+        end
+        @ignored_attributes
+      end
+
       def self.id_field(key = nil)
         @id_field = key.to_s if key
         @id_field
@@ -48,7 +56,6 @@ module Duse
 
       attr_accessor :curry
       attr_reader :attributes
-      alias_method :to_h, :attributes
 
       def initialize(options = {})
         @attributes = {}
@@ -81,6 +88,12 @@ module Duse
       def missing?(name)
         return false unless self.class.attributes.include? name
         !attributes.key?(name)
+      end
+
+      def to_h
+        result = attributes.clone
+        self.class.ignore_in_json.each { |e| result.delete e.to_s }
+        result
       end
     end
   end
