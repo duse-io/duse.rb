@@ -4,6 +4,43 @@ require 'secret_sharing'
 
 module Duse
   module Client
+    class UpdateSecret
+      # Possible Scenarios
+      # ------------------
+      # change title
+      # change secret -> changes cipher + shares
+      # change users  -> changes shares
+      def initialize(secret, values_to_update)
+        @secret = secret
+        @values = values_to_update
+      end
+
+      def encrypt_with(private_key)
+        @private_key = private_key
+        self
+      end
+
+      def build
+        result = {}
+        result[:title] = @values[:title] if @values[:title]
+        if @values[:secret_text]
+          users = @secret.users || @values[:current_users]
+          cipher_text, shares = Encryption.encrypt(@values[:secret_text], users, @private_key)
+          result[:cipher_text] = cipher_text
+          result[:shares] = shares
+        end
+        if @values[:secret_text].nil? && @values[:users]
+          symmetric_key = Encryption.decrypt_symmetric_key(@secret.shares, @private_key)
+          result[:shares] = Encryption.encrypt_symmetric_key(symmetric_key, @values[:users], @private_key)
+        end
+        result
+      end
+
+      def self.values(secret, value_hash)
+        new(secret, value_hash)
+      end
+    end
+
     class CreateSecret
       class CreatableSecret
         def initialize(options)
@@ -11,23 +48,12 @@ module Duse
         end
 
         def build
-          cipher_text, shares = encrypt(@options[:secret_text], @options[:users], @options[:private_key])
+          cipher_text, shares = Encryption.encrypt(@options[:secret_text], @options[:users], @options[:private_key])
           {
             title: @options[:title],
             cipher_text: cipher_text,
             shares: shares
           }
-        end
-
-        def encrypt(secret_text, users, private_key)
-          key, iv, cipher_text = Encryption::Symmetric.encrypt secret_text
-          raw_shares = SecretSharing.split_secret "#{key} #{iv}", 2, users.length
-          shares = users.map.with_index do |user, index|
-            share = raw_shares[index]
-            content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
-            {"user_id" => user.id, "content" => content, "signature" => signature}
-          end
-          [cipher_text, shares]
         end
       end
 
@@ -64,11 +90,7 @@ module Duse
         # require shares to be set (real shares object in the future)
         # require cipher_text to be set
 
-        raw_shares = self.shares.map do |share|
-          Encryption::Asymmetric.decrypt private_key, share
-        end
-        key, iv = SecretSharing.recover_secret(raw_shares).split ' '
-        Encryption::Symmetric.decrypt(key, iv, self.cipher_text)
+        Encryption.decrypt(self.cipher_text, self.shares, private_key)
       end
     end
   end

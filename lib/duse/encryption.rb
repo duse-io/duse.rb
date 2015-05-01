@@ -77,6 +77,35 @@ module Duse
         OpenSSL::Cipher.new('AES-256-CBC')
       end
     end
+
+    extend self
+
+    def encrypt(secret_text, users, private_key)
+      key, iv, cipher_text = Encryption::Symmetric.encrypt secret_text
+      shares = encrypt_symmetric_key("#{key.strip} #{iv.strip}", users, private_key)
+      [cipher_text, shares]
+    end
+
+    def decrypt(cipher_text, shares, private_key)
+      key, iv = decrypt_symmetric_key(shares, private_key).split ' '
+      Encryption::Symmetric.decrypt(key, iv, cipher_text)
+    end
+
+    def encrypt_symmetric_key(symmetric_key, users, private_key)
+      raw_shares = SecretSharing.split_secret(symmetric_key, 2, users.length)
+      users.map.with_index do |user, index|
+        share = raw_shares[index]
+        content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
+        {"user_id" => user.id, "content" => content, "signature" => signature}
+      end
+    end
+
+    def decrypt_symmetric_key(shares, private_key)
+      raw_shares = shares.map do |share|
+        Encryption::Asymmetric.decrypt private_key, share
+      end
+      SecretSharing.recover_secret(raw_shares)
+    end
   end
 end
 
