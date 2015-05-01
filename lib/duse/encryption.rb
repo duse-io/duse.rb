@@ -46,6 +46,7 @@ module Duse
       extend Duse::Encryption::Encoding
 
       def encrypt(plaintext)
+        plaintext = encode(plaintext)
         cipher = symmetric_algorithm
         cipher.encrypt
         key = cipher.random_key
@@ -69,7 +70,7 @@ module Duse
 
         plaintext = cipher.update(cipher_text)
         plaintext << cipher.final
-        plaintext
+        decode(plaintext)
       end
 
       def symmetric_algorithm

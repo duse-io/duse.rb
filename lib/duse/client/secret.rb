@@ -20,7 +20,7 @@ module Duse
         end
 
         def encrypt(secret_text, users, private_key)
-          key, iv, cipher_text = Encryption::Symmetric.encrypt Encryption::Symmetric.encode(secret_text)
+          key, iv, cipher_text = Encryption::Symmetric.encrypt secret_text
           raw_shares = SecretSharing.split_secret "#{key} #{iv}", 2, users.length
           shares = users.map.with_index do |user, index|
             share = raw_shares[index]
@@ -68,7 +68,7 @@ module Duse
           Encryption::Asymmetric.decrypt private_key, share
         end
         key, iv = SecretSharing.recover_secret(raw_shares).split ' '
-        Encryption::Symmetric.decode(Encryption::Symmetric.decrypt(key, iv, self.cipher_text))
+        Encryption::Symmetric.decrypt(key, iv, self.cipher_text)
       end
     end
   end
