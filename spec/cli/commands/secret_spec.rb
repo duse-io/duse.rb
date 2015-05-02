@@ -102,9 +102,18 @@ RSpec.describe 'duse secret' do
         expect(run_cli('secret', 'add') do |i|
           i.puts 'test'
           i.puts 'test'
-          i.puts 'Y'
+          i.puts 'y'
           i.puts '1'
         end.success?).to be true
+
+        expect(last_run.out).to eq(
+          "What do you want to call this secret? " + # new lines are in stdin not stdout
+          "Secret to save: " +
+          "Do you want to share this secret?[y/n] " +
+          "Who do you want to share this secret with?\n" +
+          "1: adracus\n" +
+          "Type the ids of the users you want to share with (separate with commas to select multiple)\n"
+        )
       end
     end
 

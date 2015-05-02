@@ -17,7 +17,7 @@ module Duse
 
       def who_to_share_with
         required_users = [Duse::User.find('me'), Duse::User.find('server')]
-        wants_to_share = terminal.agree 'Do you want to share this secret?[Y/n] '
+        wants_to_share = terminal.agree 'Do you want to share this secret?[y/n] '
         return required_users unless wants_to_share
         required_users + select_users(required_users)
       end
@@ -32,7 +32,7 @@ module Duse
 
       def select_from_list(subjects, method = :to_s)
         print_list(subjects, method)
-        selection = terminal.ask 'Separate with commas, to select multiple'
+        selection = terminal.ask 'Type the ids of the users you want to share with (separate with commas to select multiple)'
         CommaSeparatedIntegerList.new(selection).map do |i|
           fail InvalidSelection if subjects[i-1].nil?
           subjects[i-1]

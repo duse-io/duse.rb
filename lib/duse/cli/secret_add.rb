@@ -10,7 +10,7 @@ module Duse
       include KeyHelper
       include ShareWithUser
 
-      description 'Save a new secret'
+      description 'Interactively create a new secret, or set values via options'
 
       on('-t', '--title [TITLE]',   'The title for the secret to save')
       on('-s', '--secret [SECRET]', 'The secret to save')
