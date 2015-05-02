@@ -19,8 +19,7 @@ module Duse
         private_key = config.private_key_for user
         secret = Duse::Secret.find secret_id
         print_secret secret, private_key
-        secret = update_secret(secret)
-        secret_hash  = Duse::Client::SecretMarshaller.new(secret, private_key).to_h
+        secret_hash = Duse::Client::UpdateSecret.values(secret, values_to_update).encrypt_with(private_key).build
 
         response = Duse::Secret.update secret_id, secret_hash
         success 'Secret successfully updated!'
@@ -33,11 +32,11 @@ module Duse
         puts "Secret: #{secret.decrypt(private_key)}\n"
       end
 
-      def update_secret(secret)
+      def values_to_update
         title       = terminal.ask 'What do you want to call this secret? ' if terminal.agree 'Change the title? '
         secret_text = terminal.ask 'Secret to save: ' if terminal.agree 'Change the secret? '
         users       = who_to_share_with if terminal.agree 'Change accessible users? '
-        Duse::Client::Secret.new title: title, secret_text: secret_text, users: users
+        { title: title, secret_text: secret_text, users: users }.delete_if { |k, v| v.nil? }
       end
     end
   end

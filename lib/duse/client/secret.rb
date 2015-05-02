@@ -4,65 +4,93 @@ require 'secret_sharing'
 
 module Duse
   module Client
-    class SecretMarshaller
-      def initialize(secret, private_key)
-        @secret       = secret
-        @private_key  = private_key
+    class UpdateSecret
+      # Possible Scenarios
+      # ------------------
+      # change title
+      # change secret -> changes cipher + shares
+      # change users  -> changes shares
+      def initialize(secret, values_to_update)
+        @secret = secret
+        @values = values_to_update
       end
 
-      def to_h
-        secret_hash = {}
-        secret_hash['title'] = @secret.title     if @secret.title
-        secret_hash['parts'] = parts_from_secret if @secret.secret_text
-        secret_hash
+      def encrypt_with(private_key)
+        @private_key = private_key
+        self
       end
 
-      def parts_from_secret
-        # sliced of 18 is a result of trial & error, if it's too large then
-        # encryption will fail. Might improve with: http://stackoverflow.com/questions/11505547/how-calculate-size-of-rsa-cipher-text-using-key-size-clear-text-length
-        secret_text_in_slices_of(18).map do |secret_part|
-          shares = SecretSharing.split_secret(secret_part, 2, @secret.users.length)
-          @secret.users.each_with_index.map do |user, index|
-            share = shares[index]
-            content, signature = Duse::Encryption.encrypt(@private_key, user.public_key, share)
-            {"user_id" => user.id, "content" => content, "signature" => signature}
-          end
+      def build
+        result = {}
+        result[:title] = @values[:title] if @values[:title]
+        if @values[:secret_text]
+          users = @secret.users || @values[:current_users]
+          cipher_text, shares = Encryption.encrypt(@values[:secret_text], users, @private_key)
+          result[:cipher_text] = cipher_text
+          result[:shares] = shares
+        end
+        if @values[:secret_text].nil? && @values[:users]
+          symmetric_key = Encryption.decrypt_symmetric_key(@secret.shares, @private_key)
+          result[:shares] = Encryption.encrypt_symmetric_key(symmetric_key, @values[:users], @private_key)
+        end
+        result
+      end
+
+      def self.values(secret, value_hash)
+        new(secret, value_hash)
+      end
+    end
+
+    class CreateSecret
+      class CreatableSecret
+        def initialize(options)
+          @options = options
+        end
+
+        def build
+          cipher_text, shares = Encryption.encrypt(@options[:secret_text], @options[:users], @options[:private_key])
+          {
+            title: @options[:title],
+            cipher_text: cipher_text,
+            shares: shares
+          }
         end
       end
 
-      def secret_text_in_slices_of(piece_size)
-        encoded_secret = Encryption.encode(@secret.secret_text)
-        encoded_secret.chars.each_slice(piece_size).map(&:join)
+      def self.with(options)
+        new(options)
+      end
+
+      def initialize(options)
+        @title = options.fetch(:title)
+        @secret_text = options.fetch(:secret_text)
+        @users = options.fetch(:users)
+      end
+
+      def sign_with(private_key)
+        CreatableSecret.new(
+          title: @title,
+          secret_text: @secret_text,
+          users: @users,
+          private_key: private_key
+        )
       end
     end
 
     class Secret < Entity
-      attributes :id, :title, :parts
+      attributes :id, :title, :shares, :cipher_text
       has :users
-
-      attr_accessor :secret_text
 
       id_field :id
       one  :secret
       many :secrets
 
       def decrypt(private_key)
-        unless self.secret_text
-          secret_text = parts(private_key).inject('') do |result, shares|
-            result << SecretSharing.recover_secret(shares)
-          end
-          self.secret_text = Encryption.decode(secret_text)
-        end
-        self.secret_text
-      end
+        # require private_key to be private rsa key
+        # require shares to be set (real shares object in the future)
+        # require cipher_text to be set
 
-      def parts(private_key)
-        return nil if load_attribute('parts').nil?
-        load_attribute('parts').map do |part|
-          part.map do |share|
-            Duse::Encryption.decrypt private_key, share
-          end
-        end
+        Encryption.decrypt(self.cipher_text, self.shares, private_key)
       end
     end
   end

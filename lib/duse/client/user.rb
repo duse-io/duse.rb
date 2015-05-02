@@ -18,6 +18,10 @@ module Duse
         public_key = public_key.to_s if public_key.is_a? OpenSSL::PKey::RSA
         set_attribute('public_key', public_key)
       end
+
+      def server?
+        'server' == self.username
+      end
     end
   end
 end

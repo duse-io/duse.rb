@@ -11,7 +11,13 @@ module Duse
       on('-p', '--plain', 'Print the decrypted secret plain, without additional information.')
 
       def run(secret_id = nil)
-        secret_id ||= terminal.ask('Secret to retrieve: ').to_i
+        if secret_id.nil?
+          secrets = Duse::Secret.all
+          secrets.each do |s|
+            say "#{s.id}: #{s.title}"
+          end
+          secret_id = terminal.ask("\nSelect the id of the secret to retrieve: ").to_i
+        end
 
         secret = Duse::Secret.find secret_id
         print_secret(secret)
@@ -32,7 +38,7 @@ module Duse
         say "
           Name:   #{secret.title}
           Secret: #{plain_secret}
-          Access: #{secret.users.map(&:username).join(', ')}
+          Access: #{secret.users.delete_if(&:server?).map(&:username).join(', ')}
         ".gsub(/^( |\t)+/, "")
       end
     end
