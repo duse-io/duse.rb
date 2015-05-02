@@ -18,7 +18,7 @@ RSpec.describe 'duse secret' do
         stub_user_me_get
         stub_server_user_get
         expect(run_cli('secret', 'get', '1').out).to eq(
-          "\nName:   test\nSecret: test\nAccess: server, flower-pot\n"
+          "\nName:   test\nSecret: test\nAccess: flower-pot\n"
         )
       end
 
@@ -44,11 +44,12 @@ RSpec.describe 'duse secret' do
 
     context 'secret exists' do
       it 'asks for the secret id' do
+        stub_get_secrets
         stub_secret_get
         stub_user_me_get
         stub_server_user_get
         expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
-          "Secret to retrieve: \nName:   test\nSecret: test\nAccess: server, flower-pot\n"
+          "1: test\n\nSelect the id of the secret to retrieve: \nName:   test\nSecret: test\nAccess: flower-pot\n"
         )
       end
     end
