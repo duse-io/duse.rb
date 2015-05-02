@@ -32,7 +32,7 @@ module Duse
         say "
           Name:   #{secret.title}
           Secret: #{plain_secret}
-          Access: #{secret.users.map(&:username).join(', ')}
+          Access: #{secret.users.delete_if(&:server?).map(&:username).join(', ')}
         ".gsub(/^( |\t)+/, "")
       end
     end
