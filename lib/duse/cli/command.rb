@@ -41,9 +41,14 @@ module Duse
       end
 
       def execute
+        check_arity(method(:run), *arguments)
+        setup
         run *arguments
       rescue Interrupt
         say "\naborted!"
+      end
+
+      def setup
       end
 
       def output=(io)
@@ -196,6 +201,21 @@ module Duse
           usage << " ..."
         end
         usage << " [OPTIONS]"
+      end
+
+      def check_arity(method, *args)
+        return unless method.respond_to? :parameters
+        method.parameters.each do |type, name|
+          return if type == :rest
+          wrong_args("few") unless args.shift or type == :opt or type == :block
+        end
+        wrong_args("many") if args.any?
+      end
+
+      def wrong_args(quantity)
+        error "too #{quantity} arguments" do
+          say help
+        end
       end
     end
   end

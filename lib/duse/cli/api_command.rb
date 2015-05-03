@@ -6,9 +6,7 @@ module Duse
       abstract
 
       def execute
-        ensure_uri_is_set
-        authenticate
-        run *arguments
+        super
       rescue Duse::Client::NotLoggedIn
         error "not logged in, run `#$0 login`"
       rescue Duse::Client::Error => e
@@ -17,6 +15,11 @@ module Duse
         error 'Cannot connect to specified duse instance'
       rescue Interrupt
         say "\naborted!"
+      end
+
+      def setup
+        ensure_uri_is_set
+        authenticate
       end
 
       private
