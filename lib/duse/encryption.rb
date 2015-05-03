@@ -92,7 +92,7 @@ module Duse
     end
 
     def encrypt_symmetric_key(symmetric_key, users, private_key)
-      raw_shares = SecretSharing.split_secret(symmetric_key, 2, users.length)
+      raw_shares = SecretSharing.split(symmetric_key, 2, users.length)
       users.map.with_index do |user, index|
         share = raw_shares[index]
         content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
@@ -104,7 +104,7 @@ module Duse
       raw_shares = shares.map do |share|
         Encryption::Asymmetric.decrypt private_key, share
       end
-      SecretSharing.recover_secret(raw_shares)
+      SecretSharing.reconstruct(raw_shares)
     end
   end
 end
