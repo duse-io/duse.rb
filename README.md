@@ -15,14 +15,17 @@ written in ruby.
 
 This implementation was heavily inspired by [travis-ci/travis.rb](https://github.com/travis-ci/travis.rb)
 
-The Client
-==========
+CLI
+===
 
 To install the client simply install its ruby gem.
 
 	$ gem install duse
 
-Then you can explore the client with its help texts
+help
+----
+
+Explore the CLI via its help texts
 
 	$ duse
 	
@@ -40,7 +43,7 @@ Then you can explore the client with its help texts
 	
 	run `duse help COMMAND` for more infos
 
-When you want to see the help texts for subcommands of e.g. secrets
+When you want to see the help texts for subcommands of e.g. secret
 
 	$ duse secret
 	
@@ -58,8 +61,22 @@ When you want to see the help texts for subcommands of e.g. secrets
 	
 	run `duse help secret COMMAND` for more infos
 
-Generally the cli will tell you if an action on your side is required. For
-example when it needs to be configured and you are trying to login.
+For any command the `-h` flag can be added to receive the help description.
+
+	$ duse secret add -h 
+	Interactively create a new secret, or set values via options.
+	
+	Usage: duse secret add [OPTIONS]
+	    -h, --help                       Display help
+	    -t, --title [TITLE]              The title for the secret to save
+	    -s, --secret [SECRET]            The secret to save
+	    -g, --generate-secret            Automatically generate the secret
+	    -f, --file [FILE]                Read the secret to save from this file
+
+config
+------
+
+The CLI tells you when it needs to be configured
 
 	$ duse login
 	client not configured, run `duse config`
@@ -67,7 +84,27 @@ example when it needs to be configured and you are trying to login.
 So configure it
 
 	$ duse config
-	Uri to the duse instance you want to use: https://myserver.io/
+	Uri to the duse instance you want to use: https://myserver.com/
+
+login
+-----
+
+When it works
+
+	$ duse login
+	Username: flower-pot
+	Password: xxxxxxxx
+	Successfully logged in!
+
+When it fails
+
+	$ duse login
+	Username: flower-pot
+	Password: xxxxxxxx
+	Wrong username or password!
+
+register
+--------
 
 Let's register
 
@@ -76,20 +113,17 @@ Let's register
 	Email: fbranczyk@gmail.com
 	Password: xxxxxxxx
 	Confirm password: xxxxxxxx
-	1. /Users/fredericbranczyk/.ssh/id_boot2docker
-	2. /Users/fredericbranczyk/.ssh/id_rsa
-	3. Generate a new one
-	4. Let me choose it myself
+	1. /Users/fredericbranczyk/.ssh/id_rsa
+	2. Generate a new one
+	3. Let me choose it myself
 	Which private ssh-key do you want to use?
-	3
+	2
 	Successfully created your account! An email to confirm it has been sent. Once confirmed you can login with "duse login"
 
-Confirm the account according to the instructions in the email. Then login
+secret
+------
 
-	$ duse login
-	Username: flower-pot
-	Password: xxxxxxxx
-	Successfully logged in!
+###add
 
 Now that the client is configured and you're logged in the first secret can be
 created
@@ -100,10 +134,25 @@ created
 	Do you want to share this secret?[Y/n] n
 	Secret successfully created!
 
-Then list your secrets
+###list
+
+List your secrets
 
 	$ duse secret list
 	1: First Secret
+
+###get
+
+Retrieve a secret interactively
+
+	$ duse secret get
+	1: First secret
+	
+	Select the id of the secret to retrieve: 1
+	
+	Name:   First secret
+	Secret: test-secret
+	Access: flower-pot
 
 Retrieve a secret
 
@@ -111,12 +160,35 @@ Retrieve a secret
 	
 	Name:   First Secret
 	Secret: test-secret
-	Access: flower-pot, server
+	Access: flower-pot
 
 Or plain
 
-	$ duse secret get 1
+	$ duse secret get 1 --plain
 	test-secret
+
+###remove
+
+Delete a secret
+
+	$ duse secret remove 1
+	Successfully deleted
+
+Or interactively
+
+	$ duse secret remove
+	Secret to delete: 1
+	Successfully deleted
+
+account
+-------
+
+###confirm
+
+Confirm the account
+
+	$ duse account confirm <token>
+	Account successfully confirmed.
 
 The Library
 ===========
