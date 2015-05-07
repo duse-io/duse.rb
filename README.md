@@ -22,6 +22,17 @@ To install the client simply install its ruby gem.
 
 	$ gem install duse
 
+* [help](#help)
+* [config](#config)
+* [login](#login)
+* [register](#register)
+* [secret](#secret)
+  * [add](#add)
+  * [list](#list)
+  * [get](#get)
+  * [remove](#remove)
+* [account](#account)
+
 help
 ----
 
