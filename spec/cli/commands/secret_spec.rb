@@ -17,8 +17,21 @@ RSpec.describe 'duse secret' do
         stub_secret_get
         stub_user_me_get
         stub_server_user_get
+        stub_user_get1
+        stub_user_get2
         expect(run_cli('secret', 'get', '1').out).to eq(
           "\nName:   test\nSecret: test\nAccess: flower-pot\n"
+        )
+      end
+
+      it 'takes the secrets id from the cli call and does not ask for it' do
+        stub_secret_get
+        stub_user_me_get
+        stub_secret_get_broken_signature
+        stub_user_get1
+        stub_user_get2
+        expect(run_cli('secret', 'get', '2').err).to eq(
+          "Signatures could not be verified!\n"
         )
       end
 
@@ -48,9 +61,15 @@ RSpec.describe 'duse secret' do
         stub_secret_get
         stub_user_me_get
         stub_server_user_get
-        expect(run_cli('secret', 'get') { |i| i.puts('1') }.out).to eq(
+        stub_user_get1
+        stub_user_get2
+
+        run_cli('secret', 'get') { |i| i.puts('1') }
+
+        expect(last_run.out).to eq(
           "1: test\n\nSelect the id of the secret to retrieve: \nName:   test\nSecret: test\nAccess: flower-pot\n"
         )
+        expect(last_run.err).to be_empty
       end
     end
   end

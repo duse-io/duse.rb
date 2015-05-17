@@ -5,11 +5,6 @@ require 'secret_sharing'
 module Duse
   module Client
     class UpdateSecret
-      # Possible Scenarios
-      # ------------------
-      # change title
-      # change secret -> changes cipher + shares
-      # change users  -> changes shares
       def initialize(secret, values_to_update)
         @secret = secret
         @values = values_to_update
@@ -20,6 +15,11 @@ module Duse
         self
       end
 
+      # Possible Scenarios
+      # ------------------
+      # change title
+      # change secret -> changes cipher + shares
+      # change users  -> changes shares
       def build
         result = {}
         result[:title] = @values[:title] if @values[:title]
@@ -30,7 +30,8 @@ module Duse
           result[:shares] = shares
         end
         if @values[:secret_text].nil? && @values[:users]
-          symmetric_key = Encryption.decrypt_symmetric_key(@secret.shares, @private_key)
+          shares = @secret.shares.map(&:content)
+          symmetric_key = Encryption.decrypt_symmetric_key(shares, @private_key)
           result[:shares] = Encryption.encrypt_symmetric_key(symmetric_key, @values[:users], @private_key)
         end
         result
@@ -90,7 +91,28 @@ module Duse
         # require shares to be set (real shares object in the future)
         # require cipher_text to be set
 
-        Encryption.decrypt(self.cipher_text, self.shares, private_key)
+        shares = self.shares.map(&:content)
+        Encryption.decrypt(self.cipher_text, shares, private_key)
+      end
+
+      def signatures_valid?
+        self.shares.each do |s|
+          return false if !s.valid_signature?
+        end
+        true
+      end
+    end
+
+    class Share < Entity
+      attributes :id, :content, :signature, :last_edited_by_id
+
+      id_field :id
+      one :share
+      many :shares
+
+      def valid_signature?
+        user = Duse::User.find(self.last_edited_by_id)
+        Encryption::Asymmetric.verify(user.public_key, self.signature, self.content)
       end
     end
   end

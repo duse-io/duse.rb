@@ -40,6 +40,7 @@ module Duse
           Secret: #{plain_secret}
           Access: #{secret.users.delete_if(&:server?).map(&:username).join(', ')}
         ".gsub(/^( |\t)+/, "")
+        error 'Signatures could not be verified!' if !secret.signatures_valid?
       end
     end
   end
