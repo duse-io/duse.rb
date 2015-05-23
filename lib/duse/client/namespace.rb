@@ -70,11 +70,11 @@ module Duse
           end
 
           def forgot_password(email)
-            session.post('/users/forgot_password', { email: self.email })
+            session.post('/users/forgot_password', { email: email })
           end
 
           def resend_confirmation(email)
-            session.post('/users/confirm', { email: self.email })
+            session.post('/users/confirm', { email: email })
           end
         end
       end
