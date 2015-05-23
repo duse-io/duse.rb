@@ -32,6 +32,14 @@ To install the client simply install its ruby gem.
   * [get](#get)
   * [remove](#remove)
 * [account](#account)
+  * [confirm](#confirm)
+  * [resend-confirmation](#resend-confirmation)
+  * [info](#info)
+  * [update](#update)
+  * [password](#password)
+    * [change](#change)
+    * [reset](#reset)
+* [version](#version)
 
 help
 ----
@@ -200,6 +208,51 @@ Confirm the account
 
 	$ duse account confirm <token>
 	Account successfully confirmed.
+
+###resend-confirmation
+
+Make the request the server to resend the confirmation email.
+
+Confirm the account
+
+	$ duse account resend-confirmation
+	Your email: fbranczyk@gmail.com
+	New confirmation process started.
+
+###info
+
+Retrieve and print information about your account.
+
+	$ duse account info
+	Username: flower-pot
+	Email: fbranczyk@gmail.com
+
+###update
+
+Update your account
+
+	$ duse account update
+
+###password
+####change
+
+Change your password
+
+	$ duse account password change
+
+####reset
+
+Request your password to be reset
+
+	$ duse account password reset
+
+version
+-------
+
+Print the version of the gem.
+
+	$ duse secret remove
+	0.0.6
 
 The Library
 ===========
