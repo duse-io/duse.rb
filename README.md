@@ -276,8 +276,7 @@ Usage
 -----
 
 	require 'duse'
-	Duse.uri = 'https://example.org/'
-	Duse.token = 'token'
+	Duse.config = Duse::Client::Config.new(token: 'token', uri: 'https://example.org/')
 	user = Duse::User.get 'me'
 	p user
 	 => #<Duse::Client::User:0x0000000140acd0 @attributes={"id"=>2, "username"=>"flower-pot", "public_key"=>"-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtaAORZpFJ037AN1Drm88TLYyZ\ny+vLyVZr9XKPfMUF/KCHEsT1gJfQYFRI7t/gHjL3VouKM10671f/g8s5t1hWHF6Y\nOvaFTd3yDXAkf86x5jrPBrIH6M3M5WOwwqwW9aRF22CFzlBoCoV4GQt4KhRzqrG2\nkRJULsBuT9TiHCKEPwIDAQAB\n-----END PUBLIC KEY-----\n"}, @curry=#<Duse::Client::Namespace::Curry:0x0000000149fbf0>>
