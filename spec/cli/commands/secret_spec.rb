@@ -31,7 +31,7 @@ RSpec.describe 'duse secret' do
         stub_user_get1
         stub_user_get2
         expect(run_cli('secret', 'get', '2').err).to eq(
-          "Signatures could not be verified!\n"
+          "Signatures could not be verified!\nEither a user is changing her keypair\nor there is an attacker.\n"
         )
       end
 
