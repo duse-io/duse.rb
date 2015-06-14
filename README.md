@@ -15,6 +15,17 @@ written in ruby.
 
 This implementation was heavily inspired by [travis-ci/travis.rb](https://github.com/travis-ci/travis.rb)
 
+Compatibility
+-------------
+
+Tested against
+
+* Ruby MRI
+* JRuby
+
+> Hint: Be sure to install the Java Cryptography Extension (JCE) Unlimited
+> Strength Jurisdiction Policy Files for this to work on the JVM
+
 CLI
 ===
 
