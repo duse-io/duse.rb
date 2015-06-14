@@ -1,8 +1,11 @@
 language: ruby
 rvm:
-- 2.2.2
+  - ruby-head
+  - jruby-head
 sudo: false
 cache: bundler
+env:
+  - JRUBY_OPTS="-J-Dfile.encoding=UTF-8 -Xcli.debug=true --debug"
 deploy:
   provider: rubygems
   api_key:
