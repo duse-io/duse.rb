@@ -1,7 +1,19 @@
 language: ruby
 rvm:
-  - ruby-head
-  - jruby-head
+  - 2.2.2
+  - jruby-1.7.19
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+matrix:
+  exclude:
+    - rvm: 2.2.2
+      jdk: oraclejdk7
+    - rvm: 2.2.2
+      jdk: oraclejdk8
+env:
+  - JRUBY_OPTS="-Xcli.debug=true --debug"
 sudo: false
 cache: bundler
 deploy:
