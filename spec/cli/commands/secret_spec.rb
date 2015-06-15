@@ -66,8 +66,8 @@ RSpec.describe 'duse secret' do
 
         run_cli('secret', 'get') { |i| i.puts('1') }
 
-        expect(last_run.out).to eq(
-          "1: test\n\nSelect the id of the secret to retrieve: \nName:   test\nSecret: test\nAccess: flower-pot\n"
+        expect(last_run.out).to match(
+          "1: test\n\nSelect the id of the secret to retrieve: (1\n)?\nName:   test\nSecret: test\nAccess: flower-pot\n"
         )
         expect(last_run.err).to be_empty
       end
@@ -125,13 +125,8 @@ RSpec.describe 'duse secret' do
           i.puts '1'
         end.success?).to be true
 
-        expect(last_run.out).to eq(
-          "What do you want to call this secret? " + # new lines are in stdin not stdout
-          "Secret to save: " +
-          "Do you want to share this secret?[y/n] " +
-          "Who do you want to share this secret with?\n" +
-          "1: adracus\n" +
-          "Type the ids of the users you want to share with (separate with commas to select multiple)\n"
+        expect(last_run.out).to match(
+          /What do you want to call this secret\? (test\n)?Secret to save: (test\n)?Do you want to share this secret\?\[y\/n\] (y\n)?Who do you want to share this secret with\?\n1: adracus\nType the ids of the users you want to share with \(separate with commas to select multiple\)\n(1\n)?/
         )
       end
     end
