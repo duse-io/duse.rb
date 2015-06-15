@@ -217,6 +217,14 @@ module Duse
           say help
         end
       end
+
+      def format(data, format = nil, style = nil)
+        style ||= :important
+        data = format % color(data, style) if format and interactive?
+        data = data.gsub(/<\[\[/, '<%=').gsub(/\]\]>/, '%>')
+        data.encode! 'utf-8' if data.respond_to? :encode!
+        data
+      end
     end
   end
 end

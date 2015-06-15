@@ -1,6 +1,17 @@
 language: ruby
 rvm:
-- 2.2.2
+  - 2.2.2
+  - jruby-1.7.19
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+matrix:
+  exclude:
+    - rvm: 2.2.2
+      jdk: oraclejdk7
+    - rvm: 2.2.2
+      jdk: oraclejdk8
 sudo: false
 cache: bundler
 deploy:

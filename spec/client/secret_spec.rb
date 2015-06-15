@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 RSpec.describe Duse::Client::Secret do
   before :each do
     Duse.config = Duse::CLIConfig.new({ 'uri' => 'https://example.com/'})

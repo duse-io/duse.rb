@@ -32,7 +32,7 @@ module Duse
 
       def select_from_list(subjects, method = :to_s)
         print_list(subjects, method)
-        selection = terminal.ask 'Type the ids of the users you want to share with (separate with commas to select multiple)'
+        selection = terminal.ask "Type the ids of the users you want to share with (separate with commas to select multiple)\n"
         CommaSeparatedIntegerList.new(selection).map do |i|
           fail InvalidSelection if subjects[i-1].nil?
           subjects[i-1]
