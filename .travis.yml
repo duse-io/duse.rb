@@ -12,8 +12,6 @@ matrix:
       jdk: oraclejdk7
     - rvm: 2.2.2
       jdk: oraclejdk8
-env:
-  - JRUBY_OPTS="-Xcli.debug=true --debug"
 sudo: false
 cache: bundler
 deploy:
