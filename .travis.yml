@@ -14,6 +14,9 @@ matrix:
       jdk: oraclejdk8
 sudo: false
 cache: bundler
+addons:
+  code_climate:
+    repo_token: a2c4df09180c46d851b3e577d882b96f8b3b732bae06440f09f094952c544d39
 deploy:
   provider: rubygems
   api_key:

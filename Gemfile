@@ -6,8 +6,8 @@ group :test do
   gem 'rack-test'
   gem 'rake'
   gem 'rspec'
-  gem 'fakefs',    require: 'fakefs/safe'
+  gem 'fakefs', require: 'fakefs/safe'
   gem 'simplecov', require: false
-  gem 'coveralls', require: false
+  gem 'codeclimate-test-reporter', require: false
   gem 'webmock'
 end
