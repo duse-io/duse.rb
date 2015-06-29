@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 RSpec.describe 'duse secret' do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir

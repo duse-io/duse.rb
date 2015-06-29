@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'duse/client/entity'
 require 'duse/encryption'
 require 'secret_sharing'
