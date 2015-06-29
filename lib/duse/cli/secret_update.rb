@@ -36,7 +36,8 @@ module Duse
         title       = terminal.ask 'What do you want to call this secret? ' if terminal.agree 'Change the title? '
         secret_text = terminal.ask 'Secret to save: ' if terminal.agree 'Change the secret? '
         users       = who_to_share_with if terminal.agree 'Change accessible users? '
-        { title: title, secret_text: secret_text, users: users }.delete_if { |k, v| v.nil? }
+        folder      = terminal.ask 'Which folder do you want to put the secret in? (provide the id) ' if terminal.agree 'Change the folder the secret lies in?[y/n] '
+        { title: title, secret_text: secret_text, users: users, folder_id: folder }.delete_if { |k, v| v.nil? }
       end
     end
   end

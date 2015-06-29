@@ -2,6 +2,7 @@ require 'duse/version'
 require 'duse/client/entity'
 require 'duse/client/secret'
 require 'duse/client/user'
+require 'duse/client/folder'
 require 'duse/client/session'
 require 'duse/client/namespace'
 

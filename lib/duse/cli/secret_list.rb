@@ -8,9 +8,7 @@ module Duse
 
       def run
         secrets = Duse::Secret.all
-        secrets.each do |s|
-          say "#{s.id}: #{s.title}"
-        end
+        secrets.each { |s| say s.to_s }
         if secrets.empty?
           say 'You have not yet saved any secrets, ' \
             "you can do so with \"duse #{SecretAdd.full_command}\"."

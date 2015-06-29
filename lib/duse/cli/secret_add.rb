@@ -16,6 +16,7 @@ module Duse
       on('-s', '--secret [SECRET]', 'The secret to save')
       on('-g', '--generate-secret', 'Automatically generate the secret')
       on('-f', '--file [FILE]',     'Read the secret to save from this file')
+      on('--folder [FOLDER]',       'The folder to put the secret in')
 
       def run
         self.title  ||= terminal.ask 'What do you want to call this secret? '
@@ -23,6 +24,9 @@ module Duse
         self.secret = SecretGenerator.new.generated_password if generate_secret?
         self.secret ||= terminal.ask 'Secret to save: '
         users       = who_to_share_with
+        if self.folder.nil? && terminal.agree('Put secret in a folder other than the root folder?[y/n] ')
+          self.folder = terminal.ask 'Which folder do you want to put the secret in? (provide the id) '
+        end
 
         user = Duse::User.current
         ensure_matching_keys_for user
@@ -30,6 +34,7 @@ module Duse
         secret_hash = Duse::Client::CreateSecret.with(
           title: self.title,
           secret_text: self.secret,
+          folder_id: self.folder,
           users: users
         ).sign_with(private_key).build
 

@@ -23,6 +23,7 @@ module Duse
       def build
         result = {}
         result[:title] = @values[:title] if @values[:title]
+        result[:folder_id] = @values[:folder_id].to_i if @values[:folder_id]
         if @values[:secret_text]
           users = @secret.users || @values[:current_users]
           cipher_text, shares = Encryption.encrypt(@values[:secret_text], users, @private_key)
@@ -53,7 +54,8 @@ module Duse
           {
             title: @options[:title],
             cipher_text: cipher_text,
-            shares: shares
+            shares: shares,
+            folder_id: @options[:folder_id]
           }
         end
       end
@@ -66,6 +68,8 @@ module Duse
         @title = options.fetch(:title)
         @secret_text = options.fetch(:secret_text)
         @users = options.fetch(:users)
+        @folder_id = options.fetch(:folder_id, nil)
+        @folder_id = @folder_id.to_i if !@folder_id.nil?
       end
 
       def sign_with(private_key)
@@ -73,7 +77,8 @@ module Duse
           title: @title,
           secret_text: @secret_text,
           users: @users,
-          private_key: private_key
+          private_key: private_key,
+          folder_id: @folder_id
         )
       end
     end
@@ -100,6 +105,10 @@ module Duse
           return false if !s.valid_signature?
         end
         true
+      end
+
+      def to_s
+        "🔐  #{self.id}: #{self.title}"
       end
     end
 

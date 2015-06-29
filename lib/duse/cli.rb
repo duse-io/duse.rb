@@ -12,6 +12,7 @@ module Duse
     autoload :MetaCommand,'duse/cli/meta_command'
     autoload :Register,   'duse/cli/register'
     autoload :Secret,     'duse/cli/secret'
+    autoload :Folder,     'duse/cli/folder'
     autoload :Account,    'duse/cli/account'
     autoload :Version,    'duse/cli/version'
 

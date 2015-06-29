@@ -74,12 +74,24 @@ RSpec.describe 'duse secret' do
     end
   end
 
+  describe 'tree' do
+    xit 'prints the secrets in folder/secrets tree' do
+      stub_get_folders
+
+      expect(run_cli('secret', 'tree').out).to eq(
+        "1: test\n"
+      )
+    end
+  end
+
   describe 'list' do
-    it 'lists secrets' do
+    it 'lists secrets as id:secret pairs' do
       stub_get_secrets
 
-      expect(run_cli('secret', 'list').out).to eq(
-        "1: test\n"
+      run_cli('secret', 'list')
+      output = last_run.out
+      expect(output).to eq(
+        "🔐  1: test\n"
       )
     end
   end
@@ -106,6 +118,7 @@ RSpec.describe 'duse secret' do
           i.puts 'test'
           i.puts 'test'
           i.puts 'n'
+          i.puts 'n'
         end.success?).to be true
       end
     end
@@ -123,6 +136,7 @@ RSpec.describe 'duse secret' do
           i.puts 'test'
           i.puts 'y'
           i.puts '1'
+          i.puts 'n'
         end.success?).to be true
 
         expect(last_run.out).to match(
@@ -145,6 +159,7 @@ RSpec.describe 'duse secret' do
           i.puts 'Y'
           i.puts '3'
           i.puts '1'
+          i.puts 'n'
         end.success?).to be true
       end
     end
