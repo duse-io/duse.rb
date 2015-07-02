@@ -1,7 +1,39 @@
 require 'webmock/rspec'
 require 'json'
+require 'uri'
 
 module MockAPI
+  METHOD_STATUS_DEFAULT = { get: 200, put: 200, patch: 200, post: 201, delete: 204 }
+
+  class RequestStub
+    def initialize(http_method, route)
+      @http_method = http_method
+      @url = URI.join('https://example.com/', route)
+      @status = METHOD_STATUS_DEFAULT[http_method]
+      @request_headers = { 'Accept'=>'application/vnd.duse.1+json' }
+      @response_headers = {}
+      @body = nil
+    end
+
+    def body(body)
+      @body = body
+      @body = @body.to_json if @body.is_a?(Hash) || @body.is_a?(Array)
+      self
+    end
+
+    def activate
+      WebMock.stub_request(@http_method, @url).
+        with(headers: @request_headers).
+        to_return(status: @status, body: @body, headers: @response_headers)
+    end
+  end
+
+  [:get, :put, :patch, :post, :delete].each do |http_method|
+    define_method "stub_#{http_method.to_s}" do |route|
+      RequestStub.new(http_method, route)
+    end
+  end
+
   def stub_get_users
     payload = [{
       'id' => 1,
@@ -18,10 +50,8 @@ module MockAPI
       'username' => 'adracus',
       'email' => 'adracus@example.org',
       'url' => 'https://example.com/users/3'
-    }].to_json
-    stub_request(:get, "https://example.com/users").
-      with(headers: {'Accept'=>'application/vnd.duse.1+json'}).
-      to_return(status: 200, body: payload, headers: {})
+    }]
+    stub_get('/users').body(payload).activate
   end
 
   def stub_user_me_get
