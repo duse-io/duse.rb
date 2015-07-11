@@ -36,3 +36,6 @@ build/
 
 # ignore rubymine
 .idea
+
+# ignore jar built by warbler
+duse.rb.jar
