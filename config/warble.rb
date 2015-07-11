@@ -84,7 +84,7 @@ Warbler::Config.new do |config|
   # config.jar_extension = "jar"
 
   # Destionation for the created archive. Defaults to project's root directory.
-  # config.autodeploy_dir = "dist/"
+  config.autodeploy_dir = "pkg/dist/"
 
   # Name of the MANIFEST.MF template for the war file. Defaults to a simple
   # MANIFEST.MF that contains the version of Warbler used to create the war file.
