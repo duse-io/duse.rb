@@ -41,6 +41,7 @@ To install the client simply install its ruby gem.
 * [secret](#secret)
   * [add](#add)
   * [list](#list)
+  * [tree](#tree)
   * [get](#get)
   * [remove](#remove)
 * [account](#account)
@@ -170,14 +171,22 @@ created
 List your secrets
 
 	$ duse secret list
-	1: First Secret
+	🔐  1: First Secret
+
+###tree
+
+List your secrets in a tree view
+
+	$ duse secret tree
+	📂  flower-pot
+	└── 🔐  1: First Secret
 
 ###get
 
 Retrieve a secret interactively
 
 	$ duse secret get
-	1: First secret
+	🔐  1: First secret
 	
 	Select the id of the secret to retrieve: 1
 	
