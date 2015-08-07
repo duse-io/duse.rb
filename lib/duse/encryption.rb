@@ -17,11 +17,12 @@ module Duse
     module Asymmetric
       extend self
       extend Duse::Encryption::Encoding
+      PADDING = OpenSSL::PKey::RSA::PKCS1_PADDING
 
       def encrypt(private_key, public_key, text)
-        encrypted = public_key.public_encrypt text.force_encoding('ascii-8bit')
+        encrypted = public_key.public_encrypt text.force_encoding('ascii-8bit'), PADDING
         signature = sign(private_key, encrypted)
-        [encode(encrypted), signature]
+        { cipher: encode(encrypted), signature: signature }
       end
 
       def sign(private_key, text)
@@ -29,7 +30,7 @@ module Duse
       end
 
       def decrypt(private_key, text)
-        private_key.private_decrypt(decode(text)).force_encoding('utf-8')
+        private_key.private_decrypt(decode(text), PADDING).force_encoding('utf-8')
       end
 
       def verify(public_key, signature, encrypted)
@@ -95,8 +96,12 @@ module Duse
       raw_shares = SecretSharing.split(symmetric_key, 2, users.length)
       users.map.with_index do |user, index|
         share = raw_shares[index]
-        content, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
-        {"user_id" => user.id, "content" => content, "signature" => signature}
+        result = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
+        {
+          "user_id" => user.id,
+          "content" => result.fetch(:cipher),
+          "signature" => result.fetch(:signature)
+        }
       end
     end
 
