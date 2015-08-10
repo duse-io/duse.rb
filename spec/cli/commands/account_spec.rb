@@ -1,4 +1,4 @@
-RSpec.describe 'duse account' do
+RSpec.describe 'duse account', :fs => :fake do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLIConfig.config_file, 'w') do |f|

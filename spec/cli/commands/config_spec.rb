@@ -1,4 +1,4 @@
-describe 'duse config' do
+describe 'duse config', :fs => :fake do
   context 'false uri provided' do
     it 'errors with a message' do
       expect(run_cli('config') { |i| i.puts('test') }.err).to eq(

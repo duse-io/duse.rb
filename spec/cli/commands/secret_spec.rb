@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-RSpec.describe 'duse secret' do
+RSpec.describe 'duse secret', :fs => :fake do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLIConfig.config_file, 'w') do |f|

@@ -52,7 +52,7 @@ RSpec.configure do |config|
 
   config.include Helpers
   config.include MockAPI
-  config.include FakeFS::SpecHelpers
+  config.include FakeFS::SpecHelpers, :fs => :fake
 
   config.before :each do
     Duse.config = nil

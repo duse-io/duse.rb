@@ -1,4 +1,4 @@
-describe 'duse register' do
+describe 'duse register', :fs => :fake do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
 

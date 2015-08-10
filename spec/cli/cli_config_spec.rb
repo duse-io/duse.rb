@@ -1,6 +1,6 @@
 require 'duse/cli/cli_config'
 
-RSpec.describe Duse::CLIConfig do
+RSpec.describe Duse::CLIConfig, :fs => :fake do
   describe '.load' do
     context 'config file does not exist' do
       it 'returns an empty hash' do

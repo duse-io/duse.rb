@@ -1,4 +1,4 @@
-describe 'duse login' do
+describe 'duse login', :fs => :fake do
   before :each do
     FileUtils.mkdir_p Duse::CLIConfig.config_dir
     open(Duse::CLIConfig.config_file, 'w') do |f|
