@@ -4,6 +4,12 @@ require 'base64'
 
 module Duse
   module Encryption
+    module Digest
+      def digest
+        OpenSSL::Digest::SHA256.new
+      end
+    end
+
     module Encoding
       def encode(plain_text)
         Base64.encode64(plain_text).encode('utf-8')
@@ -17,6 +23,7 @@ module Duse
     module Asymmetric
       extend self
       extend Duse::Encryption::Encoding
+      extend Duse::Encryption::Digest
       PADDING = OpenSSL::PKey::RSA::PKCS1_PADDING
 
       def encrypt(private_key, public_key, text)
@@ -35,10 +42,6 @@ module Duse
 
       def verify(public_key, signature, encrypted)
         public_key.verify digest, decode(signature), decode(encrypted)
-      end
-
-      def digest
-        OpenSSL::Digest::SHA256.new
       end
     end
 
@@ -79,7 +82,21 @@ module Duse
       end
     end
 
+    module CryptographicHash
+      extend self
+      extend Duse::Encryption::Encoding
+      extend Duse::Encryption::Digest
+
+      def hmac(key, data)
+        encode(OpenSSL::HMAC.digest(digest, key, data))
+      end
+    end
+
     extend self
+
+    def hmac(key, data)
+      Duse::Encryption::CryptographicHash.hmac(key, data)
+    end
 
     def encrypt(secret_text, users, private_key)
       key, iv, cipher_text = Encryption::Symmetric.encrypt secret_text
