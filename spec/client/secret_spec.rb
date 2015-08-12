@@ -98,8 +98,7 @@ RSpec.describe Duse::Client::Secret do
 
         shares = secret[:shares].map { |s| Duse::Client::Share.new(s) }
         server_share = Duse::Encryption::Asymmetric.decrypt(server_user_private_key, shares[1].content)
-        result = Duse::Encryption::Asymmetric.encrypt(current_user_private_key, current_user_public_key, server_share)
-        shares[1].content = result.fetch(:cipher)
+        shares[1].content, _ = Duse::Encryption::Asymmetric.encrypt(current_user_private_key, current_user_public_key, server_share)
 
         secret = Duse::Client::Secret.new shares: shares, cipher_text: secret[:cipher_text]
         decrypted_secret = secret.decrypt(current_user_private_key)
@@ -142,8 +141,7 @@ RSpec.describe Duse::Client::Secret do
 
         shares = secret_hash[:shares].map { |s| Duse::Client::Share.new(s) }
         server_share = Duse::Encryption::Asymmetric.decrypt(server_user_private_key, shares[1].content)
-        result = Duse::Encryption::Asymmetric.encrypt(current_user_private_key, current_user_public_key, server_share)
-        shares[1].content = result.fetch(:cipher)
+        shares[1].content, _ = Duse::Encryption::Asymmetric.encrypt(current_user_private_key, current_user_public_key, server_share)
 
         new_secret = Duse::Client::Secret.new shares: shares, cipher_text: secret.cipher_text
         decrypted_secret = new_secret.decrypt(current_user_private_key)

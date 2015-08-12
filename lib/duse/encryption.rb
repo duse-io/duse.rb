@@ -29,7 +29,7 @@ module Duse
       def encrypt(private_key, public_key, text)
         encrypted = public_key.public_encrypt text.force_encoding('ascii-8bit'), PADDING
         signature = sign(private_key, encrypted)
-        { cipher: encode(encrypted), signature: signature }
+        [encode(encrypted), signature]
       end
 
       def sign(private_key, text)
@@ -93,6 +93,7 @@ module Duse
     end
 
     extend self
+    extend Duse::Encryption::Encoding
 
     def hmac(key, data)
       Duse::Encryption::CryptographicHash.hmac(key, data)
@@ -113,11 +114,11 @@ module Duse
       raw_shares = SecretSharing.split(symmetric_key, 2, users.length)
       users.map.with_index do |user, index|
         share = raw_shares[index]
-        result = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
+        cipher, signature = Encryption::Asymmetric.encrypt(private_key, user.public_key, share)
         {
           "user_id" => user.id,
-          "content" => result.fetch(:cipher),
-          "signature" => result.fetch(:signature)
+          "content" => cipher,
+          "signature" => signature
         }
       end
     end
