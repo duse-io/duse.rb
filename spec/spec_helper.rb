@@ -33,6 +33,7 @@ require 'fileutils'
 require 'fakefs/spec_helpers'
 
 require 'support/helpers'
+require 'support/key_helper'
 require 'support/mock_api'
 require 'duse'
 require 'duse/cli'
@@ -51,6 +52,7 @@ RSpec.configure do |config|
   end
 
   config.include Helpers
+  config.include KeyHelper
   config.include MockAPI
   config.include FakeFS::SpecHelpers, :fs => :fake
 

@@ -24,6 +24,7 @@ module Duse
       extend self
       extend Duse::Encryption::Encoding
       extend Duse::Encryption::Digest
+      #PADDING = OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING
       PADDING = OpenSSL::PKey::RSA::PKCS1_PADDING
 
       def encrypt(private_key, public_key, text)
