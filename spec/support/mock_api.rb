@@ -40,10 +40,18 @@ module MockAPI
     {
       'id' => 1,
       'title' => 'test',
-      'cipher_text' => "0aqOigsWK04MhJ5EHgM49Q==\n",
+      'cipher_text' => "oMmo5ptscZJzzgTMkTQ63A==\n",
       'shares' => [
-        { 'last_edited_by_id' => 2, 'signature' => "dPMQbO9UzYFS4hY0U5iLjjVFTeGvDJemuEYVog6zClbLMbZG8pSaQ2MzNI1I\n0UsZJNXlyHP6NR/kTp0mpCmndrnA+c8c7UDotSE1BnMqizscZiBcTTlBn9IS\ncQsKLNsV50FDLqZnsLOuB0lvQnnUN4GrxmW38Vi/emva2voK+WQM3GybrFyd\nb2p5c9DN4abYpjASxg9IilkmnfYLfcs7LXgmtlJOl/dg7CybcaPrE+lOZn7F\nRLIfLh601cP3XyGe5WYHBMJXtJHYzczRlU/rJ98BosfqewHDjYRAHtt7IcVA\nWKseYK5TpBZLIbEK2ZcQLo65huyuKh6z4OReqjCvpQ==\n", 'content' => "NQSRqhjkHyUyT00YDgQ6WayC0EwtdytQ/iZAUdc6mnXKNQc74hae3VIJqjUf\nNkq1Qus/dS7a5DMsKa+2F74p1UF3YbswNnZ7fc2VH+iz6hIdYbgCu5bmAuVF\nXFpXk7Nw9n4Cpvjg2x5jxBQ0S1BnYY8J+EBluzichoqub4EVl5yxTWipqiaZ\nKwR1gEEKi3h5w2uljOib62gFdxUnXLtMjDlIXJjN6Kl9idCiz3upBj+4KZFx\n4qBWpvU/6xQRgbbOwfHNzTDl9RSlWSYTXvJ1/7iXYfoSEOMGJSmlGSm/P3Y/\nVPoChK0lfJYanNW4Gu4qQf9d09E5d6NQcGZdN3PNIQ==\n"  },
-        { 'last_edited_by_id' => 2, 'signature' => "GYIflo5hjcsEMjTZxnb4gsKV8bOe2XiG88u8IJ5zvJm3ZavLNmeDJ0PCKkpS\nM05NLLzbaqlGyM7Bh7TubanuvWEi412p9qyMABqVnka3co7GWE3N0RHX1JbG\ncq/O86iO3GDCA7YEwZUjdP0UhI+ytA6WNPU/hsmsDJJzaxXs5GFc51XZUBx9\nHYqKc60i1dL1UIi4IlfcvkiBfUg2lXaeJvHjj2zb0i/khpQ6q0H/OPcNE1Vn\nvYgZGN6PLy60KnirPltKynw8fii5FF2QSntINiC5GM64Eir0ZAKyh9lOQWUV\nCQvtoX4MbUXYWIZXt2sc4GzJE74mPmZ0qmD16hT/kA==\n", 'content' => "gQUlhs+uPz93UN/Cpcd7x8ochDXWbfiC6IrP7ijCfxaa9kvsVnQddYkJVgH1\nBLO6SC36b/lVsGfcvUwmO0vefGrSy2XykXVJdYPMf/LQsOukOs1rLVacg4B6\nf0KeKvLVf/HVYcKiY4L2rFIPvuWC+bUWxRThpiABSu1ZCH9qgcR24PPRnwYw\nsTT15OBHmBzhsP+b3NZI9Yh3OIzWLvDSjQmRuldryuUstPsgfWKd/xawPU4D\nJ8EUFGNltFqb+R4n2eGpNSVQCl/+o9gfMG6dq5CE5HRHwpKgXaybdy753lrF\nHWXS4g6apO4lpJS7kXdhHX7OTbA79GHj/ait9fuZLA==\n" }
+        {
+          'last_edited_by_id' => 2,
+          "content" => "CyNrNgp0ywDymkLkkU2kEU3oTZM65CzvuX9qbDOu0Yee4iAVI7+tIPXzaH/T\na47Lqq59eoQimzPJJYW6FGSkG7DRVZ5coZRIgmt+1nPAyCdTYEcJ9Aoj+9Ua\nE0SC5irgQatVN0LFh4M+mbrlkwhYpSpRh/WJvC2TWEDuh4koKcJ0hxyrvBxM\n/LbE5J3GlIm7U0fnoeGIcGYvJSqQD4N+6LmrWJFrPDwp2NhVGCGEDJvErDKC\nd0XiPu9WXr3YCZ3sgsaxJiqNicdzbfnLbaqP9Kq0y2Do7zU1tQEN0OOiTh1y\nfLLU0hDv1zGUSIzT/Z+yddTguvmd4LqxrGTsPCFP7A==\n",
+          "signature" => "OGZgZ8nClakhxnt1LAh4iGNmXnB9hU44FtDrZSaVAvRLyGcFYdbxx1yueUxP\nLLY6K9pB19DqxowtOMdkBdVtss64+FKV87Wuqx2c+c6+l6VzSwTRdsezapiS\nunlY42v5io/lIQD9g+leMzJyw1tK4q3cixY9jsk5uXLR5opbOovBzweNIk1W\n7MXz0YYJgf/tTePqqcLFCV4i3JhT9zzCCAIb019mVpmqvUoouRFBuIet5cNR\nj4/wZqEiCyrd87Q+HG4Ssyh9UNKHCeC8zdhb67nfQKcRa8rNbnluLM4/HsIa\nBvmp9d0VtIYuH3ri+IYMQECo7ediDbkvZkqzjUl/kA==\n"
+        },
+        {
+          'last_edited_by_id' => 2,
+          "content" => "aOmkxffDVAxBmj7ZRfX6wEepaBKWlFzipBg3PdDtlOe45tepmMxY/juFECkw\nJODnq0knfcoIXD2ObVv9gzToAtZy+eTkgElmpxebrh3bH9iB1kDkLMq1z7C+\n/5HmBj8sJ59u6YFcyRGDrmL+yY+meeBGwJdH5lL1cOVMbe6lxbvItnSIQXpi\n6KQM5YczMBzd2jYUAJpGk22S2p4j+5ElKB7n9aR/VRPGaB+nnA5CJSTGSfrW\nDm4xjfzYBOgFNFpAF4+Yjw35+okrdSQoF16+y8+KeTdN/Uo/Jm+aQh9Q2tk4\nSjRnhJjY4ZqO0WMtML3BBQhbwXcXAFl0sxZF1zzB4Q==\n",
+          "signature" => "Nv9sNIDypa0b4f7m4Bcf3bulikN487VbGizGBlDkfetXNCP0zrL/LtUfGMv6\n158HoX68nBPVX+0o1wSkjKoD4Qm79E3F4ftPLrHcsErvZr8rCUluRpoBsK/O\nP3ZOstyjEMjbkj2eaqmZkykhVIR55JtXzIM3YCo4UwjgtgzCyK5Ym8of3xzi\npVfoy4ZYVQnk7ec5u5nQUMpI8gixPH1WfM94bxZyw8bICr8r6kw5TkqEvW5U\nhpFkYdRXj8Fav1gHq3GiGmUhxd59Q/79optz3nWl/v/jDnVbEoAEtDltGS1B\n+Ijtoq3SfNkPY3DyhUxB5MSkMH5axJdcyFuU389j7A==\n"
+        }
       ],
       'users' => [{
         'id' => 1,
