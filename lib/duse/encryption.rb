@@ -1,6 +1,7 @@
 require 'openssl'
 require 'digest/sha2'
 require 'base64'
+require 'secret_sharing'
 
 module Duse
   module Encryption

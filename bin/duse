@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
 Encoding.default_external = Encoding::UTF_8 if defined? Encoding
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+#require 'jruby-openssl' if RUBY_PLATFORM == 'java'
 
-require 'bundler/setup'
 require 'duse/cli'
 
 Duse::CLI.run(ARGV)

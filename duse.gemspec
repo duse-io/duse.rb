@@ -21,3 +21,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'faraday_middleware'
   s.add_runtime_dependency 'tree_outline'
 end
+

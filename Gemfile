@@ -1,9 +1,7 @@
 source 'https://rubygems.org'
 gemspec
 
-group :jruby do
-  gem 'jruby-openssl'
-end
+gem 'jruby-openssl', platforms: :jruby
 
 group :test do
   gem 'sinatra'
