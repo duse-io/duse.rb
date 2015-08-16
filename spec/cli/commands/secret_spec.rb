@@ -63,7 +63,7 @@ RSpec.describe 'duse secret', :fs => :fake do
         stub_secret_get
         stub_user_me_get
         stub_server_user_get
-        stub_user_get1
+        stub_user_get2
         stub_user_get2
 
         run_cli('secret', 'get') { |i| i.puts('1') }

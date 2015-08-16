@@ -62,10 +62,8 @@ RSpec.describe Duse::Client::Secret do
   describe '.create' do
     it 'builds a secret' do
       stub_create_secret
-      current_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n"
-      server_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n"
-      current_user = OpenStruct.new id: 1, public_key: current_user_public_key
-      server_user = OpenStruct.new id: 2, public_key: server_user_public_key
+      current_user = OpenStruct.new id: 1, public_key: user_public_key
+      server_user = OpenStruct.new id: 2, public_key: server_public_key
 
       secret_json = Duse::Client::CreateSecret.with(
         title: 'secret title',
@@ -82,20 +80,18 @@ RSpec.describe Duse::Client::Secret do
   describe 'creation process' do
     context 'own and server user' do
       def test_working_encryption_and_decryption_for(plaintext)
-        current_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n"
-        server_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n"
-        current_user = OpenStruct.new id: 1, public_key: current_user_public_key
-        server_user = OpenStruct.new id: 2, public_key: server_user_public_key
+        current_user = OpenStruct.new id: 1, public_key: user_public_key
+        server_user = OpenStruct.new id: 2, public_key: server_public_key
         secret = Duse::Client::CreateSecret.with(
           title: 'test',
           secret_text: plaintext,
           users: [current_user, server_user]
         ).sign_with(user_private_key).build
 
-        shares = secret[:shares].map { |s| Duse::Client::Share.new(s) }
-        server_share = Duse::Encryption::Asymmetric.decrypt(server_private_key, shares[1].content)
-        shares[1].content, _ = Duse::Encryption::Asymmetric.encrypt(user_private_key, current_user_public_key, server_share)
+        server_share = Duse::Encryption::Asymmetric.decrypt(server_private_key, secret[:shares][1]['content'])
+        secret[:shares][1]['content'], secret[:shares][1]['signature'] = Duse::Encryption::Asymmetric.encrypt(user_private_key, user_public_key, server_share)
 
+        shares = secret[:shares].map { |s| Duse::Client::Share.new(s) }
         secret = Duse::Client::Secret.new shares: shares, cipher_text: secret[:cipher_text]
         decrypted_secret = secret.decrypt(user_private_key)
 
@@ -123,10 +119,8 @@ RSpec.describe Duse::Client::Secret do
     context 'changin users' do
       it 'leaves the cipher text unchanged and generates new shares' do
         stub_secret_get
-        current_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n"
-        server_user_public_key = OpenSSL::PKey::RSA.new "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n"
-        current_user = OpenStruct.new id: 1, public_key: current_user_public_key
-        server_user = OpenStruct.new id: 2, public_key: server_user_public_key
+        current_user = OpenStruct.new id: 1, public_key: user_public_key
+        server_user = OpenStruct.new id: 2, public_key: server_public_key
         secret = Duse::Secret.find(1)
         secret_hash = Duse::Client::UpdateSecret.values(
           secret,
@@ -135,7 +129,7 @@ RSpec.describe Duse::Client::Secret do
 
         shares = secret_hash[:shares].map { |s| Duse::Client::Share.new(s) }
         server_share = Duse::Encryption::Asymmetric.decrypt(server_private_key, shares[1].content)
-        shares[1].content, _ = Duse::Encryption::Asymmetric.encrypt(user_private_key, current_user_public_key, server_share)
+        shares[1].content, shares[1].signature = Duse::Encryption::Asymmetric.encrypt(user_private_key, user_public_key, server_share)
 
         new_secret = Duse::Client::Secret.new shares: shares, cipher_text: secret.cipher_text
         decrypted_secret = new_secret.decrypt(user_private_key)

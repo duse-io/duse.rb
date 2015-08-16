@@ -1,9 +1,11 @@
 require 'webmock/rspec'
 require 'json'
 require 'uri'
+require 'support/key_helper'
 
 module MockAPI
   METHOD_STATUS_DEFAULT = { get: 200, put: 200, patch: 200, post: 201, delete: 204 }
+  include KeyHelper
 
   class RequestStub
     def initialize(http_method, route)
@@ -63,7 +65,7 @@ module MockAPI
       'id' => 2,
       'username' => 'flower-pot',
       'email' => 'flower-pot@example.org',
-      'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n",
+      'public_key' => user_public_key.to_s,
       'url' => 'https://example.com/users/2'
     }
 
@@ -75,7 +77,7 @@ module MockAPI
       'id' => 1,
       'username' => 'server',
       'email' => 'server@localhost',
-      'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n",
+      'public_key' => server_public_key.to_s,
       'url' => 'https://example.com/users/1'
     }
 
@@ -91,7 +93,7 @@ module MockAPI
       'id' => 3,
       'username' => 'adracus',
       'email' => 'adracus@example.org',
-      'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Y1b9awjW0nshQXk64uO\n1v+GYliBH8ogu6QjQDn0eoLIfcOibrotbhJuSS0G46yOhboOCZQWrwyqi4MYtTMB\nH3ITTmNkhzOkdRXLJGJXXv3OCYR0J+PdCXbrtfYkvqOgyJE4RAR6YBEO/XcQk0Em\nE4IDFq22Aar7MxSjrLk17LX9mTifdzg1xdxX5myX4NrXGVWTWKeS5klLWCe9AigQ\n35b8c2Zyehx6jxHk+jt5CguMC9VqSyJobKdu926W4k2AgzWRdZh0EvCg2wWjlYjc\nhJEnrpHLeJxGMEThPoGqgQWiG5BBYIl9kx1vg1QZmS2biS6djGpGIn8l8PN30+QS\n5QIDAQAB\n-----END PUBLIC KEY-----\n",
+      'public_key' => other_public_key.to_s,
       'url' => 'https://example.com/users/3'
     }
 
@@ -111,22 +113,22 @@ module MockAPI
     payload = {
       'id' => 2,
       'title' => 'test',
-      'cipher_text' => "DZTJUbyBLTtJ2TFETHfbvw==\n",
+      'cipher_text' => "0aqOigsWK04MhJ5EHgM49Q==\n",
       'shares' => [
-        { 'last_edited_by_id' => 1, 'signature' => "blabla123", 'content' => "JmmvpdzT3umPfU8eFmCLY35GYTjHwjTjaUKT2wTUgyRojFnYbjO3l1gQF0gZ\nspBGK2rlb5q8Ak18XIl+eOsIDmjtPS4a+9Uk/hcCgHmAZ5u5TRHjtEE0X1Ih\nKkF8iXN/PomOW4WCFEseK0VeRTcPzQZ6CtMWjb0Cgr95KpiAqIoPMSlSU8JD\nXbcKsaKeAXspXgjpN+wxyiI+dQIrU+hYhErYOa28AIZkFgtqiP8ZcgiNXqbm\nS6n211M4NCaqD2inZ3dpbDS6MLAG737kSbL5puclArSuyp71Q1a25s5YTmeI\nCAf30zcV3RwPOWjYLfi+Pb8vskN3bxblS3nJxJ4WbQ==\n" },
-        { 'last_edited_by_id' => 2, 'signature' => "blabla123", 'content' => "IkiK8njWLinkWku7B5dltlMiyOzjDU2N+/2J+ZAUADcfOzA2xlRi6XhKg8BY\n3g792iWyzPpKzj17FywQf4MDL2h12KtC6nvBenlmZx49hg6fIcHCuUoSflwJ\n4Mz5+Ud3N3KP3Zak1WGR4wjVmjkvkFj/KWqMaTMfkc3dTArO15/9ld+J5kfS\n1XjSa8T+NDPBuwdE2VOLiwyJVLTBQuvjRimZ5QgGPoTnD6CQ5jvohyiDHCob\noSbH/TfhVbKlv/ZkSCyVsaWmMUbGvNNxRGjJRPyNZ6R5y74U9UQlO60J/Cur\nXQlBqTRBPf7cZPl/bRgicPabc61S17u8jQU1U4BDxQ==\n" }
+        { 'last_edited_by_id' => 2, 'signature' => "blabla", 'content' => "NQSRqhjkHyUyT00YDgQ6WayC0EwtdytQ/iZAUdc6mnXKNQc74hae3VIJqjUf\nNkq1Qus/dS7a5DMsKa+2F74p1UF3YbswNnZ7fc2VH+iz6hIdYbgCu5bmAuVF\nXFpXk7Nw9n4Cpvjg2x5jxBQ0S1BnYY8J+EBluzichoqub4EVl5yxTWipqiaZ\nKwR1gEEKi3h5w2uljOib62gFdxUnXLtMjDlIXJjN6Kl9idCiz3upBj+4KZFx\n4qBWpvU/6xQRgbbOwfHNzTDl9RSlWSYTXvJ1/7iXYfoSEOMGJSmlGSm/P3Y/\nVPoChK0lfJYanNW4Gu4qQf9d09E5d6NQcGZdN3PNIQ==\n"  },
+        { 'last_edited_by_id' => 2, 'signature' => "blabla", 'content' => "gQUlhs+uPz93UN/Cpcd7x8ochDXWbfiC6IrP7ijCfxaa9kvsVnQddYkJVgH1\nBLO6SC36b/lVsGfcvUwmO0vefGrSy2XykXVJdYPMf/LQsOukOs1rLVacg4B6\nf0KeKvLVf/HVYcKiY4L2rFIPvuWC+bUWxRThpiABSu1ZCH9qgcR24PPRnwYw\nsTT15OBHmBzhsP+b3NZI9Yh3OIzWLvDSjQmRuldryuUstPsgfWKd/xawPU4D\nJ8EUFGNltFqb+R4n2eGpNSVQCl/+o9gfMG6dq5CE5HRHwpKgXaybdy753lrF\nHWXS4g6apO4lpJS7kXdhHX7OTbA79GHj/ait9fuZLA==\n" }
       ],
       'users' => [{
         'id' => 1,
         'username' => 'server',
         'email' => 'server@localhost',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => server_public_key.to_s,
         'url' => 'https://example.com/users/1'
       }, {
         'id' => 2,
         'username' => 'flower-pot',
         'email' => 'flower-pot@example.org',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => user_public_key.to_s,
         'url' => 'https://example.com/users/2'
       }],
       'url' => 'http://example.com/secrets/1'
@@ -139,22 +141,22 @@ module MockAPI
     payload = {
       'id' => 1,
       'title' => 'test',
-      'cipher_text' => "DZTJUbyBLTtJ2TFETHfbvw==\n",
+      'cipher_text' => "0aqOigsWK04MhJ5EHgM49Q==\n",
       'shares' => [
-        { 'last_edited_by_id' => 1, 'signature' => "mWecJ8ni+yVsRmN4rOfE+i36s0efYkJcazLTE9d57fX7sV4yRujMrbaYCpzi\n90puFKHJex25CjrHEhDmb8i8YMNIX96DBymbb2yvyCSsBQ1e8LLE3tXlQ7SM\nRr2Q5mkqoLWcfaNhszw6gLTXElASdtUdd0lmcMX9kKwNmOmdv6eZcWphI4Ti\nVBdylYnMrq3zb+9FOqB2ONl9Gn/HiKItxCZw2dcyGhrwAVrGFisxVHHrMfKt\nF90vwLkfRKfoz4aKgS4x4FC2fSI8xIA5K1hHENMrEviNeC0nCMt1DnafR7Cb\nEVoTamNU9jSgMNrJxsQTOgsblqPpfV/JgGTx3iEyTg==\n", 'content' => "JmmvpdzT3umPfU8eFmCLY35GYTjHwjTjaUKT2wTUgyRojFnYbjO3l1gQF0gZ\nspBGK2rlb5q8Ak18XIl+eOsIDmjtPS4a+9Uk/hcCgHmAZ5u5TRHjtEE0X1Ih\nKkF8iXN/PomOW4WCFEseK0VeRTcPzQZ6CtMWjb0Cgr95KpiAqIoPMSlSU8JD\nXbcKsaKeAXspXgjpN+wxyiI+dQIrU+hYhErYOa28AIZkFgtqiP8ZcgiNXqbm\nS6n211M4NCaqD2inZ3dpbDS6MLAG737kSbL5puclArSuyp71Q1a25s5YTmeI\nCAf30zcV3RwPOWjYLfi+Pb8vskN3bxblS3nJxJ4WbQ==\n" },
-        { 'last_edited_by_id' => 2, 'signature' => "fMB7PImowpcNBdgdeVRJtSGXtd5krI1wI/a/VbKRgPV4LiRxzoeuFrkhBrFq\n7L7/sXCdRsu5LyJGgxC8P/mSihv64e1jy/uXX9+HkhKfE7KQeSZKOvfIh4Hj\n7mKaAIQvAaASf54MKQFl5WHuXyUXUYECNS5uBHSSeFIjbIsaUuTXSrrvabBK\nk4VjHjz6C5yZ8uCHTP3Wsh8kg6kUqJcWV0cUSAo4eUxhrRnn7lGUTUp+HtVl\n0iTSJGrDXh1qiz6xO0FipWNyJEtZwxm005t0QhsA2E9hGgGMS2kvEFFNtvG0\ncz0b1WBrkZHum+Ol0xRC/u8jVmkxu4/TEiy0mfMbPg==\n", 'content' => "IkiK8njWLinkWku7B5dltlMiyOzjDU2N+/2J+ZAUADcfOzA2xlRi6XhKg8BY\n3g792iWyzPpKzj17FywQf4MDL2h12KtC6nvBenlmZx49hg6fIcHCuUoSflwJ\n4Mz5+Ud3N3KP3Zak1WGR4wjVmjkvkFj/KWqMaTMfkc3dTArO15/9ld+J5kfS\n1XjSa8T+NDPBuwdE2VOLiwyJVLTBQuvjRimZ5QgGPoTnD6CQ5jvohyiDHCob\noSbH/TfhVbKlv/ZkSCyVsaWmMUbGvNNxRGjJRPyNZ6R5y74U9UQlO60J/Cur\nXQlBqTRBPf7cZPl/bRgicPabc61S17u8jQU1U4BDxQ==\n" }
+        { 'last_edited_by_id' => 2, 'signature' => "dPMQbO9UzYFS4hY0U5iLjjVFTeGvDJemuEYVog6zClbLMbZG8pSaQ2MzNI1I\n0UsZJNXlyHP6NR/kTp0mpCmndrnA+c8c7UDotSE1BnMqizscZiBcTTlBn9IS\ncQsKLNsV50FDLqZnsLOuB0lvQnnUN4GrxmW38Vi/emva2voK+WQM3GybrFyd\nb2p5c9DN4abYpjASxg9IilkmnfYLfcs7LXgmtlJOl/dg7CybcaPrE+lOZn7F\nRLIfLh601cP3XyGe5WYHBMJXtJHYzczRlU/rJ98BosfqewHDjYRAHtt7IcVA\nWKseYK5TpBZLIbEK2ZcQLo65huyuKh6z4OReqjCvpQ==\n", 'content' => "NQSRqhjkHyUyT00YDgQ6WayC0EwtdytQ/iZAUdc6mnXKNQc74hae3VIJqjUf\nNkq1Qus/dS7a5DMsKa+2F74p1UF3YbswNnZ7fc2VH+iz6hIdYbgCu5bmAuVF\nXFpXk7Nw9n4Cpvjg2x5jxBQ0S1BnYY8J+EBluzichoqub4EVl5yxTWipqiaZ\nKwR1gEEKi3h5w2uljOib62gFdxUnXLtMjDlIXJjN6Kl9idCiz3upBj+4KZFx\n4qBWpvU/6xQRgbbOwfHNzTDl9RSlWSYTXvJ1/7iXYfoSEOMGJSmlGSm/P3Y/\nVPoChK0lfJYanNW4Gu4qQf9d09E5d6NQcGZdN3PNIQ==\n"  },
+        { 'last_edited_by_id' => 2, 'signature' => "GYIflo5hjcsEMjTZxnb4gsKV8bOe2XiG88u8IJ5zvJm3ZavLNmeDJ0PCKkpS\nM05NLLzbaqlGyM7Bh7TubanuvWEi412p9qyMABqVnka3co7GWE3N0RHX1JbG\ncq/O86iO3GDCA7YEwZUjdP0UhI+ytA6WNPU/hsmsDJJzaxXs5GFc51XZUBx9\nHYqKc60i1dL1UIi4IlfcvkiBfUg2lXaeJvHjj2zb0i/khpQ6q0H/OPcNE1Vn\nvYgZGN6PLy60KnirPltKynw8fii5FF2QSntINiC5GM64Eir0ZAKyh9lOQWUV\nCQvtoX4MbUXYWIZXt2sc4GzJE74mPmZ0qmD16hT/kA==\n", 'content' => "gQUlhs+uPz93UN/Cpcd7x8ochDXWbfiC6IrP7ijCfxaa9kvsVnQddYkJVgH1\nBLO6SC36b/lVsGfcvUwmO0vefGrSy2XykXVJdYPMf/LQsOukOs1rLVacg4B6\nf0KeKvLVf/HVYcKiY4L2rFIPvuWC+bUWxRThpiABSu1ZCH9qgcR24PPRnwYw\nsTT15OBHmBzhsP+b3NZI9Yh3OIzWLvDSjQmRuldryuUstPsgfWKd/xawPU4D\nJ8EUFGNltFqb+R4n2eGpNSVQCl/+o9gfMG6dq5CE5HRHwpKgXaybdy753lrF\nHWXS4g6apO4lpJS7kXdhHX7OTbA79GHj/ait9fuZLA==\n" }
       ],
       'users' => [{
         'id' => 1,
         'username' => 'server',
         'email' => 'server@localhost',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyvyAf7lnVx9eQcAS7JL\nYRHrqJJe51rAdanaUiiy8eek2Iyh6JG551EK7x4n9/Y7r0fW2sNmy+Bp3FpL8E/p\ncxutggTWCnUQUvXmEEm5qZ1KOIIlEQNp5glToAenJ7pxotJsTMlVw4tizsKScenc\n8w+02wpcmWuzWKjoY/G5KV33UDz/LxVo1RJdJp94JiL/OinIl+uk+Vf7VZj/E8g/\n7DyXIuiBosVpj9E9T4kpxs3/7RmUfDzUisVq0UvgflRjvP1V+1KdpNnjVB+H08mb\nSVO6yf2YOcrPDRa3pgz7PIr225QJ+HmVjPTg5VAy7rUxhCK+q+HNd2oz35zA70SO\npQIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => server_public_key.to_s,
         'url' => 'https://example.com/users/1'
       }, {
         'id' => 2,
         'username' => 'flower-pot',
         'email' => 'flower-pot@example.org',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => user_public_key.to_s,
         'url' => 'https://example.com/users/2'
       }],
       'url' => 'http://example.com/secrets/1'
@@ -171,22 +173,22 @@ module MockAPI
     payload = {
       'id' => 1,
       'title' => 'test',
-      'cipher_text' => "DZTJUbyBLTtJ2TFETHfbvw==\n",
+      'cipher_text' => "0aqOigsWK04MhJ5EHgM49Q==\n",
       'shares' => [
-        { 'last_edited_by_id' => 1, 'signature' => "mWecJ8ni+yVsRmN4rOfE+i36s0efYkJcazLTE9d57fX7sV4yRujMrbaYCpzi\n90puFKHJex25CjrHEhDmb8i8YMNIX96DBymbb2yvyCSsBQ1e8LLE3tXlQ7SM\nRr2Q5mkqoLWcfaNhszw6gLTXElASdtUdd0lmcMX9kKwNmOmdv6eZcWphI4Ti\nVBdylYnMrq3zb+9FOqB2ONl9Gn/HiKItxCZw2dcyGhrwAVrGFisxVHHrMfKt\nF90vwLkfRKfoz4aKgS4x4FC2fSI8xIA5K1hHENMrEviNeC0nCMt1DnafR7Cb\nEVoTamNU9jSgMNrJxsQTOgsblqPpfV/JgGTx3iEyTg==\n", 'content' => "JmmvpdzT3umPfU8eFmCLY35GYTjHwjTjaUKT2wTUgyRojFnYbjO3l1gQF0gZ\nspBGK2rlb5q8Ak18XIl+eOsIDmjtPS4a+9Uk/hcCgHmAZ5u5TRHjtEE0X1Ih\nKkF8iXN/PomOW4WCFEseK0VeRTcPzQZ6CtMWjb0Cgr95KpiAqIoPMSlSU8JD\nXbcKsaKeAXspXgjpN+wxyiI+dQIrU+hYhErYOa28AIZkFgtqiP8ZcgiNXqbm\nS6n211M4NCaqD2inZ3dpbDS6MLAG737kSbL5puclArSuyp71Q1a25s5YTmeI\nCAf30zcV3RwPOWjYLfi+Pb8vskN3bxblS3nJxJ4WbQ==\n" },
-        { 'last_edited_by_id' => 2, 'signature' => "fMB7PImowpcNBdgdeVRJtSGXtd5krI1wI/a/VbKRgPV4LiRxzoeuFrkhBrFq\n7L7/sXCdRsu5LyJGgxC8P/mSihv64e1jy/uXX9+HkhKfE7KQeSZKOvfIh4Hj\n7mKaAIQvAaASf54MKQFl5WHuXyUXUYECNS5uBHSSeFIjbIsaUuTXSrrvabBK\nk4VjHjz6C5yZ8uCHTP3Wsh8kg6kUqJcWV0cUSAo4eUxhrRnn7lGUTUp+HtVl\n0iTSJGrDXh1qiz6xO0FipWNyJEtZwxm005t0QhsA2E9hGgGMS2kvEFFNtvG0\ncz0b1WBrkZHum+Ol0xRC/u8jVmkxu4/TEiy0mfMbPg==\n", 'content' => "IkiK8njWLinkWku7B5dltlMiyOzjDU2N+/2J+ZAUADcfOzA2xlRi6XhKg8BY\n3g792iWyzPpKzj17FywQf4MDL2h12KtC6nvBenlmZx49hg6fIcHCuUoSflwJ\n4Mz5+Ud3N3KP3Zak1WGR4wjVmjkvkFj/KWqMaTMfkc3dTArO15/9ld+J5kfS\n1XjSa8T+NDPBuwdE2VOLiwyJVLTBQuvjRimZ5QgGPoTnD6CQ5jvohyiDHCob\noSbH/TfhVbKlv/ZkSCyVsaWmMUbGvNNxRGjJRPyNZ6R5y74U9UQlO60J/Cur\nXQlBqTRBPf7cZPl/bRgicPabc61S17u8jQU1U4BDxQ==\n" }
+        { 'last_edited_by_id' => 2, 'signature' => "dPMQbO9UzYFS4hY0U5iLjjVFTeGvDJemuEYVog6zClbLMbZG8pSaQ2MzNI1I\n0UsZJNXlyHP6NR/kTp0mpCmndrnA+c8c7UDotSE1BnMqizscZiBcTTlBn9IS\ncQsKLNsV50FDLqZnsLOuB0lvQnnUN4GrxmW38Vi/emva2voK+WQM3GybrFyd\nb2p5c9DN4abYpjASxg9IilkmnfYLfcs7LXgmtlJOl/dg7CybcaPrE+lOZn7F\nRLIfLh601cP3XyGe5WYHBMJXtJHYzczRlU/rJ98BosfqewHDjYRAHtt7IcVA\nWKseYK5TpBZLIbEK2ZcQLo65huyuKh6z4OReqjCvpQ==\n", 'content' => "NQSRqhjkHyUyT00YDgQ6WayC0EwtdytQ/iZAUdc6mnXKNQc74hae3VIJqjUf\nNkq1Qus/dS7a5DMsKa+2F74p1UF3YbswNnZ7fc2VH+iz6hIdYbgCu5bmAuVF\nXFpXk7Nw9n4Cpvjg2x5jxBQ0S1BnYY8J+EBluzichoqub4EVl5yxTWipqiaZ\nKwR1gEEKi3h5w2uljOib62gFdxUnXLtMjDlIXJjN6Kl9idCiz3upBj+4KZFx\n4qBWpvU/6xQRgbbOwfHNzTDl9RSlWSYTXvJ1/7iXYfoSEOMGJSmlGSm/P3Y/\nVPoChK0lfJYanNW4Gu4qQf9d09E5d6NQcGZdN3PNIQ==\n"  },
+        { 'last_edited_by_id' => 2, 'signature' => "GYIflo5hjcsEMjTZxnb4gsKV8bOe2XiG88u8IJ5zvJm3ZavLNmeDJ0PCKkpS\nM05NLLzbaqlGyM7Bh7TubanuvWEi412p9qyMABqVnka3co7GWE3N0RHX1JbG\ncq/O86iO3GDCA7YEwZUjdP0UhI+ytA6WNPU/hsmsDJJzaxXs5GFc51XZUBx9\nHYqKc60i1dL1UIi4IlfcvkiBfUg2lXaeJvHjj2zb0i/khpQ6q0H/OPcNE1Vn\nvYgZGN6PLy60KnirPltKynw8fii5FF2QSntINiC5GM64Eir0ZAKyh9lOQWUV\nCQvtoX4MbUXYWIZXt2sc4GzJE74mPmZ0qmD16hT/kA==\n", 'content' => "gQUlhs+uPz93UN/Cpcd7x8ochDXWbfiC6IrP7ijCfxaa9kvsVnQddYkJVgH1\nBLO6SC36b/lVsGfcvUwmO0vefGrSy2XykXVJdYPMf/LQsOukOs1rLVacg4B6\nf0KeKvLVf/HVYcKiY4L2rFIPvuWC+bUWxRThpiABSu1ZCH9qgcR24PPRnwYw\nsTT15OBHmBzhsP+b3NZI9Yh3OIzWLvDSjQmRuldryuUstPsgfWKd/xawPU4D\nJ8EUFGNltFqb+R4n2eGpNSVQCl/+o9gfMG6dq5CE5HRHwpKgXaybdy753lrF\nHWXS4g6apO4lpJS7kXdhHX7OTbA79GHj/ait9fuZLA==\n" }
       ],
       'users' => [{
         'id' => 1,
         'username' => 'server',
         'email' => 'server@localhost',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => server_public_key.to_s,
         'url' => 'https://example.com/users/1'
       }, {
         'id' => 2,
         'username' => 'flower-pot',
         'email' => 'flower-pot@example.org',
-        'public_key' => "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMm3Ovh7gU0rLHK4NiHh\nWaYRrV9PH6XtHqV0GoiHH7awrjVkT1aZiS+nlBxckfuvuQjRXakVCZh18UdQadVQ\n7FLTWMZNoZ/uh41g4Iv17Wh1I3Fgqihdm83cSWvJ81qQCVGBaKeVitSa49zT/Mmo\noBvYFwulaqJjhqFc3862Rl3WowzGVqGf+OiYhFrBbnIqXijDmVKsbqkG5AILGo1n\nng06HIAvMqUcGMebgoju9SuKaR+C46KT0K5sPpNw/tNcDEZqZAd25QjAroGnpRHS\nI9hTEuPopPSyRqz/EVQfbhi0LbkdDW9S5ECw7GfFPFpRp2239fjl/9ybL6TkeZL7\nAwIDAQAB\n-----END PUBLIC KEY-----\n",
+        'public_key' => user_public_key.to_s,
         'url' => 'https://example.com/users/2'
       }],
       'url' => 'http://example.com/secrets/1'

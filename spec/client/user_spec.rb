@@ -8,7 +8,7 @@ RSpec.describe Duse::Client::User do
       'id' => 2,
       'username' => 'flower-pot',
       'email' => 'flower-pot@example.org',
-      'public_key' => "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n",
+      'public_key' => user_public_key.to_s,
       'url' => 'https://example.com/users/2'
     }.to_json
 
@@ -33,19 +33,18 @@ RSpec.describe Duse::Client::User do
   describe '.create' do
     it 'creates correct user entity from json create response' do
       stub_create_user
-      public_key = OpenSSL::PKey::RSA.new("-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCftZvHkB6uKWVDvrIzmy2p496H\nv9PD/hhRk+DSXcE/CPtRmvYZzbWbbBup9hkvhyH/P1O5EF8KSZm4Cdnz6p37idTe\nNdlaH9cRFV2wc2A/hbg2kaISxrDxUqRbywBE9NOBSjXu2wRpy0TMo85eM2A0E2ET\n2XM6tZcuwFULX6bl8QIDAQAB\n-----END PUBLIC KEY-----\n")
 
       user = Duse::User.create(
         username: 'flower-pot',
         email:    'flower-pot@example.org',
         password: 'Passw0rd!',
         password_confirmation: 'Passw0rd!',
-        public_key: public_key.to_s
+        public_key: user_public_key.to_s
       )
 
       expect(user.username).to eq 'flower-pot'
       expect(user.email).to eq 'flower-pot@example.org'
-      expect(user.public_key.to_s).to eq public_key.to_s
+      expect(user.public_key.to_s).to eq user_public_key.to_s
     end
   end
 
