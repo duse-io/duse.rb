@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 gemspec
 
+group :jruby do
+  gem 'jruby-openssl'
+end
+
 group :test do
   gem 'sinatra'
   gem 'rack-test'
