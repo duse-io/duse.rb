@@ -1,5 +1,7 @@
 require 'yaml'
 require 'duse/client/config'
+require 'fileutils'
+require 'openssl'
 
 module Duse
   class PrivateKeyMissing < StandardError; end

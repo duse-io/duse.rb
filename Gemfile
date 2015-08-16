@@ -4,6 +4,7 @@ gemspec
 gem 'jruby-openssl', platforms: :jruby
 
 group :test do
+  gem 'bundler'
   gem 'sinatra'
   gem 'rack-test'
   gem 'rake'

@@ -18,7 +18,7 @@ module Duse
           username: @username,
           email: @email,
           password: @password,
-          public_key: @key.public_key.to_pem
+          public_key: @key.public_key.to_pem.gsub('RSA PUBLIC KEY', 'PUBLIC KEY')
         )
         Duse::CLIConfig.new.save_private_key_for user, @key.to_pem
         success 'Successfully created your account! An email to confirm it has been sent. Once confirmed you can login with "duse login"'
