@@ -8,6 +8,7 @@ module Duse
       def run
         user = Duse::User.current
         say "
+          ID:       #{user.id}
           Username: #{user.username}
           Email:    #{user.email}
         ".gsub(/^( |\t)+/, "")

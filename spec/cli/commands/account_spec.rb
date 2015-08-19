@@ -26,7 +26,8 @@ RSpec.describe 'duse account', :fs => :fake do
 
         expect(run_cli('account', 'info').success?).to be true
         expect(last_run.out).to eq [
-          "\nUsername: flower-pot\n",
+          "\nID:       2\n",
+          "Username: flower-pot\n",
           "Email:    flower-pot@example.org\n"
         ].join
       end
