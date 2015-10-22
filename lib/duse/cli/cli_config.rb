@@ -14,7 +14,9 @@ module Duse
     end
 
     def save_private_key_for(user, private_key)
-      File.open(private_key_file_for(user), 'w') do |file|
+      file_location = private_key_file_for(user)
+      FileUtils.mv(file_location, "#{file_location}.old") if File.exist?(file_location)
+      File.open(file_location, 'w') do |file|
         file.write private_key
       end
     end

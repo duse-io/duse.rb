@@ -125,6 +125,10 @@ module Duse
         user = Duse::User.find(self.last_edited_by_id)
         Encryption::Asymmetric.verify(user.public_key, self.signature, self.content)
       end
+
+      def decrypt(private_key)
+        Encryption::Asymmetric.decrypt(private_key, self.content)
+      end
     end
   end
 end

@@ -77,6 +77,12 @@ module Duse
             session.post('/users/confirm', { email: email })
           end
         end
+
+        module Share
+          def update_all(shares)
+            session.patch('/shares', shares)
+          end
+        end
       end
 
       attr_accessor :session

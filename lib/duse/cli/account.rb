@@ -3,6 +3,7 @@ require 'duse/cli/account_resend_confirmation'
 require 'duse/cli/account_info'
 require 'duse/cli/account_update'
 require 'duse/cli/account_password'
+require 'duse/cli/account_update_keypair'
 
 module Duse
   module CLI
@@ -12,6 +13,7 @@ module Duse
       subcommand AccountInfo
       subcommand AccountUpdate
       subcommand AccountPassword
+      subcommand AccountUpdateKeypair
 
       description 'Manage your account'
     end
