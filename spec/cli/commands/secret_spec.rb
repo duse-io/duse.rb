@@ -89,12 +89,26 @@ RSpec.describe 'duse secret', :fs => :fake do
   describe 'list' do
     it 'lists secrets as id:secret pairs' do
       stub_get_secrets
+      stub_const("RUBY_PLATFORM", "darwin")
 
       run_cli('secret', 'list')
       output = last_run.out
       expect(output).to eq(
         "🔐  1: test\n"
       )
+    end
+
+    context "when OS is not darwin" do
+      it 'lists secrets as id:secret pairs' do
+        stub_get_secrets
+        stub_const("RUBY_PLATFORM", "linux")
+
+        run_cli('secret', 'list')
+        output = last_run.out
+        expect(output).to eq(
+          "1: test\n"
+        )
+      end
     end
   end
 
