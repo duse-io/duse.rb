@@ -1,8 +1,8 @@
 # encoding: UTF-8
 
-require 'duse/client/entity'
-require 'duse/encryption'
-require 'secret_sharing'
+require "duse/client/entity"
+require "duse/encryption"
+require "secret_sharing"
 
 module Duse
   module Client
@@ -86,6 +86,8 @@ module Duse
     end
 
     class Secret < Entity
+      LOCK_AND_KEY = "🔐"
+
       attributes :id, :title, :shares, :cipher_text
       has :users
 
@@ -109,8 +111,14 @@ module Duse
         true
       end
 
+      # for now we will only try to show the folder icon on mac this might be
+      # something we will remove if the support is not good enough
+      def cli_icon_prefix
+        ((/darwin/ =~ RUBY_PLATFORM) != nil) ? "#{LOCK_AND_KEY}  " : ""
+      end
+
       def to_s
-        "🔐  #{self.id}: #{self.title}"
+        "#{cli_icon_prefix}#{self.id}: #{self.title}"
       end
     end
 
