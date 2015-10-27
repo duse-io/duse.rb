@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files -z`.split("\x0")
 
   s.add_runtime_dependency 'highline'
-  s.add_runtime_dependency 'secret_sharing', '>= 0.0.5'
+  s.add_runtime_dependency 'secret_sharing', '0.0.6'
   s.add_runtime_dependency 'faraday'
   s.add_runtime_dependency 'faraday_middleware'
   s.add_runtime_dependency 'tree_outline'
