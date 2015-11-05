@@ -111,6 +111,7 @@ module Duse
 
       def instance_from(entity, hash)
         instance = entity.new
+        instance.curry = curry_by_entity(entity)
         entity.attributes.each do |attribute|
           if hash.has_key? attribute
             value = hash[attribute]
@@ -122,6 +123,10 @@ module Duse
           end
         end
         instance
+      end
+
+      def curry_by_entity(entity)
+        Duse.const_get(entity.name.split("::").last)
       end
     end
   end

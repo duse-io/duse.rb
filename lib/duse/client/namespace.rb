@@ -12,23 +12,17 @@ module Duse
         end
 
         def find_one(id)
-          entity = session.find_one(type, id)
-          entity.curry = self
-          entity
+          session.find_one(type, id)
         end
         alias_method :find, :find_one
         alias_method :get, :find_one
 
         def create(params)
-          entity = session.create(type, params)
-          entity.curry = self
-          entity
+          session.create(type, params)
         end
 
         def update(id, params)
-          entity = session.update(type, id, params)
-          entity.curry = self
-          entity
+          session.update(type, id, params)
         end
 
         def delete(id)
@@ -36,9 +30,7 @@ module Duse
         end
 
         def find_many(params = {})
-          session.find_many(type, params).each do |e|
-            e.curry = self
-          end
+          session.find_many(type, params)
         end
         alias_method :find_all, :find_many
         alias_method :all, :find_all
