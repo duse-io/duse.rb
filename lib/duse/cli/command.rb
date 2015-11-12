@@ -46,6 +46,9 @@ module Duse
         run *arguments
       rescue Interrupt
         say "\naborted!"
+      rescue Faraday::SSLError
+        error "\nSSL connection could not be verified. Aborting...You should " \
+          "check what the hell is going on here."
       end
 
       def setup

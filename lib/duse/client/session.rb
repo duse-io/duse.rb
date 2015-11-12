@@ -92,7 +92,7 @@ module Duse
       def connection
         fail ArgumentError, 'Uri must be set' if config.uri.nil?
 
-        @connection ||= Faraday.new url: config.uri do |faraday|
+        @connection ||= Faraday.new faraday_options do |faraday|
           faraday.request  :json
           faraday.response :json, content_type: /\bjson$/
           faraday.adapter  *faraday_adapter
@@ -104,6 +104,14 @@ module Duse
       end
 
       private
+
+      def faraday_options
+        opts = {
+          url: config.uri
+        }
+        opts.merge!({ ssl: { verify: false } }) if ENV['IGNORE_SSL'] == 'true'
+        opts
+      end
 
       def instances_from(entity, array)
         array.map { |e| instance_from(entity, e) }
