@@ -1,6 +1,8 @@
 require 'duse/client/entity'
 require 'faraday'
 require 'faraday_middleware'
+require 'typhoeus'
+require 'typhoeus/adapters/faraday'
 
 module Duse
   module Client
@@ -95,12 +97,12 @@ module Duse
         @connection ||= Faraday.new faraday_options do |faraday|
           faraday.request  :json
           faraday.response :json, content_type: /\bjson$/
-          faraday.adapter  *faraday_adapter
+          faraday.adapter  faraday_adapter
         end
       end
 
       def faraday_adapter
-        Faraday.default_adapter
+        :typhoeus
       end
 
       private
